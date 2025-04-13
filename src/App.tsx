@@ -1,13 +1,20 @@
 import './sass/app.scss';
-import { Container, Text } from '@mantine/core';
+import AppRoutes from './routes';
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
+import { TenantProvider } from './contexts/TenantContext.tsx';
 
-function App() {
+const App: React.FC = () => {
+  console.log(window.location.hostname);
   
   return (
-    <Container>
-      <Text>It works</Text>
-    </Container>
+    <Router>
+      <TenantProvider>
+        <AppRoutes />
+      </TenantProvider>
+    </Router >
   )
 }
 
-export default App
+export default App;

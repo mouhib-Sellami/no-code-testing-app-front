@@ -20,12 +20,12 @@ createRoot(document.getElementById('root')!).render(
           <PersistGate loading={null} persistor={persistor}>
             <SessionProvider>
               <AppConfigProvider>
-                <App />
+                  <App />
               </AppConfigProvider>
             </SessionProvider>
           </PersistGate>
         </ReduxProvider>
       </ModalsProvider>
     </MantineEmotionProvider>
-  </MantineProvider>
+  </MantineProvider >
 )

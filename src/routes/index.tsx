@@ -1,0 +1,69 @@
+import { lazy } from "react";
+import { PATH_APP, PATH_AUTH } from "./paths";
+import { useRoutes } from "react-router-dom";
+import Loadable from "./Loadable";
+import GuestGuard from "@/guards/GuestGuard";
+import AuthGuard from "@/guards/AuthGuard";
+
+
+export default function AppRoutes() {
+
+    return useRoutes([
+        
+        {
+            path: PATH_AUTH.login,
+            element: (
+                <GuestGuard>
+                    {/* <LoginPage /> */}
+                    <></>
+                </GuestGuard>
+            ),
+            index: true
+        },
+        {
+            path: PATH_AUTH.register,
+            element: (
+                <GuestGuard>
+                    {/* <RegisterPage /> */}
+                    <></>
+                </GuestGuard>
+            )
+        },
+        {
+            path: PATH_AUTH.forgetPassword,
+            element: (
+                <GuestGuard>
+                    {/* <ForgetPasswordPage /> */}
+                    <></>
+                </GuestGuard>
+            )
+        },
+        {
+            path: PATH_APP.root,
+            element: (
+                <AuthGuard>
+                    <></>
+                    {/* <DashboardLayout /> */}
+                </AuthGuard>
+            ), children: [
+            ]
+        },
+        {
+            path: "*",
+            element: (
+                <Page404 />
+            )
+        },
+    ])
+};
+
+// AUTH
+// const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
+// const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));
+// const ForgetPasswordPage = Loadable(lazy(() => import('@/pages/auth/reset-password/ResetPasswordPage')));
+
+//HOME
+// const HomePage = Loadable(lazy(() => import('@/pages/dashboard/home/HomePage')));
+
+//OTHER
+const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));

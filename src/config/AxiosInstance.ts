@@ -10,8 +10,8 @@ export const injectStore = (_store: any) => {
 }
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_SERVER_API_URL || window.location.hostname,
-    timeout: 60000,
+    baseURL: location.protocol + "//" + location.hostname + '/api/',
+    timeout: 15000,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",

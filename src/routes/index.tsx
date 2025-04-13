@@ -49,6 +49,12 @@ export default function AppRoutes() {
             ]
         },
         {
+            path: PATH_APP.general.notFound,
+            element: (
+                <Page404 />
+            )
+        },
+        {
             path: "*",
             element: (
                 <Page404 />

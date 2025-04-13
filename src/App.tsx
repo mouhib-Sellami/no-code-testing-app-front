@@ -6,8 +6,7 @@ import {
 import { TenantProvider } from './contexts/TenantContext.tsx';
 
 const App: React.FC = () => {
-  console.log(window.location.hostname);
-  
+
   return (
     <Router>
       <TenantProvider>

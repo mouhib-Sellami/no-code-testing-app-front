@@ -17,6 +17,7 @@ export const PATH_APP = {
     general: {
         dashboard: {
             home: path(ROOTS_APP, '/dashboard'),
-        }
+        },
+        notFound: path(ROOTS_APP, '/404')
     }
 };

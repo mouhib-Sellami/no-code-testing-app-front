@@ -5,6 +5,7 @@ import { encryptTransform } from 'redux-persist-transform-encrypt';
 import notificationReducer from "@/redux/slices/notificationSlice/notificationSlice";
 import sessionReducer from "@/redux/slices/sessionSlice/sessionSlice";
 import appConfigReducer from "@/redux/slices/appConfigSlice";
+import TenantReducer from "@/redux/slices/TenantSlice/TenantSlice";
 
 const encrypts = encryptTransform({
     secretKey: import.meta.env.VITE_REDUX_SECURE_STORAGE_HASH_KEY,
@@ -43,11 +44,18 @@ const sessionPersistConfig = {
     whitelist: ['isAlive'],
 };
 
+const TenantPersistConfig = {
+    ...basePersistenceConfig,
+    key: 'tenant',
+    whitelist: [],
+};
+
 
 const rootReducer = combineReducers({
     appConfigs: persistReducer(appConfigPersistenceConfig, appConfigReducer),
     notification: persistReducer(notificationPersistConfig, notificationReducer),
     session: persistReducer(sessionPersistConfig, sessionReducer),
+    tenant: persistReducer(TenantPersistConfig, TenantReducer),
 })
 
 export { rootPersistConfig, rootReducer };

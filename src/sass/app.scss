@@ -1,12 +1,15 @@
 // Fonts
 
-@use "variables" as *;
-@use "fonts" as *;
-@use '@mantine/core/styles.css' as *;
-@use '@mantine/dates/styles.css' as *;
-@use '@mantine/notifications/styles.css' as *;
-@use '@mantine/core/styles.layer.css' as *;
-@use 'mantine-datatable/styles.layer.css' as *;
+@import "variables";
+@import "ui-elements";
+@import "fonts";
+@import "typography";
+@import "transitions";
+@import "mixins";
+@import '@mantine/core/styles.css';
+@import '@mantine/dates/styles.css';
+@import '@mantine/notifications/styles.css';
+@import '@mantine/core/styles.layer.css';
 
 html {
     width: 100vw;
@@ -30,6 +33,7 @@ body {
     height: 100%;
     overflow-x: hidden !important;
     font-family: $font-family-base !important;
+
 }
 
 .mantine-BarChart-bar {

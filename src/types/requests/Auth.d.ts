@@ -1,4 +1,4 @@
 interface UserAuth {
-    email: string;
+    username: string;
     password: string;
 }

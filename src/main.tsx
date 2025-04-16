@@ -4,7 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { persistor, store } from "@redux/store";
 import { PersistGate } from 'redux-persist/integration/react';
 import { AppConfigProvider } from './contexts/AppConfigContext.tsx';
-import SessionProvider from './contexts/SessionContext.tsx';
+import { SessionProvider } from './contexts/SessionContext.tsx';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { emotionTransform, MantineEmotionProvider } from '@mantine/emotion';
@@ -20,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
           <PersistGate loading={null} persistor={persistor}>
             <SessionProvider>
               <AppConfigProvider>
-                  <App />
+                <App />
               </AppConfigProvider>
             </SessionProvider>
           </PersistGate>

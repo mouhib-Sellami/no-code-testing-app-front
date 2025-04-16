@@ -4,14 +4,24 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState: TenantState = {
     is_valid: true,
-    is_loading: false
+    is_loading: false,
+    tenant: null
 };
 
 const tenantSlice = createSlice({
     name: 'tenant',
     initialState,
     reducers: {
-
+        resetTenant: (state) => {
+            state.is_loading = false;
+            state.is_valid = true;
+            state.tenant = null;
+        },
+        handleNewTenant: (state, action) => {
+            state.is_loading = false;
+            state.is_valid = true;
+            state.tenant = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -42,6 +52,6 @@ export const check_domain = createAsyncThunk('domains/check_domain', async (_, t
     }
 });
 
-export const { } = tenantSlice.actions;
+export const { handleNewTenant, resetTenant } = tenantSlice.actions;
 
 export default tenantSlice.reducer;

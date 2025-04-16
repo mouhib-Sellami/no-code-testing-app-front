@@ -1,0 +1,56 @@
+import { dispatch } from "@/redux/store";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { onShowNotification } from "../notificationSlice/notificationSlice";
+import authServices from "@/redux/services/authServices";
+import { loginResponse } from "@/types/response/authResponses";
+import secureLocalStorage from "react-secure-storage";
+import { handleNewSession, handleSessionExpired } from "../sessionSlice/sessionSlice";
+
+export const login = createAsyncThunk('auth/login', async (data: UserAuth, thunkAPI) => {
+    try {
+        secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
+        const response: loginResponse = await authServices.login(data);
+        secureLocalStorage.setItem(import.meta.env.VITE_AUTH_TOKEN || '@token', response.token);
+        dispatch(handleNewSession());
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            if (error?.response?.status === 400) {
+                dispatch(onShowNotification({
+                    content: "E-mail ou mot de passe incorrect.",
+                    level: "ERROR",
+                    type: "AUTH"
+                }))
+            }
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+    try {
+        const response = await authServices.logout();
+        secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    } finally {
+        dispatch(handleSessionExpired())
+    }
+});
+
+export const retrieve = createAsyncThunk('auth/retrieve', async (_, thunkAPI) => {
+    try {
+        const response = await authServices.retrieve();
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

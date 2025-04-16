@@ -1,0 +1,108 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AuthState } from '@/types/redux/AuthState';
+import axiosInstance from '@/config/AxiosInstance';
+import { login, logout, retrieve } from './authSliceThunk';
+
+
+const initialState: AuthState = {
+    user: null,
+    isError: false,
+    isAuthenticated: false,
+    isLoading: false,
+    message: '',
+    permissions: [],
+    organization: null,
+    role: null
+};
+
+const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        resetAuth: (state: AuthState) => {
+            state.user = null;
+            state.isLoading = false;
+            state.isAuthenticated = false;
+            state.isError = false;
+            state.message = '';
+            state.permissions = [];
+            state.role = null;
+            state.organization = null;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(login.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(login.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                state.permissions = action.payload.role.permissions;
+                state.role = action.payload.role;
+                state.organization = action.payload.organization;
+                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
+                axiosInstance.defaults.headers['Authorization'] = `Bearer ${action.payload.token}`;
+                state.message = '';
+            })
+            .addCase(login.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.user = null;
+                state.permissions = [];
+                state.isAuthenticated = false;
+            })
+            .addCase(retrieve.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(retrieve.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                state.permissions = action.payload.role.permissions;
+                state.role = action.payload.role;
+                state.organization = action.payload.organization;
+                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
+                axiosInstance.defaults.headers['Authorization'] = `Bearer ${action.payload.token}`;
+                state.message = '';
+            })
+            .addCase(retrieve.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.user = null;
+                state.isAuthenticated = false;
+                state.permissions = [];
+            })
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(logout.fulfilled, (state) => {
+                state.user = null;
+                state.isLoading = false;
+                state.isAuthenticated = false;
+                state.isError = false;
+                state.message = '';
+                state.permissions = [];
+                state.organization = null;
+            })
+            .addCase(logout.rejected, (state) => {
+                state.user = null;
+                state.isLoading = false;
+                state.isAuthenticated = false;
+                state.isError = false;
+                state.message = '';
+                state.permissions = [];
+                state.organization = null;
+            })
+
+    }
+});
+
+
+export const { resetAuth } = authSlice.actions;
+
+export default authSlice.reducer;

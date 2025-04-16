@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { PATH_APP, PATH_AUTH } from "./paths";
-import { useRoutes } from "react-router-dom";
+import { Outlet, useRoutes } from "react-router-dom";
 import Loadable from "./Loadable";
 import GuestGuard from "@/guards/GuestGuard";
 import AuthGuard from "@/guards/AuthGuard";
@@ -9,16 +9,21 @@ import AuthGuard from "@/guards/AuthGuard";
 export default function AppRoutes() {
 
     return useRoutes([
-        
+
+        {
+            path: PATH_AUTH.landing,
+            element: (
+                <LandingPage />
+            ),
+            index: true
+        },
         {
             path: PATH_AUTH.login,
             element: (
                 <GuestGuard>
-                    {/* <LoginPage /> */}
-                    <></>
+                    <LoginPage />
                 </GuestGuard>
             ),
-            index: true
         },
         {
             path: PATH_AUTH.register,
@@ -42,10 +47,18 @@ export default function AppRoutes() {
             path: PATH_APP.root,
             element: (
                 <AuthGuard>
-                    <></>
+                    <>
+                        <Outlet />
+                    </>
                     {/* <DashboardLayout /> */}
                 </AuthGuard>
             ), children: [
+                {
+                    path: PATH_APP.general.dashboard.home,
+                    element: (
+                        <HomePage />
+                    )
+                }
             ]
         },
         {
@@ -64,12 +77,13 @@ export default function AppRoutes() {
 };
 
 // AUTH
-// const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
+const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
 // const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));
 // const ForgetPasswordPage = Loadable(lazy(() => import('@/pages/auth/reset-password/ResetPasswordPage')));
 
 //HOME
-// const HomePage = Loadable(lazy(() => import('@/pages/dashboard/home/HomePage')));
+const HomePage = Loadable(lazy(() => import('@/pages/dashboard/home/HomePage')));
 
 //OTHER
 const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));
+const LandingPage = Loadable(lazy(() => import('@pages/landing/LandingPage')));

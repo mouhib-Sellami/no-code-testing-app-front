@@ -1,10 +1,16 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { RootState, dispatch, useSelector } from '@/redux/store';
-// import useAuth from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
+import { login, logout, retrieve } from '@/redux/slices/authSlices/authSliceThunk';
+import { User } from '@/types/models/User';
+import secureLocalStorage from 'react-secure-storage';
+import { handleNewTenant } from '@/redux/slices/TenantSlice/TenantSlice';
+import { loginResponse } from '@/types/response/authResponses';
 
 type SessionContextProps = {
     signIn: (data: UserAuth) => Promise<any>;
     signOut: () => Promise<void>;
+    retrieveUser: () => Promise<any>;
     isLoading: boolean;
     isAuthenticated: boolean;
     user: User | null,
@@ -14,14 +20,30 @@ type SessionProviderProps = {
     children?: ReactNode;
 }
 
-const SessionContext = createContext<Partial<SessionContextProps>>({});
+const SessionContext = createContext<Partial<SessionContextProps>>({
+    isAuthenticated: false,
+    isLoading: false,
+    signIn: (_: UserAuth) => null,
+    signOut: () => null,
+    retrieveUser: () => null
+});
 
 const SessionProvider = ({ children }: SessionProviderProps) => {
-    // const { isLoading, user, isAuthenticated } = useAuth();
+    const { isLoading, user, isAuthenticated } = useAuth();
+
+    const TOKEN = React.useMemo(() => {
+        return secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
+    }, [])
+
     const { isAlive } = useSelector(
         (state: RootState) => state.session
     )
 
+    useEffect(() => {
+        if (!isAlive && TOKEN) {
+            signOut().then().catch()
+        }
+    }, [isAlive, TOKEN])
     useEffect(() => {
         if (!isAlive) {
             signOut().then().catch()
@@ -29,33 +51,37 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
     }, [isAlive])
 
     const signIn = useCallback(async (data: UserAuth) => {
-        // const res = await dispatch(login(data))
-        // return res
+        const res = await dispatch(login(data))
+        if (res.meta.requestStatus == "fulfilled") {
+            const { organization } = res.payload as loginResponse;
+            dispatch(handleNewTenant(organization))
+        }
+        return res
     }, [])
 
     const signOut = useCallback(async () => {
-        // await dispatch(logout())
+        await dispatch(logout());
     }, [])
 
-    // const fetchUserDetails = React.useCallback(async () => {
-    //     if (!user)
-    //         return      
-    //     // await dispatch(getUserDetails(user.id))
-    // }, [user])
+    const retrieveUser = React.useCallback(async () => {
+        return await dispatch(retrieve())
+    }, [])
 
-    // React.useEffect(() => {
-    //     if (isAuthenticated && isAlive) {
-    //         fetchUserDetails();
-    //     }
-    // }, [isAlive, isAuthenticated])
+    useEffect(() => {
+        if (isAlive && TOKEN) {
+            retrieveUser();
+        }
+    }, [isAlive, TOKEN])
+
     return (
         <SessionContext.Provider
             value={{
-                // isLoading,
-                // user,
-                // isAuthenticated,
+                isLoading,
+                user,
+                isAuthenticated,
+                retrieveUser,
                 signOut,
-                signIn,
+                signIn
             }}>
             {children}
         </SessionContext.Provider>
@@ -72,4 +98,4 @@ export const useSession = () => {
     return context;
 }
 
-export default SessionProvider;
+export { SessionProvider, SessionContext };

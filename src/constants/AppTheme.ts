@@ -27,8 +27,8 @@ const theme = createTheme({
         green: colorsTuple("#067647"),
         grayLogin: colorsTuple("#94979C"),
         darkGray: colorsTuple("#292929"),
-        primaryColor: colorsTuple("#7F56D9"),
-        secondary: colorsTuple("#18586F"),
+        primaryColor: colorsTuple("#ba2d0b"),
+        secondary: colorsTuple("#ba2d0b"),
         primary: virtualColor({
             name: "primary",
             dark: "primaryColor",
@@ -87,7 +87,7 @@ const theme = createTheme({
 
         primaryButtonColor: virtualColor({
             name: "primaryButtonColor",
-            dark: "primaryButtonDarkColor",
+            dark: "primary",
             light: "primaryButtonLightColor"
         }),
 
@@ -265,7 +265,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }
@@ -284,7 +284,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }
@@ -303,8 +303,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
-                    // fontSize: 14,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }
@@ -323,8 +322,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
-                    // fontSize: 14,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }
@@ -343,7 +341,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }

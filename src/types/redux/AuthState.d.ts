@@ -1,6 +1,6 @@
 import { Organization } from "../models/Organization";
 import { Permission, Role } from "../models/Role";
-import { User } from "../User";
+import { User } from "../models/User";
 
 
 export type AuthState = {

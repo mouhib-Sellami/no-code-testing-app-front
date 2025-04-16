@@ -4,6 +4,7 @@ import { Outlet, useRoutes } from "react-router-dom";
 import Loadable from "./Loadable";
 import GuestGuard from "@/guards/GuestGuard";
 import AuthGuard from "@/guards/AuthGuard";
+import { DashboardLayout } from "@/constants/layout/DashboardLayout";
 
 
 export default function AppRoutes() {
@@ -47,10 +48,7 @@ export default function AppRoutes() {
             path: PATH_APP.root,
             element: (
                 <AuthGuard>
-                    <>
-                        <Outlet />
-                    </>
-                    {/* <DashboardLayout /> */}
+                    <DashboardLayout />
                 </AuthGuard>
             ), children: [
                 {

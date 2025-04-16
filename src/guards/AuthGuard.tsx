@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import CustomLoadingOverlay from '@/components/custom-loading/CustomLoadingOverlay';
 import { PATH_AUTH } from '@/routes/paths';
 import useAuth from '@/hooks/useAuth';
 
@@ -29,8 +28,6 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       setRequestedLocation(location.pathname);
     }
   }, [isAuthenticated, location.pathname, requestedLocation]);
-
-  if (isLoading) return <CustomLoadingOverlay />;
 
   if (!isAuthenticated) return <Navigate to={PATH_AUTH.login} state={{ from: location }} replace />;
 

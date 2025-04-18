@@ -38,8 +38,6 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
             return thunkAPI.rejectWithValue(error?.response?.data);
         }
         return thunkAPI.rejectWithValue(error);
-    } finally {
-        dispatch(handleSessionExpired())
     }
 });
 

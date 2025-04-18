@@ -5,6 +5,7 @@ import Loadable from "./Loadable";
 import GuestGuard from "@/guards/GuestGuard";
 import AuthGuard from "@/guards/AuthGuard";
 import { DashboardLayout } from "@/constants/layout/DashboardLayout";
+import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
 
 
 export default function AppRoutes() {
@@ -56,6 +57,14 @@ export default function AppRoutes() {
                     element: (
                         <HomePage />
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.roles,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_role">
+                            <RolePage />
+                        </PermissionGuardRedirection>
+                    )
                 }
             ]
         },
@@ -81,6 +90,8 @@ const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
 
 //HOME
 const HomePage = Loadable(lazy(() => import('@/pages/dashboard/home/HomePage')));
+// ROLES
+const RolePage = Loadable(lazy(() => import('@/pages/dashboard/roles/RolesPage')));
 
 //OTHER
 const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));

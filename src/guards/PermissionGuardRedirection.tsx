@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import useCheckPermission from '@/hooks/useCheckPermission';
 import { Navigate } from 'react-router';
@@ -6,7 +6,6 @@ import { PATH_APP } from '@/routes/paths';
 
 interface PermissionGuardRedirectionProps extends React.PropsWithChildren {
     permission: string,
-    children: ReactElement | ReactElement[]
 }
 
 

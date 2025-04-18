@@ -1,0 +1,1 @@
+export type actionState = "login" | string

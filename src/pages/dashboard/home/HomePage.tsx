@@ -1,23 +1,14 @@
-import PrimaryButton from "@/components/buttons/PrimaryButton";
-import { SessionContext } from "@/contexts/SessionContext";
-import { handleSessionExpired } from "@/redux/slices/sessionSlice/sessionSlice";
-import { dispatch } from "@/redux/store";
-import { Container, Text } from "@mantine/core";
+import PageContentLayout from "@/components/ui/content-layout/PageContentLayout";
+import useAuth from "@/hooks/useAuth";
 import React from "react";
 
 
 const HomePage: React.FC = ({ }) => {
-    const { } = React.useContext(SessionContext);
-
-    const logout_ = React.useCallback(async () => {
-        dispatch(handleSessionExpired())
-    }, [])
+    const { user } = useAuth();
     return (
-        <Container>
-            <PrimaryButton onClick={logout_}>
-                Logout
-            </PrimaryButton>
-        </Container>
+        <PageContentLayout title={`For you`}>
+
+        </PageContentLayout>
     )
 }
 

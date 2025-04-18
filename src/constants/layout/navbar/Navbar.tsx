@@ -12,7 +12,7 @@ interface Props {
 export function Navbar({ data }: Props) {
 
     const links = data.filter(elm => elm.isVisible).map((item, idx) => (
-        <PermissionGuard permission={item.permission || "PUBLIC"}>
+        <PermissionGuard permission={item.permission || "PUBLIC"} key={idx}>
             <Box key={idx} p={0} m={0} bg={"transparent"}>
                 <NavLinksGroup {...item} />
                 <Center>

@@ -6,7 +6,8 @@ import notificationReducer from "@/redux/slices/notificationSlice/notificationSl
 import sessionReducer from "@/redux/slices/sessionSlice/sessionSlice";
 import appConfigReducer from "@/redux/slices/appConfigSlice";
 import TenantReducer from "@/redux/slices/TenantSlice/TenantSlice";
-import permissionReducer from "@/redux/slices/authSlices/permissionSlice";
+import permissionReducer from "@/redux/slices/accessSlices/permissionSlice";
+import roleReducer from "@/redux/slices/accessSlices/roleSlice";
 import authReducer from "@/redux/slices/authSlices/authSlice";
 
 const encrypts = encryptTransform({
@@ -57,7 +58,7 @@ const sessionPersistConfig = {
 const TenantPersistConfig = {
     ...basePersistenceConfig,
     key: 'tenant',
-    whitelist: ['tenant','is_valid'],
+    whitelist: ['tenant', 'is_valid'],
 };
 
 const PermissionsPersistConfig = {
@@ -65,6 +66,13 @@ const PermissionsPersistConfig = {
     storage: storage,
     keyPrefix: 'redux-',
     whitelist: ['permissions'],
+};
+
+const RolesPersistConfig = {
+    key: 'roles',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: ['roles'],
 };
 
 
@@ -75,6 +83,7 @@ const rootReducer = combineReducers({
     session: persistReducer(sessionPersistConfig, sessionReducer),
     tenant: persistReducer(TenantPersistConfig, TenantReducer),
     permissions: persistReducer(PermissionsPersistConfig, permissionReducer),
+    roles: persistReducer(RolesPersistConfig, roleReducer),
 
 })
 

@@ -21,13 +21,6 @@ export function DashboardLayout() {
             mainRef.current.scrollTo({ top: 0, behavior: "instant" });
         }
     }, [pathname]);
-
-    useEffect(() => {
-        if (mainRef.current) {
-            mainRef.current.scrollTo({ top: 0, behavior: "instant" });
-        }
-    }, [pathname]);
-
     return (
         <AppShell
 

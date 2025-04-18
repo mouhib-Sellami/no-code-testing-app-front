@@ -6,6 +6,7 @@ import { handleSessionExpired } from '@/redux/slices/sessionSlice/sessionSlice';
 import useAuth from '@/hooks/useAuth';
 import UserButton from './UserButton';
 import { IconLogout } from '@tabler/icons-react';
+import { logout } from '@/redux/slices/authSlices/authSliceThunk';
 
 const NavbarFooter: React.FC = () => {
     const { openDeleteModal } = useConfirmModal();
@@ -19,7 +20,7 @@ const NavbarFooter: React.FC = () => {
             cancelText: "cancel",
             title: "Logging out",
             onConfirm: async () => {
-                await dispatch(handleSessionExpired());
+                await dispatch(logout());
             }
         })
     }, [])

@@ -16,10 +16,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     if (searchParams.has('token')) {
-      searchParams.delete('token');
-      const newSearch = searchParams.toString();
-      const newPath = `${location.pathname}${newSearch ? `?${newSearch}` : ''}`;
-      navigate(newPath, { replace: true });
+      navigate(location.pathname, { replace: true });
     }
   }, [location.search, navigate, location.pathname]);
 

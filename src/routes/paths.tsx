@@ -17,6 +17,10 @@ export const PATH_APP = {
     general: {
         dashboard: {
             home: path(ROOTS_APP, '/dashboard'),
+            users: path(ROOTS_APP, '/members'),
+            projects: path(ROOTS_APP, '/projects'),
+            organization: path(ROOTS_APP, '/organization'),
+            roles: path(ROOTS_APP, '/privilege'),
         },
         notFound: path(ROOTS_APP, '/404')
     }

@@ -19,23 +19,23 @@ export const navLinks: NavItem[] = [
     {
         label: "Members",
         icon: IconUsers,
-        link: PATH_APP.general.dashboard.home,
-        name: "Home",
+        link: PATH_APP.general.dashboard.users,
+        name: "members",
         isVisible: true,
         permission: "can_view_user"
     },
     {
         label: "Privilege section",
         icon: IconShieldLock,
-        link: PATH_APP.general.dashboard.home,
-        name: "Home",
+        link: PATH_APP.general.dashboard.roles,
+        name: "roles",
         isVisible: true,
         permission: "can_view_role"
     },
     {
         label: "Projects",
         icon: IconFolderCode,
-        link: PATH_APP.general.dashboard.home,
+        link: PATH_APP.general.dashboard.projects,
         name: "projects",
         isVisible: true,
         permission: "can_view_project"
@@ -43,8 +43,8 @@ export const navLinks: NavItem[] = [
     {
         label: "Organization",
         icon: IconBuildingCog,
-        link: PATH_APP.general.dashboard.home,
-        name: "Home",
+        link: PATH_APP.general.dashboard.organization,
+        name: "organization",
         isVisible: true,
         permission: "can_view_organization"
     },

@@ -38,7 +38,6 @@ const responseHandler = (response: AxiosResponse) => {
 
 const errorHandler = async (error: AxiosError) => {
     try {
-        const token = secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || "@token");
         if (error.code === AxiosError.ERR_NETWORK || error.code === AxiosError.ETIMEDOUT) {
             await store.dispatch(onShowNotification({
                 content: "Network error, check your Internet connection.",
@@ -46,7 +45,7 @@ const errorHandler = async (error: AxiosError) => {
                 type: "NETWORK",
             }));
         }
-        if (token && error.response?.status === 401) {
+        if (error.response?.status === 401) {
             await store.dispatch(onShowNotification({
                 content: "Your session has expired.",
                 level: "WARNING",

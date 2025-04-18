@@ -6,6 +6,7 @@ import { User } from '@/types/models/User';
 import secureLocalStorage from 'react-secure-storage';
 import { handleNewTenant } from '@/redux/slices/TenantSlice/TenantSlice';
 import { loginResponse } from '@/types/response/authResponses';
+import { useSearchParams } from 'react-router-dom';
 
 type SessionContextProps = {
     signIn: (data: UserAuth) => Promise<any>;
@@ -13,65 +14,74 @@ type SessionContextProps = {
     retrieveUser: () => Promise<any>;
     isLoading: boolean;
     isAuthenticated: boolean;
-    user: User | null,
-}
+    user: User | null;
+};
 
 type SessionProviderProps = {
     children?: ReactNode;
-}
+};
 
 const SessionContext = createContext<Partial<SessionContextProps>>({
     isAuthenticated: false,
     isLoading: false,
     signIn: (_: UserAuth) => null,
     signOut: () => null,
-    retrieveUser: () => null
+    retrieveUser: () => null,
 });
 
 const SessionProvider = ({ children }: SessionProviderProps) => {
     const { isLoading, user, isAuthenticated } = useAuth();
+    const [searchParams] = useSearchParams();
+    const { isAlive } = useSelector((state: RootState) => state.session);
 
     const TOKEN = React.useMemo(() => {
-        return secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
-    }, [])
+        return (
+            searchParams.get('token') ||
+            secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+        );
+    }, [searchParams]);
 
-    const { isAlive } = useSelector(
-        (state: RootState) => state.session
-    )
+    const isRedirecting = React.useMemo(() => {
+        return searchParams.has('next') && searchParams.has('action') && searchParams.has('token');
+    }, [searchParams]);
 
     useEffect(() => {
-        if (!isAlive && TOKEN) {
-            signOut().then().catch()
+        if (!isAlive && !isRedirecting) {
+            signOut().then().catch();
         }
-    }, [isAlive, TOKEN])
-    useEffect(() => {
-        if (!isAlive) {
-            signOut().then().catch()
-        }
-    }, [isAlive])
+    }, [isAlive, TOKEN, isRedirecting, searchParams]);
 
     const signIn = useCallback(async (data: UserAuth) => {
-        const res = await dispatch(login(data))
-        if (res.meta.requestStatus == "fulfilled") {
+        const res = await dispatch(login(data));
+        if (res.meta.requestStatus === 'fulfilled') {
             const { organization } = res.payload as loginResponse;
-            dispatch(handleNewTenant(organization))
+            dispatch(handleNewTenant(organization));
         }
-        return res
-    }, [])
+        return res;
+    }, []);
 
     const signOut = useCallback(async () => {
         await dispatch(logout());
-    }, [])
+    }, []);
 
-    const retrieveUser = React.useCallback(async () => {
-        return await dispatch(retrieve())
-    }, [])
+    const retrieveUser = useCallback(async () => {
+        const res = await dispatch(retrieve());
+        console.log(res);
+        return res
+        
+    }, []);
 
     useEffect(() => {
-        if (isAlive && TOKEN) {
+        if (isAlive && TOKEN && !isRedirecting) {
             retrieveUser();
         }
-    }, [isAlive, TOKEN])
+    }, [isAlive, TOKEN, isRedirecting]);
+
+    useEffect(() => {
+        if (isAlive) {
+            retrieveUser();
+        }
+    }, [isAlive,]);
 
     return (
         <SessionContext.Provider
@@ -81,12 +91,13 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
                 isAuthenticated,
                 retrieveUser,
                 signOut,
-                signIn
-            }}>
+                signIn,
+            }}
+        >
             {children}
         </SessionContext.Provider>
     );
-}
+};
 
 export const useSession = () => {
     const context = useContext(SessionContext);
@@ -96,6 +107,6 @@ export const useSession = () => {
         }
     }
     return context;
-}
+};
 
 export { SessionProvider, SessionContext };

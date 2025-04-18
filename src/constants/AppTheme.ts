@@ -322,7 +322,7 @@ const theme = createTheme({
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    height: "2.5rem",
+                    minHight: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
                 }

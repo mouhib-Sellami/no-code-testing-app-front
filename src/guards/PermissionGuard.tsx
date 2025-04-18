@@ -1,10 +1,9 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import useCheckPermission from '@/hooks/useCheckPermission';
 
 interface PermissionGuardProps extends React.PropsWithChildren {
     permission: string,
-    children: ReactElement | ReactElement[]
 }
 
 PermissionGuard.propTypes = {

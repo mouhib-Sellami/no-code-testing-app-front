@@ -2,7 +2,7 @@ import React from "react"
 import { Box, Grid } from "@mantine/core";
 import ResetPasswordForm from "@/components/forms/auth/forgetPasswordRequest/ResetPasswordForm";
 
-const ForgetPasswordRequest: React.FC = ({ }) => {
+const ResetPasswordRequest: React.FC = ({ }) => {
 
     return (
         <Box p={0} m={0} w={"100%"} h={"100%"}>
@@ -24,4 +24,4 @@ const ForgetPasswordRequest: React.FC = ({ }) => {
     )
 }
 
-export default ForgetPasswordRequest;
+export default ResetPasswordRequest;

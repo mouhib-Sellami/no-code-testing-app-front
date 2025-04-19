@@ -64,3 +64,27 @@ export const forgetPasswordRequest = createAsyncThunk('auth/forgetPasswordReques
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+export const verifyToken = createAsyncThunk('auth/verifyToken', async (data: { token: string }, thunkAPI) => {
+    try {
+        const response = await authServices.verifyToken(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const resetPassword = createAsyncThunk('auth/resetPassword', async (data: resetPasswordRequest, thunkAPI) => {
+    try {
+        const response = await authServices.resetPassword(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

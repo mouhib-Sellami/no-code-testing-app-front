@@ -66,9 +66,7 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
 
     const retrieveUser = useCallback(async () => {
         const res = await dispatch(retrieve());
-        console.log(res);
         return res
-        
     }, []);
 
     useEffect(() => {

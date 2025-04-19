@@ -1,11 +1,14 @@
 import React from "react";
 import { Alert, Box, Center, Group, PasswordInput, px, Stack, Text, Title, useMantineTheme } from "@mantine/core";
-import { NavLink, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { useForm } from "@mantine/form";
 import { IconShieldCheckered } from "@tabler/icons-react";
 import useAuth from "@/hooks/useAuth";
 import { PATH_AUTH } from "@/routes/paths";
+import { dispatch } from "@/redux/store";
+import { resetPassword, verifyToken } from "@/redux/slices/authSlices/authSliceThunk";
+import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 
 const ResetPasswordForm: React.FC = ({ }) => {
     const params = useParams();
@@ -15,7 +18,7 @@ const ResetPasswordForm: React.FC = ({ }) => {
 
     const [isExpired, setIsExpired] = React.useState(false);
 
-    const initialValues = React.useMemo(() => {
+    const initialValues: resetPasswordRequest = React.useMemo(() => {
         return {
             password: '',
             confirm_password: '',
@@ -23,9 +26,16 @@ const ResetPasswordForm: React.FC = ({ }) => {
         }
     }, [params])
 
-    console.log(initialValues);
+    const verify_token = React.useCallback(async () => {
+        const res = await dispatch(verifyToken({ token: params.token }))
+        if (res.meta.requestStatus == "rejected") {
+            setIsExpired(true);
+        }
+    }, [params])
 
-    const verify_token = React.useCallback(async () => { }, [])
+    React.useEffect(() => {
+        verify_token()
+    }, [params])
 
     React.useEffect(() => {
         if (!params.token) {
@@ -37,12 +47,30 @@ const ResetPasswordForm: React.FC = ({ }) => {
         mode: "uncontrolled",
         initialValues: initialValues,
         validate: {
-            password: (value) => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value) ? null : 'Invalid password'),
+            password: (value) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(value) ? null : 'Invalid password'),
+            confirm_password: (value, values) => value == values.password ? null : "Password mismatch"
         },
     });
 
-    const submit = React.useCallback(async (values) => {
-
+    const submit = React.useCallback(async (values: resetPasswordRequest) => {
+        const res = await dispatch(resetPassword(values));
+        if (res.meta.requestStatus == "fulfilled") {
+            navigate(PATH_AUTH.login);
+            dispatch(onShowNotification({
+                level: "SUCCESS",
+                content: "Password updated successfully",
+                type: "AUTH"
+            }))
+        } else {
+            dispatch(onShowNotification({
+                level: "ERROR",
+                content: "Password cannot be updated try again later",
+                type: "AUTH"
+            }))
+            if (res.payload.hasOwnProperty('token')) {
+                setIsExpired(true)
+            }
+        }
     }, [])
 
     return (
@@ -52,40 +80,36 @@ const ResetPasswordForm: React.FC = ({ }) => {
                     <Title order={2} fz={{ xl: 26, lg: 24, md: 20 }}>Reset Password</Title>
                     <Text c={"dimmed"} fz={{ xl: 16, lg: 14, md: 12 }}>Please enter your new password.</Text>
                 </Group>
-                <Box hidden={isExpired}>
+                <Box hidden={isExpired} pos={'relative'}>
                     <form onSubmit={form.onSubmit((values) => submit(values))} style={{ width: "100%" }}>
                         <Stack w={"100%"} gap={"sm"}>
                             <PasswordInput
+                                disabled={isLoading}
                                 required
                                 withAsterisk
                                 label="Password"
                                 placeholder="Password"
                                 key={form.key('password')}
                                 {...form.getInputProps('password')}
-                                error={form.errors.password || form.errors.confirmPassword}
+                                error={form.errors.password || form.errors.confirm_password}
                                 radius="md"
                             />
                             <PasswordInput
+                                disabled={isLoading}
                                 required
                                 withAsterisk
                                 label="Confirm Password"
                                 placeholder="Confirm Password"
-                                // key={form.key('confirmPassword')}
-                                // {...form.getInputProps('confirmPassword')}
-                                // error={form.errors.confirmPassword}
+                                key={form.key('confirm_password')}
+                                {...form.getInputProps('confirm_password')}
+                                error={form.errors.confirm_password}
                                 radius="md"
                             />
-                            <PrimaryButton h={44} type='submit'>
+                            <PrimaryButton h={44} type='submit' loading={isLoading}>
                                 <Text fz={{ xl: 16, lg: 14, md: 12 }}>
-                                    Confirmer
+                                    Submit
                                 </Text>
                             </PrimaryButton>
-                            <Text ta="center" c={"dimmed"} fz={{ xl: 16, base: 14 }} mt="md">
-                                Vous voulez se connecter?{' '}
-                                <NavLink to={"/"} style={{ textDecoration: "none", color: colors.whiteBlackLabelTextColor[9] }}>
-                                    Cliquez ici
-                                </NavLink>
-                            </Text>
                         </Stack>
                     </form>
                 </Box>

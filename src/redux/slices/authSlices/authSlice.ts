@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AuthState } from '@/types/redux/AuthState';
 import axiosInstance from '@/config/AxiosInstance';
-import { forgetPasswordRequest, login, logout, retrieve } from './authSliceThunk';
+import { forgetPasswordRequest, login, logout, resetPassword, retrieve, verifyToken } from './authSliceThunk';
 
 
 const initialState: AuthState = {
@@ -110,7 +110,30 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.message = '';
             })
-
+            .addCase(verifyToken.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(verifyToken.fulfilled, (state) => {
+                state.isLoading = false;
+                state.message = '';
+            })
+            .addCase(verifyToken.rejected, (state) => {
+                state.isLoading = false;
+                state.message = '';
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(resetPassword.fulfilled, (state) => {
+                state.isLoading = false;
+                state.message = '';
+            })
+            .addCase(resetPassword.rejected, (state) => {
+                state.isLoading = false;
+                state.message = '';
+            })
     }
 });
 

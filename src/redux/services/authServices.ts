@@ -1,6 +1,5 @@
 import axiosInstance from "@/config/AxiosInstance";
 
-
 const API_PREFIX = "auth/"
 
 const login = async (user: UserAuth) => {
@@ -37,12 +36,32 @@ const forgetPasswordRequest = async (values: { email: string }) => {
     return data
 };
 
+const verifyToken = async (values: { token: string }) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + "token/verify/",
+        data: values
+    });
+    return data
+};
+
+const resetPassword = async (values: resetPasswordRequest) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + "reset/password/",
+        data: values
+    });
+    return data
+};
+
 
 const authServices = {
     login,
     logout,
     retrieve,
-    forgetPasswordRequest
+    forgetPasswordRequest,
+    verifyToken,
+    resetPassword
 };
 
 export default authServices;

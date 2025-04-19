@@ -10,6 +10,7 @@ export const PATH_AUTH = {
     login: path(ROOTS_AUTH, '/login'),
     register: path(ROOTS_AUTH, '/register'),
     forgetPassword: path(ROOTS_AUTH, '/forget-password'),
+    resetPassword: path(ROOTS_AUTH, '/reset/password/:token'),
 }
 
 export const PATH_APP = {

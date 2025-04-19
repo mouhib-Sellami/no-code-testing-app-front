@@ -52,3 +52,15 @@ export const retrieve = createAsyncThunk('auth/retrieve', async (_, thunkAPI) =>
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+export const forgetPasswordRequest = createAsyncThunk('auth/forgetPasswordRequest', async (data: { email: string }, thunkAPI) => {
+    try {
+        const response = await authServices.forgetPasswordRequest(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

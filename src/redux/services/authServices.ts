@@ -28,11 +28,21 @@ const retrieve = async () => {
     return data
 };
 
+const forgetPasswordRequest = async (values: { email: string }) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + "find/email/",
+        data: values
+    });
+    return data
+};
+
 
 const authServices = {
     login,
     logout,
-    retrieve
+    retrieve,
+    forgetPasswordRequest
 };
 
 export default authServices;

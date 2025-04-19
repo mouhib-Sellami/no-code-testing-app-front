@@ -22,7 +22,7 @@ const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, 
                     background: colors.mainContentColor[9]
                 },
                 content: {
-                    position: "relative"
+                    position: "relative",
                 },
                 title: {
                     fontSize: 20,
@@ -35,7 +35,7 @@ const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, 
                 },
                 body: {
                     background: colors.mainContentColor[9],
-                    padding: 0
+                    padding: 24
                 }
             }}
 

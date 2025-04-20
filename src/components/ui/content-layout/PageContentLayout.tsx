@@ -1,6 +1,7 @@
-import { Box, Stack } from "@mantine/core";
+import { Box } from "@mantine/core";
 import React, { PropsWithChildren } from "react";
 import ContentHeaderLayout, { ContentHeaderLayoutProps } from "./ContentHeaderLayout";
+import PageContentWrapper from "./PageContentWrapper";
 
 export interface PageContentLayoutProps extends PropsWithChildren, ContentHeaderLayoutProps {
 
@@ -9,13 +10,13 @@ export interface PageContentLayoutProps extends PropsWithChildren, ContentHeader
 const PageContentLayout: React.FC<PageContentLayoutProps> = (props) => {
     const { children, ...item } = props;
     return (
-        <Box w={"100%"} h={"100%"} px={"md"} pos={"relative"}>
+        <Box w={"100%"} h={"100%"} pr={"lg"} pt={"lg"}>
             <ContentHeaderLayout
                 {...item}
             />
-            <Stack p={0} m={0} w={"100%"} mt={"md"} gap={20}>
+            <PageContentWrapper>
                 {children}
-            </Stack>
+            </PageContentWrapper>
         </Box>
     )
 }

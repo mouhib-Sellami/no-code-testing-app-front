@@ -2,9 +2,11 @@ import React from "react";
 import OrganizationDetailsForm from "@/components/forms/auth/register/OrganizationDetailsForm";
 import UserDetailsForm from "@/components/forms/auth/register/UserDetailsForm";
 import AuthLayout from "@/constants/layout/auth/AuthLayout";
-import { Center, rem, Stack, Stepper } from "@mantine/core";
+import { Center, rem, Stack, Stepper, Text, useMantineTheme } from "@mantine/core";
 import useFormDataFormatter from "@/hooks/useFormDataFormatter";
 import { SessionContext } from "@/contexts/SessionContext";
+import { NavLink } from "react-router";
+import { PATH_AUTH } from "@/routes/paths";
 
 const RegisterPage: React.FC = ({ }) => {
     const [active, setActive] = React.useState(0);
@@ -12,6 +14,7 @@ const RegisterPage: React.FC = ({ }) => {
     const [organizationDetails, setOrganizationDetails] = React.useState<OrganizationDetailsRegisterForm | null>(null);
     const { isLoading, register } = React.useContext(SessionContext);
     const { jsonToFormData } = useFormDataFormatter();
+    const { colors } = useMantineTheme();
 
     const onNext = React.useCallback((data) => {
         setUserDetails(data);
@@ -41,6 +44,12 @@ const RegisterPage: React.FC = ({ }) => {
                             <OrganizationDetailsForm isLoading={isLoading} data={organizationDetails} onSubmit={submit} onPrev={onPrev} />
                         </Stepper.Step>
                     </Stepper>
+                    <Text ta="center" c={"dimmed"} size='sm' mt="md">
+                        Already have an account ?{' '}
+                        <NavLink to={PATH_AUTH.login} style={{ textDecoration: "none", color: colors.primary[9] }}>
+                            Click here
+                        </NavLink>
+                    </Text>
                 </Stack>
             </Center>
         </AuthLayout>

@@ -190,22 +190,15 @@ const theme = createTheme({
         fontWeight: "200",
         textWrap: 'wrap',
         sizes: {
-            h1: { fontSize: rem(36) },
-            h2: { fontSize: rem(34) }
+            h1: { fontSize: rem(32) },
+            h2: { fontSize: rem(28) },
+            h3: { fontSize: rem(24) },
+            h4: { fontSize: rem(20) },
+            h5: { fontSize: rem(16) },
+            h6: { fontSize: rem(14) }
         }
     },
     components: {
-        'SegmentedControl': {
-            styles: {
-                root: {
-                    background: "var(--mantine-color-activeLinkBgColor-9)"
-                },
-                indicator: {
-                    background: "var(--mantine-color-sideNavBar-9)",
-                    margin: 0
-                }
-            }
-        },
         'Text': {
             styles: {
                 root: {

@@ -7,7 +7,6 @@ import NavbarHeader from './navbar/NavbarHeader';
 import { useEffect, useRef } from 'react';
 import { navLinks } from './navbar/navLinks';
 
-
 export function DashboardLayout() {
     const [opened] = useDisclosure();
     const theme = useMantineTheme();
@@ -15,20 +14,18 @@ export function DashboardLayout() {
     const { pathname } = useLocation();
     const mainRef = useRef<HTMLDivElement>(null);
 
-
     useEffect(() => {
         if (mainRef.current) {
-            mainRef.current.scrollTo({ top: 0, behavior: "instant" });
+            mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
         }
     }, [pathname]);
 
     return (
         <AppShell
-
             layout="alt"
             header={{ height: 0, offset: true, collapsed: !pinned }}
             navbar={{
-                width: px("15rem"),
+                width: px("17rem"),
                 breakpoint: 'sm',
                 collapsed: { mobile: !opened }
             }}
@@ -43,6 +40,7 @@ export function DashboardLayout() {
                 }}
             >
                 <Stack style={{
+                    width: "100%",
                     height: "100%",
                     borderWidth: 1,
                     padding: 10,
@@ -62,8 +60,19 @@ export function DashboardLayout() {
                     </AppShell.Section>
                 </Stack>
             </AppShell.Navbar>
-            <AppShell.Main bg={theme.colors.mainContentColor[9]} m={0} my={5} ref={mainRef} py={0} pt={"md"}>
-                <Outlet />
+            <AppShell.Main bg={theme.colors.mainContentColor[9]} styles={{
+                main: {
+
+                    margin: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingRight: 0,
+                    // paddingLeft: px("15rem"),
+                }
+            }}>
+                <Box style={{ height: '100vh', overflow: 'auto' }} m={0} ref={mainRef} p={0}>
+                    <Outlet />
+                </Box>
             </AppShell.Main>
         </AppShell >
     );

@@ -1,4 +1,5 @@
 // import useAuth from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { PATH_APP } from '@/routes/paths';
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router';
@@ -8,10 +9,9 @@ interface GuestGuardProps {
 }
 
 const GuestGuard: React.FC<GuestGuardProps> = ({ children }) => {
-    // const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
 
-    // return isAuthenticated ? <Navigate to={PATH_APP.general.dashboard.home} /> : children;
-    return children;
+    return isAuthenticated ? <Navigate to={PATH_APP.general.dashboard.home} /> : children;
 }
 
 export default GuestGuard;

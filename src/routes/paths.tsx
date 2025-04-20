@@ -10,6 +10,7 @@ export const PATH_AUTH = {
     login: path(ROOTS_AUTH, '/login'),
     register: path(ROOTS_AUTH, '/register'),
     forgetPassword: path(ROOTS_AUTH, '/forget-password'),
+    resetPassword: path(ROOTS_AUTH, '/reset/password/:token'),
 }
 
 export const PATH_APP = {
@@ -17,6 +18,10 @@ export const PATH_APP = {
     general: {
         dashboard: {
             home: path(ROOTS_APP, '/dashboard'),
+            users: path(ROOTS_APP, '/members'),
+            projects: path(ROOTS_APP, '/projects'),
+            organization: path(ROOTS_APP, '/organization'),
+            roles: path(ROOTS_APP, '/privilege'),
         },
         notFound: path(ROOTS_APP, '/404')
     }

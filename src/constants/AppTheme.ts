@@ -27,8 +27,8 @@ const theme = createTheme({
         green: colorsTuple("#067647"),
         grayLogin: colorsTuple("#94979C"),
         darkGray: colorsTuple("#292929"),
-        primaryColor: colorsTuple("#7F56D9"),
-        secondary: colorsTuple("#18586F"),
+        primaryColor: colorsTuple("#ba2d0b"),
+        secondary: colorsTuple("#ba2d0b"),
         primary: virtualColor({
             name: "primary",
             dark: "primaryColor",
@@ -87,7 +87,7 @@ const theme = createTheme({
 
         primaryButtonColor: virtualColor({
             name: "primaryButtonColor",
-            dark: "primaryButtonDarkColor",
+            dark: "primary",
             light: "primaryButtonLightColor"
         }),
 
@@ -190,22 +190,15 @@ const theme = createTheme({
         fontWeight: "200",
         textWrap: 'wrap',
         sizes: {
-            h1: { fontSize: rem(36) },
-            h2: { fontSize: rem(34) }
+            h1: { fontSize: rem(32) },
+            h2: { fontSize: rem(28) },
+            h3: { fontSize: rem(24) },
+            h4: { fontSize: rem(20) },
+            h5: { fontSize: rem(16) },
+            h6: { fontSize: rem(14) }
         }
     },
     components: {
-        'SegmentedControl': {
-            styles: {
-                root: {
-                    background: "var(--mantine-color-activeLinkBgColor-9)"
-                },
-                indicator: {
-                    background: "var(--mantine-color-sideNavBar-9)",
-                    margin: 0
-                }
-            }
-        },
         'Text': {
             styles: {
                 root: {
@@ -252,7 +245,7 @@ const theme = createTheme({
                 }
             }
         },
-        'TextInput': {
+        'InputWrapper': {
             styles: {
                 label: {
                     fontSize: 14,
@@ -264,88 +257,31 @@ const theme = createTheme({
                 root: {
                     marginBottom: "0.3rem",
                 },
-                input: {
-                    // height: 44,
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
             }
         },
-        'PasswordInput': {
+        'Input': {
             styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
                 root: {
                     marginBottom: "0.3rem",
                 },
                 input: {
-                    // height: 44,
+                    height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
+                },
             }
         },
-        'Select': {
+
+        'Grid': {
             styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
+                col: {
+                    paddingTop: 0,
+                    paddingBottom: 0
                 },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    // height: 44,
-                    // fontSize: 14,
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
-            }
-        },
-        'MultiSelect': {
-            styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    // height: 44,
-                    // fontSize: 14,
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
-            }
-        },
-        'DateInput': {
-            styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    // height: 44,
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
+                inner: {
+                    height: "100%",
+                    marginTop: 0,
+                    marginBottom: 0
                 }
             }
         }

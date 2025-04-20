@@ -1,66 +1,115 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { RootState, dispatch, useSelector } from '@/redux/store';
-// import useAuth from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
+import { login, logout, retrieve, signup } from '@/redux/slices/authSlices/authSliceThunk';
+import { User } from '@/types/models/User';
+import secureLocalStorage from 'react-secure-storage';
+import { handleNewTenant } from '@/redux/slices/TenantSlice/TenantSlice';
+import { loginResponse } from '@/types/response/authResponses';
+import { useSearchParams } from 'react-router-dom';
 
 type SessionContextProps = {
     signIn: (data: UserAuth) => Promise<any>;
+    register: (data: FormData) => Promise<any>;
     signOut: () => Promise<void>;
+    retrieveUser: () => Promise<any>;
     isLoading: boolean;
     isAuthenticated: boolean;
-    user: User | null,
-}
+    user: User | null;
+};
 
 type SessionProviderProps = {
     children?: ReactNode;
-}
+};
 
-const SessionContext = createContext<Partial<SessionContextProps>>({});
+const SessionContext = createContext<Partial<SessionContextProps>>({
+    isAuthenticated: false,
+    isLoading: false,
+    signIn: (_: UserAuth) => null,
+    register: (_: FormData) => null,
+    signOut: () => null,
+    retrieveUser: () => null,
+});
 
 const SessionProvider = ({ children }: SessionProviderProps) => {
-    // const { isLoading, user, isAuthenticated } = useAuth();
-    const { isAlive } = useSelector(
-        (state: RootState) => state.session
-    )
+    const { isLoading, user, isAuthenticated } = useAuth();
+    const [searchParams] = useSearchParams();
+    const { isAlive } = useSelector((state: RootState) => state.session);
+
+    const TOKEN = React.useMemo(() => {
+        return (
+            searchParams.get('token') ||
+            secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+        );
+    }, [searchParams]);
+
+    const isRedirecting = React.useMemo(() => {
+        return searchParams.has('next') && searchParams.has('action') && searchParams.has('token');
+    }, [searchParams]);
 
     useEffect(() => {
-        if (!isAlive) {
-            signOut().then().catch()
+        if (!isAlive && !isRedirecting) {
+            signOut().then().catch();
         }
-    }, [isAlive])
+    }, [isAlive, TOKEN, isRedirecting, searchParams]);
 
     const signIn = useCallback(async (data: UserAuth) => {
-        // const res = await dispatch(login(data))
-        // return res
-    }, [])
+        const res = await dispatch(login(data));
+        if (res.meta.requestStatus === 'fulfilled') {
+            const { organization } = res.payload as loginResponse;
+            dispatch(handleNewTenant(organization));
+        }
+        return res;
+    }, []);
+
+    const register = useCallback(async (data: FormData) => {
+        const res = await dispatch(signup(data));
+        if (res.meta.requestStatus === 'fulfilled') {
+            const { organization } = res.payload as loginResponse;
+            dispatch(handleNewTenant(organization));
+        } else {
+            console.log(res.payload);
+        }
+        return res;
+    }, []);
 
     const signOut = useCallback(async () => {
-        // await dispatch(logout())
-    }, [])
+        await dispatch(logout());
+    }, []);
 
-    // const fetchUserDetails = React.useCallback(async () => {
-    //     if (!user)
-    //         return      
-    //     // await dispatch(getUserDetails(user.id))
-    // }, [user])
+    const retrieveUser = useCallback(async () => {
+        const res = await dispatch(retrieve());
+        return res
+    }, []);
 
-    // React.useEffect(() => {
-    //     if (isAuthenticated && isAlive) {
-    //         fetchUserDetails();
-    //     }
-    // }, [isAlive, isAuthenticated])
+    useEffect(() => {
+        if (isAlive && TOKEN && !isRedirecting) {
+            retrieveUser();
+        }
+    }, [isAlive, TOKEN, isRedirecting]);
+
+    useEffect(() => {
+        if (isAlive) {
+            retrieveUser();
+        }
+    }, [isAlive,]);
+
     return (
         <SessionContext.Provider
             value={{
-                // isLoading,
-                // user,
-                // isAuthenticated,
+                isLoading,
+                user,
+                isAuthenticated,
+                retrieveUser,
                 signOut,
                 signIn,
-            }}>
+                register
+            }}
+        >
             {children}
         </SessionContext.Provider>
     );
-}
+};
 
 export const useSession = () => {
     const context = useContext(SessionContext);
@@ -70,6 +119,6 @@ export const useSession = () => {
         }
     }
     return context;
-}
+};
 
-export default SessionProvider;
+export { SessionProvider, SessionContext };

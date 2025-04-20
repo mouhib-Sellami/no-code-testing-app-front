@@ -50,6 +50,7 @@ const ResetPasswordForm: React.FC = ({ }) => {
             password: (value) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(value) ? null : 'Invalid password'),
             confirm_password: (value, values) => value == values.password ? null : "Password mismatch"
         },
+        enhanceGetInputProps: () => ({ disabled: isLoading }),
     });
 
     const submit = React.useCallback(async (values: resetPasswordRequest) => {
@@ -84,7 +85,6 @@ const ResetPasswordForm: React.FC = ({ }) => {
                     <form onSubmit={form.onSubmit((values) => submit(values))} style={{ width: "100%" }}>
                         <Stack w={"100%"} gap={"sm"}>
                             <PasswordInput
-                                disabled={isLoading}
                                 required
                                 withAsterisk
                                 label="Password"
@@ -95,14 +95,12 @@ const ResetPasswordForm: React.FC = ({ }) => {
                                 radius="md"
                             />
                             <PasswordInput
-                                disabled={isLoading}
                                 required
                                 withAsterisk
                                 label="Confirm Password"
                                 placeholder="Confirm Password"
                                 key={form.key('confirm_password')}
                                 {...form.getInputProps('confirm_password')}
-                                error={form.errors.confirm_password}
                                 radius="md"
                             />
                             <PrimaryButton h={44} type='submit' loading={isLoading}>

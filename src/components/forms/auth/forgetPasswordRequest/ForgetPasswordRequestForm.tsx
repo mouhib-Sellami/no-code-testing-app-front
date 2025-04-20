@@ -27,6 +27,7 @@ const ForgetPasswordRequestForm: React.FC = ({ }) => {
         validate: {
             email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         },
+        enhanceGetInputProps: () => ({ disabled: isLoading }),
     });
 
     const submit = React.useCallback(async (values) => {

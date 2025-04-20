@@ -28,6 +28,14 @@ export default function AppRoutes() {
             ),
         },
         {
+            path: PATH_AUTH.register,
+            element: (
+                <GuestGuard>
+                    <RegisterPage />
+                </GuestGuard>
+            ),
+        },
+        {
             path: PATH_AUTH.forgetPassword,
             element: (
                 <GuestGuard>
@@ -101,6 +109,7 @@ export default function AppRoutes() {
 
 // AUTH
 const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
+const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));
 const ForgetPasswordRequest = Loadable(lazy(() => import('@pages/auth/forget-password/ForgetPasswordRequest')));
 const ResetPasswordRequest = Loadable(lazy(() => import('@pages/auth/forget-password/ResetPasswordRequest')));
 // const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));

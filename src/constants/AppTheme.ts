@@ -252,7 +252,7 @@ const theme = createTheme({
                 }
             }
         },
-        'TextInput': {
+        'InputWrapper': {
             styles: {
                 label: {
                     fontSize: 14,
@@ -261,6 +261,13 @@ const theme = createTheme({
                     fontFamily: "inter",
                     fontWeight: 500,
                 },
+                root: {
+                    marginBottom: "0.3rem",
+                },
+            }
+        },
+        'Input': {
+            styles: {
                 root: {
                     marginBottom: "0.3rem",
                 },
@@ -268,82 +275,20 @@ const theme = createTheme({
                     height: "2.5rem",
                     background: "transparent",
                     borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
+                },
             }
         },
-        'PasswordInput': {
+
+        'Grid': {
             styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
+                col: {
+                    paddingTop: 0,
+                    paddingBottom: 0
                 },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    height: "2.5rem",
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
-            }
-        },
-        'Select': {
-            styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    height: "2.5rem",
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
-            }
-        },
-        'MultiSelect': {
-            styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    minHight: "2.5rem",
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
-                }
-            }
-        },
-        'DateInput': {
-            styles: {
-                label: {
-                    fontSize: 14,
-                    color: "var(--mantine-color-whiteBlackLabelTextColor-9)",
-                    marginBottom: 8,
-                    fontFamily: "inter",
-                    fontWeight: 500,
-                },
-                root: {
-                    marginBottom: "0.3rem",
-                },
-                input: {
-                    height: "2.5rem",
-                    background: "transparent",
-                    borderColor: "var(--mantine-color-dividerBorderColorDark-9)",
+                inner: {
+                    height: "100%",
+                    marginTop: 0,
+                    marginBottom: 0
                 }
             }
         }

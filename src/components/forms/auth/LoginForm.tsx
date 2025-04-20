@@ -2,8 +2,9 @@ import React from "react";
 import { Center, Checkbox, Group, Loader, PasswordInput, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import { useForm } from '@mantine/form';
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { SessionContext } from "@/contexts/SessionContext";
+import { PATH_AUTH } from "@/routes/paths";
 
 const LoginForm: React.FC = ({ }) => {
     const { colors } = useMantineTheme();
@@ -19,6 +20,7 @@ const LoginForm: React.FC = ({ }) => {
             username: (val: string) => (val.length > 0 ? null : "username Invalid."),
             password: (val: string) => (val.length >= 4 ? null : "Password invalid.")
         },
+        enhanceGetInputProps: () => ({ disabled: isLoading }),
     });
 
     const submit = React.useCallback(async (values: UserAuth) => {
@@ -61,15 +63,17 @@ const LoginForm: React.FC = ({ }) => {
                                 </Text>
                             </Link>
                         </Group>
-                        <PrimaryButton type='submit'>
-                            {isLoading ?
-                                <Loader color="white" size={"sm"} />
-                                :
-                                <Text size='md' fz={{ xl: 16, lg: 14, md: 12 }}>
-                                    Log in
-                                </Text>
-                            }
+                        <PrimaryButton type='submit' loading={isLoading}>
+                            <Text size='md' fz={{ xl: 16, lg: 14, md: 12 }}>
+                                Log in
+                            </Text>
                         </PrimaryButton>
+                        <Text ta="center" c={"dimmed"} size='sm' mt="md">
+                            Don't have an account ?{' '}
+                            <NavLink to={PATH_AUTH.register} style={{ textDecoration: "none", color: colors.primary[9] }}>
+                                Click here
+                            </NavLink>
+                        </Text>
                     </Stack>
                 </form>
             </Stack>

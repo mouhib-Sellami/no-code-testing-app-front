@@ -11,6 +11,11 @@ const login = async (user: UserAuth) => {
     return data
 };
 
+const signup = async (values: FormData) => {
+    const { data } = await axiosInstance.postForm(API_PREFIX + "signup/", values);
+    return data
+};
+
 const logout = async () => {
     const { data } = await axiosInstance({
         method: "POST",
@@ -57,6 +62,7 @@ const resetPassword = async (values: resetPasswordRequest) => {
 
 const authServices = {
     login,
+    signup,
     logout,
     retrieve,
     forgetPasswordRequest,

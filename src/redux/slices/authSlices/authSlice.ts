@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AuthState } from '@/types/redux/AuthState';
 import axiosInstance from '@/config/AxiosInstance';
-import { forgetPasswordRequest, login, logout, resetPassword, retrieve, verifyToken } from './authSliceThunk';
+import { forgetPasswordRequest, login, logout, resetPassword, retrieve, signup, verifyToken } from './authSliceThunk';
 
 
 const initialState: AuthState = {
@@ -48,6 +48,28 @@ const authSlice = createSlice({
                 state.message = '';
             })
             .addCase(login.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.user = null;
+                state.permissions = [];
+                state.isAuthenticated = false;
+            })
+            .addCase(signup.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(signup.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                state.permissions = action.payload.role.permissions;
+                state.role = action.payload.role;
+                state.organization = action.payload.organization;
+                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
+                axiosInstance.defaults.headers['Authorization'] = `Bearer ${action.payload.token}`;
+                state.message = '';
+            })
+            .addCase(signup.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.user = null;

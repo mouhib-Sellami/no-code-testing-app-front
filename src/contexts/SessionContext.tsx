@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect } from 'react';
 import { RootState, dispatch, useSelector } from '@/redux/store';
 import useAuth from '@/hooks/useAuth';
-import { login, logout, retrieve } from '@/redux/slices/authSlices/authSliceThunk';
+import { login, logout, retrieve, signup } from '@/redux/slices/authSlices/authSliceThunk';
 import { User } from '@/types/models/User';
 import secureLocalStorage from 'react-secure-storage';
 import { handleNewTenant } from '@/redux/slices/TenantSlice/TenantSlice';
@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 
 type SessionContextProps = {
     signIn: (data: UserAuth) => Promise<any>;
+    register: (data: FormData) => Promise<any>;
     signOut: () => Promise<void>;
     retrieveUser: () => Promise<any>;
     isLoading: boolean;
@@ -25,6 +26,7 @@ const SessionContext = createContext<Partial<SessionContextProps>>({
     isAuthenticated: false,
     isLoading: false,
     signIn: (_: UserAuth) => null,
+    register: (_: FormData) => null,
     signOut: () => null,
     retrieveUser: () => null,
 });
@@ -60,6 +62,17 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
         return res;
     }, []);
 
+    const register = useCallback(async (data: FormData) => {
+        const res = await dispatch(signup(data));
+        if (res.meta.requestStatus === 'fulfilled') {
+            const { organization } = res.payload as loginResponse;
+            dispatch(handleNewTenant(organization));
+        } else {
+            console.log(res.payload);
+        }
+        return res;
+    }, []);
+
     const signOut = useCallback(async () => {
         await dispatch(logout());
     }, []);
@@ -90,6 +103,7 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
                 retrieveUser,
                 signOut,
                 signIn,
+                register
             }}
         >
             {children}

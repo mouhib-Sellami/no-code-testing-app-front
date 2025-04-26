@@ -1,105 +1,136 @@
-// import useAppPermissions from "@/hooks/useAppPermissions";
-// import useAuth from "@/hooks/useAuth";
-// import { onError } from "@/redux/slices/errorSlice";
-// import { createOrgRoles, updateOrgRole } from "@/redux/slices/orgRoleSlice";
-// import { getAppPermissions } from "@/redux/slices/permissionSlice";
-// import { dispatch } from "@/redux/store";
-// import { Role } from "@/types/Role";
-// import { Button, Group, Modal, MultiSelect, Select, TextInput, Title } from "@mantine/core";
-// import { useForm } from "@mantine/form";
-// import React from "react";
+import React from "react";
+import { dispatch } from "@/redux/store";
+import { Checkbox, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { AppModalProps } from "../base-model/types";
+import BaseAppModal from "../base-model/BaseAppModal";
+import { updateRole } from "@/redux/slices/accessSlices/roleSliceBaseServices";
+import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
+import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
+import AppCard from "@/components/cards/AppCard";
+import { Role } from "@/types/models/Role";
+import useRoles from "@/hooks/useRoles";
+import useRoleFormatter from "@/hooks/roles/useRoleFormatter";
+import useAppHooks from "@/hooks/useAppHooks";
+export interface EditRoleModalProps extends AppModalProps {
+    role: Role
+}
 
+const EditRoleModal: React.FC<EditRoleModalProps> = (props) => {
+    const { isLoading } = useRoles();
+    const { formPermission, loadingPermissions, PERMISSION_GROUP_BY, checkPermissionSelection } = useRoleFormatter();
+    const { createAcronym } = useAppHooks();
 
-// export interface EditRoleModalProps extends BaseModalProps {
-//     role: Role,
-//     onUpdate: () => void
-// }
+    const initialValues = React.useMemo(() => {
+        if (props.role)
+            return {
+                id: props.role.id,
+                name: props.role.name,
+                slug: props.role.slug || createAcronym(props.role.name),
+                permissions: props.role.permissions.map(elm => elm.id?.toString())
+            }
+    }, [props.role])
 
-// const EditRoleModal: React.FC<EditRoleModalProps> = (props) => {
-//     const { permissions } = useAppPermissions();
-//     const { organization } = useAuth();
+    const form = useForm({
+        mode: 'controlled',
+        initialValues: initialValues,
+        enhanceGetInputProps: () => ({ disabled: isLoading }),
+        validate: {
+            name: (value) => (value.length == 0
+                ? 'name is required!' : null),
+            permissions: (value) => (value.length == 0 ? "Select permissions" : null)
+        },
+    });
 
-//     const permissionsOptions = React.useMemo(() => {
-//         return permissions.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.label }))
-//     }, [permissions])
+    const onSubmit = React.useCallback(async (values) => {
+        const res = await dispatch(updateRole(values))
+        if (res?.type == "roles/createOrgRoles/rejected") {
+            setTimeout(() => dispatch(onShowNotification({
+                content: "Cannot create role , try again later! ",
+                level: "WARNING",
+                render: "NOTIFICATION",
+                type: "user role"
+            })), 500)
+        } else {
+            props.onSubmit();
+            dispatch(onShowNotification({
+                content: "Role updated successfully !",
+                level: "SUCCESS",
+                render: "NOTIFICATION",
+                type: "user role"
+            }));
+        }
+    }, [])
 
-//     const fetchPermissions = React.useCallback(async () => {
-//         await dispatch(getAppPermissions())
-//     }, [])
+    const submit = React.useCallback(() => {
+        form.validate()
+        if (form.isValid()) {
+            onSubmit({ ...form.values, slug: createAcronym(form.values.name) })
+        }
+    }, [form])
 
-//     React.useEffect(() => {
-//         fetchPermissions().then().catch()
-//     }, [])
+    const onSelectPermission = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const id = e.target.value;
 
-//     const initialValues = React.useMemo(() => {
-//         if (organization && props.role)
-//             return {
-//                 id: props.role.id,
-//                 organization: organization.id,
-//                 name: props.role.name,
-//                 slug: props.role.slug,
-//                 permissions: props.role.permissions.map(elm => elm.id?.toString())
-//             }
-//     }, [organization, props.role])
+        const find = form.values.permissions.find(x => x == id);
+        let tmp = form.values.permissions;
+        console.log(find);
 
-//     const form = useForm({
-//         mode: 'controlled',
-//         initialValues: initialValues,
-//         validate: {
-//             name: (value) => (value.length == 0
-//                 ? 'name is required!' : null),
-//             permissions: (value) => (value.length == 0 ? "Select permissions" : null)
-//         },
-//     });
+        if (find) {
+            tmp = tmp.filter(elm => elm != id)
+        } else {
+            tmp.push(id)
+        }
+        form.setFieldValue('permissions', tmp)
+    }, [form.values])
 
-//     const onSubmit = React.useCallback(async (values) => {
-//         const res = await dispatch(updateOrgRole(values))
-//         if (res?.type == "roles/updateOrgRole/rejected") {
-//             setTimeout(() => dispatch(onError({
-//                 content: "Cannot update role , try again later! ",
-//                 level: "WARNING",
-//                 render: "NOTIFICATION",
-//                 type: "user creation"
-//             })), 500)
-//         } else {
-//             props.onUpdate()
+    return (
+        <BaseAppModal
+            {...props}
+            withCancelButton
+            size={"xl"}
+            title="Update role"
+            onCancel={() => props.onCancel()}
+            onSubmit={() => submit()}
+            SubmitButtonLoading={isLoading}
+        >
+            <Stack w={"100%"} gap={"sm"}>
+                <TextInput
+                    withAsterisk
+                    label="Name"
+                    placeholder="Role name"
+                    autoFocus
 
-//         }
-//     }, [props.role])
-//     return (
-//         <Modal size="xl"
-//             closeOnClickOutside
-//             opened={props.isVisible}
-//             onClose={props.onClose}
-//             centered>
-//             <Title style={{ textAlign: "center" }} order={3}>Edit Role</Title>
-//             <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
-//                 <TextInput
-//                     withAsterisk
-//                     label="Name"
-//                     placeholder="Role name"
-//                     autoFocus
+                    {...form.getInputProps('name')}
+                />
+                <TextInput
+                    readOnly
+                    withAsterisk
+                    label="Slug"
+                    value={createAcronym(form.values.name)}
+                    placeholder=""
+                />
+                <Stack w={"100%"} gap={"sm"}>
+                    <Text>Permissions</Text>
+                    <SimpleGrid cols={2} pos={"relative"} >
+                        {PERMISSION_GROUP_BY.length == 0 || loadingPermissions && <CustomLoadingOverlay />}
+                        {PERMISSION_GROUP_BY.map((elm, idx) => {
+                            return (
+                                <AppCard title={<Text tt={'capitalize'} >{elm.model}</Text>} key={idx}>
+                                    <SimpleGrid cols={2}>
+                                        {elm.permissions.map((per, index) => {
+                                            return (<Checkbox key={index} disabled={isLoading} label={formPermission(per.label)} checked={checkPermissionSelection(per.value, form)} value={per.value} styles={{ label: { fontSize: 14, textTransform: "capitalize" } }}
+                                                onChange={onSelectPermission} />)
+                                        })}
+                                    </SimpleGrid>
+                                </AppCard>
+                            )
+                        })}
+                    </SimpleGrid>
+                </Stack>
+            </Stack>
+        </BaseAppModal>
+    )
+}
 
-//                     {...form.getInputProps('name')}
-//                 />
-//                 <TextInput
-//                     withAsterisk
-//                     label="Slug"
-//                     placeholder=""
-//                     {...form.getInputProps('slug')}
-//                 />
-//                 <MultiSelect
-//                     label="Permissions"
-//                     placeholder="Pick value"
-//                     data={permissionsOptions}
-//                     {...form.getInputProps('permissions')}
-//                 />
-//                 <Group justify="center" mt="md">
-//                     <Button type="submit">Submit</Button>
-//                 </Group>
-//             </form>
-//         </Modal>
-//     )
-// }
-
-// export default EditRoleModal;
+export default EditRoleModal;

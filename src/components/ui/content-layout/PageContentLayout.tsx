@@ -10,7 +10,7 @@ export interface PageContentLayoutProps extends PropsWithChildren, ContentHeader
 const PageContentLayout: React.FC<PageContentLayoutProps> = (props) => {
     const { children, ...item } = props;
     return (
-        <Box w={"100%"} h={"100%"} pr={"lg"} pt={"lg"}>
+        <Box w={"100%"} h={"100%"} px={"md"}>
             <ContentHeaderLayout
                 {...item}
             />

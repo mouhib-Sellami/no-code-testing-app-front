@@ -1,6 +1,6 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { ActionIcon, Badge, Collapse, Group, ScrollArea, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Badge, Center, Collapse, Group, ScrollArea, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import { Role } from "@/types/models/Role";
 
@@ -53,7 +53,7 @@ const RoleDataTableConfig = (props: DataTableActions<Role>) => {
             },
             {
                 accessor: "name", title: "Name",
-                width: "10%"
+                width: "20%"
             },
             {
                 accessor: "slug", title: "slug",
@@ -61,15 +61,11 @@ const RoleDataTableConfig = (props: DataTableActions<Role>) => {
             },
             {
                 accessor: 'permissions', title: "Permissions", textAlign: 'center',
-                width: "40%",
+                width: "10%",
                 render: (role: Role) => (
-                    <SimpleGrid cols={3}>
-                        {/* {role.permissions.map(elm => {
-                            return (<Badge color={"primary"}>
-                                {elm.label}
-                            </Badge>)
-                        })} */}
-                    </SimpleGrid>
+                    <Center w={"100%"} h={"100%%"}>
+                        <Badge>{role.permissions.length} permissions</Badge>
+                    </Center>
                 )
             },
             {

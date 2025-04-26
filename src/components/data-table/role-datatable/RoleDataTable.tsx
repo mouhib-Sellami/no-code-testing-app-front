@@ -10,15 +10,21 @@ import { IconBackspace, IconEye, IconPencil, IconSearch } from "@tabler/icons-re
 import { dispatch } from "@/redux/store";
 import { deleteRole } from "@/redux/slices/accessSlices/roleSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import EditRoleModal from "@/components/modals/role-modals/EditRoleModal";
+import ViewRoleModal from "@/components/modals/role-modals/ViewRoleModal";
 
 const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, count, onChange, ...item }) => {
     const [page, setPage] = React.useState(1);
     const [RECORDS, setRECORDS] = React.useState<Array<Role>>(records.slice(0, DataTableConfig.MAX_PAGE_SIZE));
     const { openDeleteModal } = useConfirmModal();
     const [query, setQuery] = React.useState('');
+    const [selected, setSelected] = React.useState<Role | null>(null);
+    const [openForUpdate, { open: openUpdate, close: closeUpdate }] = useDisclosure(false);
+    const [openForView, { open: openView, close: closeView }] = useDisclosure(false);
+
     const [debouncedQuery] = useDebouncedValue(query, 200);
-    
+
     React.useEffect(() => {
         setRECORDS(
             records.filter(({ name }) => {
@@ -71,15 +77,17 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
             {
                 icon: IconPencil,
                 color: "gray",
-                action(record) {
-
+                action(record: Role) {
+                    setSelected(record);
+                    openUpdate();
                 },
             },
             {
                 icon: IconEye,
                 color: "gray",
-                action(record) {
-
+                action(record: Role) {
+                    setSelected(record);
+                    openView();
                 },
             },
         ]
@@ -104,6 +112,8 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                 />
             </Group>
             <AppDataTable isLoading={isLoading} columns={COLUMNS} pageSize={DataTableConfig.MAX_PAGE_SIZE} total={count} records={RECORDS} page={page} {...item} onPageChanges={(p) => { setPage(p) }} />
+            {openForUpdate && selected && <EditRoleModal role={selected} onCancel={closeUpdate} onSubmit={() => { onChange?.(); closeUpdate() }} visible={openForUpdate} />}
+            {openForView && selected && <ViewRoleModal role={selected} onCancel={closeView} onSubmit={() => { closeView() }} visible={openForView} />}
         </Box>
     )
 }

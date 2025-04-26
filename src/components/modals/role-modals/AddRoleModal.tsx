@@ -1,45 +1,37 @@
-import useAppPermissions from "@/hooks/useAppPermissions";
-import useAuth from "@/hooks/useAuth";
-import { dispatch } from "@/redux/store";
-import { Button, Group, MultiSelect, TextInput, Title } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import React from "react";
+import useAppPermissions from "@/hooks/useAppPermissions";
+import { dispatch } from "@/redux/store";
+import { Checkbox, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { AppModalProps } from "../base-model/types";
 import BaseAppModal from "../base-model/BaseAppModal";
 import { createRole } from "@/redux/slices/accessSlices/roleSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import { getAppPermissions } from "@/redux/slices/accessSlices/permissionSlice";
+import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
+import AppCard from "@/components/cards/AppCard";
+import useRoles from "@/hooks/useRoles";
+import useRoleFormatter from "@/hooks/roles/useRoleFormatter";
+import useAppHooks from "@/hooks/useAppHooks";
 
 
 const CreateRoleModal: React.FC<AppModalProps> = (props) => {
-    const { permissions } = useAppPermissions();
-    const { organization } = useAuth();
-
-    const permissionsOptions = React.useMemo(() => {
-        return permissions.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.label }))
-    }, [permissions])
-
-    const fetchPermissions = React.useCallback(async () => {
-        await dispatch(getAppPermissions())
-    }, [])
-
-    React.useEffect(() => {
-        fetchPermissions().then().catch()
-    }, [])
+    const { isLoading } = useRoles();
+    const { formPermission, loadingPermissions, PERMISSION_GROUP_BY, checkPermissionSelection } = useRoleFormatter();
+    const { createAcronym } = useAppHooks();
 
     const initialValues = React.useMemo(() => {
-        if (organization)
-            return {
-                organization: organization.id,
-                name: "",
-                slug: "",
-                permissions: []
-            }
-    }, [organization])
+        return {
+            name: "",
+            slug: "",
+            permissions: []
+        }
+    }, [])
 
     const form = useForm({
         mode: 'controlled',
         initialValues: initialValues,
+        enhanceGetInputProps: () => ({ disabled: isLoading }),
         validate: {
             name: (value) => (value.length == 0
                 ? 'name is required!' : null),
@@ -57,6 +49,12 @@ const CreateRoleModal: React.FC<AppModalProps> = (props) => {
                 type: "user creation"
             })), 500)
         } else {
+            dispatch(onShowNotification({
+                content: "Role created successfully !",
+                level: "SUCCESS",
+                render: "NOTIFICATION",
+                type: "user role"
+            }))
             props.onSubmit()
         }
     }, [])
@@ -64,39 +62,71 @@ const CreateRoleModal: React.FC<AppModalProps> = (props) => {
     const submit = React.useCallback(() => {
         form.validate()
         if (form.isValid()) {
-            onSubmit(form.values)
+            onSubmit({ ...form.values, slug: createAcronym(form.values.name) })
         }
     }, [form])
+
+    const onSelectPermission = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const id = e.target.value;
+
+        const find = form.values.permissions.find(x => x == id);
+        let tmp = form.values.permissions;
+        console.log(find);
+
+        if (find) {
+            tmp = tmp.filter(elm => elm != id)
+        } else {
+            tmp.push(id)
+        }
+        form.setFieldValue('permissions', tmp)
+    }, [form.values])
 
     return (
         <BaseAppModal
             {...props}
+            withCancelButton
+            size={"xl"}
             title="Create new role"
             onCancel={() => props.onCancel()}
             onSubmit={() => submit()}
+            SubmitButtonLoading={isLoading}
         >
-            <TextInput
-                withAsterisk
-                label="Name"
-                placeholder="Role name"
-                autoFocus
+            <Stack w={"100%"} gap={"sm"}>
 
-                {...form.getInputProps('name')}
-            />
-            <TextInput
-                withAsterisk
-                label="Slug"
-                placeholder=""
-                {...form.getInputProps('slug')}
-            />
-            <MultiSelect
-                searchable
-                label="Permissions"
-                placeholder="Pick value"
-                hidePickedOptions
-                data={permissionsOptions}
-                {...form.getInputProps('permissions')}
-            />
+                <TextInput
+                    withAsterisk
+                    label="Name"
+                    placeholder="Role name"
+                    autoFocus
+
+                    {...form.getInputProps('name')}
+                />
+                <TextInput
+                    readOnly
+                    withAsterisk
+                    label="Slug"
+                    value={createAcronym(form.values.name)}
+                    placeholder=""
+                />
+                <Stack w={"100%"} gap={"sm"}>
+                    <Text>Permissions</Text>
+                    <SimpleGrid cols={2} pos={"relative"}>
+                        {PERMISSION_GROUP_BY.length == 0 || loadingPermissions && <CustomLoadingOverlay />}
+                        {PERMISSION_GROUP_BY.map((elm, idx) => {
+                            return (
+                                <AppCard title={<Text tt={'capitalize'} >{elm.model}</Text>} key={idx}>
+                                    <SimpleGrid cols={2}>
+                                        {elm.permissions.map((per, index) => {
+                                            return (<Checkbox key={index} label={formPermission(per.label)} disabled={isLoading} checked={checkPermissionSelection(per.value, form)} value={per.value} styles={{ label: { fontSize: 14, textTransform: "capitalize" } }}
+                                                onChange={onSelectPermission} />)
+                                        })}
+                                    </SimpleGrid>
+                                </AppCard>
+                            )
+                        })}
+                    </SimpleGrid>
+                </Stack>
+            </Stack>
         </BaseAppModal>
     )
 }

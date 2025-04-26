@@ -1,89 +1,82 @@
-// import useAppPermissions from "@/hooks/useAppPermissions";
-// import useAuth from "@/hooks/useAuth";
-// import { onError } from "@/redux/slices/errorSlice";
-// import { createOrgRoles } from "@/redux/slices/orgRoleSlice";
-// import { getAppPermissions } from "@/redux/slices/permissionSlice";
-// import { dispatch } from "@/redux/store";
-// import { Role } from "@/types/Role";
-// import { Button, Group, Modal, MultiSelect, Select, TextInput, Title } from "@mantine/core";
-// import { useForm } from "@mantine/form";
-// import React from "react";
+import React from "react";
+import { Checkbox, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { AppModalProps } from "../base-model/types";
+import BaseAppModal from "../base-model/BaseAppModal";
+import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
+import AppCard from "@/components/cards/AppCard";
+import { Role } from "@/types/models/Role";
+import useRoles from "@/hooks/useRoles";
+import useRoleFormatter from "@/hooks/roles/useRoleFormatter";
 
+export interface ViewRoleModalProps extends AppModalProps {
+    role: Role
+}
 
-// export interface ViewRoleModalProps extends BaseModalProps {
-//     role: Role
-// }
+const ViewRoleModal: React.FC<ViewRoleModalProps> = (props) => {
+    const { isLoading } = useRoles();
+    const { formPermission, loadingPermissions, PERMISSION_GROUP_BY, checkPermissionSelection } = useRoleFormatter();
 
-// const ViewRoleModal: React.FC<ViewRoleModalProps> = (props) => {
-//     const { permissions } = useAppPermissions();
-//     const { organization } = useAuth();
+    const initialValues = React.useMemo(() => {
+        if (props.role)
+            return {
+                id: props.role.id,
+                name: props.role.name,
+                slug: props.role.slug,
+                permissions: props.role.permissions.map(elm => elm.id?.toString())
+            }
+    }, [props.role])
 
-//     const permissionsOptions = React.useMemo(() => {
-//         return permissions.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.label }))
-//     }, [permissions])
+    const form = useForm({
+        mode: 'controlled',
+        initialValues: initialValues,
+        enhanceGetInputProps: () => ({ disabled: true }),
+    });
 
-//     const fetchPermissions = React.useCallback(async () => {
-//         await dispatch(getAppPermissions())
-//     }, [])
+    return (
+        <BaseAppModal
+            {...props}
+            submitText={'Close'}
+            size={"xl"}
+            title="Role details"
+            onCancel={() => props.onCancel()}
+            SubmitButtonLoading={isLoading}
+        >
+            <Stack w={"100%"} gap={"sm"}>
+                <TextInput
+                    withAsterisk
+                    label="Name"
+                    placeholder="Role name"
+                    autoFocus
 
-//     React.useEffect(() => {
-//         fetchPermissions().then().catch()
-//     }, [])
+                    {...form.getInputProps('name')}
+                />
+                <TextInput
+                    withAsterisk
+                    label="Slug"
+                    placeholder=""
+                    {...form.getInputProps('slug')}
+                />
+                <Stack w={"100%"} gap={"sm"}>
+                    <Text>Permissions</Text>
+                    <SimpleGrid cols={2} pos={"relative"} >
+                        {PERMISSION_GROUP_BY.length == 0 || loadingPermissions && <CustomLoadingOverlay />}
+                        {PERMISSION_GROUP_BY.map((elm, idx) => {
+                            return (
+                                <AppCard title={<Text tt={'capitalize'} >{elm.model}</Text>} key={idx}>
+                                    <SimpleGrid cols={2}>
+                                        {elm.permissions.map((per, index) => {
+                                            return (<Checkbox key={index} disabled={true} label={formPermission(per.label)} checked={checkPermissionSelection(per.value, form)} value={per.value} styles={{ label: { fontSize: 14, textTransform: "capitalize" } }} />)
+                                        })}
+                                    </SimpleGrid>
+                                </AppCard>
+                            )
+                        })}
+                    </SimpleGrid>
+                </Stack>
+            </Stack>
+        </BaseAppModal>
+    )
+}
 
-//     const initialValues = React.useMemo(() => {
-//         if (organization && props.role)
-//             return {
-//                 organization: organization.id,
-//                 name: props.role.name,
-//                 slug: props.role.slug,
-//                 permissions: props.role.permissions.map(elm => elm.id?.toString())
-//             }
-//     }, [organization, props.role])
-
-//     const form = useForm({
-//         mode: 'controlled',
-//         initialValues: initialValues,
-//         validate: {
-//             name: (value) => (value.length == 0
-//                 ? 'name is required!' : null),
-//             permissions: (value) => (value.length == 0 ? "Select permissions" : null)
-//         },
-//     });
-//     return (
-//         <Modal size="xl"
-//             closeOnClickOutside
-//             opened={props.isVisible}
-//             onClose={props.onClose}
-//             centered>
-//             <Title style={{ textAlign: "center" }} order={3}>Role</Title>
-//             <form>
-//                 <TextInput
-//                     readOnly
-//                     disabled={true}
-//                     label="Name"
-//                     placeholder="Role name"
-//                     autoFocus
-
-//                     {...form.getInputProps('name')}
-//                 />
-//                 <TextInput
-//                     readOnly
-//                     disabled={true}
-//                     label="Slug"
-//                     placeholder=""
-//                     {...form.getInputProps('slug')}
-//                 />
-//                 <MultiSelect
-//                     readOnly
-//                     disabled={true}
-//                     label="Permissions"
-//                     data={permissionsOptions}
-//                     {...form.getInputProps('permissions')}
-//                 />
-
-//             </form>
-//         </Modal>
-//     )
-// }
-
-// export default ViewRoleModal;
+export default ViewRoleModal;

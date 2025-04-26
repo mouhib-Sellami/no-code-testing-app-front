@@ -261,9 +261,6 @@ const theme = createTheme({
         },
         'Input': {
             styles: {
-                root: {
-                    marginBottom: "0.3rem",
-                },
                 input: {
                     height: "2.5rem",
                     background: "transparent",

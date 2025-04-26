@@ -29,15 +29,15 @@ const RolePage: React.FC = ({ }) => {
                 <Group align="center" justify="space-between" w={"100%"}>
                     <Title order={5}>Organization roles 🪪</Title>
                     <PermissionGuard permission="can_create_role">
-                    <ActionIcon onClick={() => open()} variant="filled" aria-label="Create new role">
-                        <IconPlus style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                    </ActionIcon>
+                        <ActionIcon onClick={() => open()} variant="filled" aria-label="Create new role">
+                            <IconPlus style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                        </ActionIcon>
                     </PermissionGuard>
                 </Group>}
                 permission="can_view_all_role">
                 <RoleDataTable
                     onChange={fetchRolesData}
-                    height={400}
+                    height={350}
                     count={ROLE_STATES.roles.length}
                     records={ROLE_STATES.roles}
                     isLoading={ROLE_STATES.isLoading}

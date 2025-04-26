@@ -34,7 +34,7 @@ const AppCard: React.FC<AppCardProps> = (props) => {
             <Box w={"100%"} h={"100%"} p={!withoutPadding ? "md" : 0} hidden={!contentHeader}>
                 {contentHeader}
             </Box>
-            <Box w={"100%"} h={"100%"}>
+            <Box w={"100%"} h={"100%"} p={!withoutPadding ? "md" : 0}>
                 <PermissionGuardAlert permission={permission}>
                     {children}
                 </PermissionGuardAlert>

@@ -89,6 +89,14 @@ export default function AppRoutes() {
                             <RolePage />
                         </PermissionGuardRedirection>
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.users,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_user">
+                            <UsersPage />
+                        </PermissionGuardRedirection>
+                    )
                 }
             ]
         },
@@ -112,13 +120,15 @@ const LoginPage = Loadable(lazy(() => import('@pages/auth/login/LoginPage')));
 const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));
 const ForgetPasswordRequest = Loadable(lazy(() => import('@pages/auth/forget-password/ForgetPasswordRequest')));
 const ResetPasswordRequest = Loadable(lazy(() => import('@pages/auth/forget-password/ResetPasswordRequest')));
-// const RegisterPage = Loadable(lazy(() => import('@pages/auth/register/RegisterPage')));
-// const ForgetPasswordPage = Loadable(lazy(() => import('@/pages/auth/reset-password/ResetPasswordPage')));
 
 //HOME
 const HomePage = Loadable(lazy(() => import('@/pages/dashboard/home/HomePage')));
+
 // ROLES
 const RolePage = Loadable(lazy(() => import('@/pages/dashboard/roles/RolesPage')));
+
+//USERS
+const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage')));
 
 //OTHER
 const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));

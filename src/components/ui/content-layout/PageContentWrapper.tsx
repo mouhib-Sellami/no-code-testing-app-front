@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from "react";
 
 const PageContentWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     return (
-        <Stack p={0} m={0} w={"100%"} gap={"xl"}>
+        <Stack p={0} pb={5} m={0} w={"100%"} gap={"xl"}>
             {children}
         </Stack>
     )

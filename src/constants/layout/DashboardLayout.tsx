@@ -25,7 +25,7 @@ export function DashboardLayout() {
             layout="alt"
             header={{ height: 0, offset: true, collapsed: !pinned }}
             navbar={{
-                width: px("17rem"),
+                width: px("16.3rem"),
                 breakpoint: 'sm',
                 collapsed: { mobile: !opened }
             }}
@@ -40,7 +40,6 @@ export function DashboardLayout() {
                 }}
             >
                 <Stack style={{
-                    width: "100%",
                     height: "100%",
                     borderWidth: 1,
                     padding: 10,
@@ -64,13 +63,11 @@ export function DashboardLayout() {
                 main: {
 
                     margin: 0,
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    paddingRight: 0,
-                    // paddingLeft: px("15rem"),
+                    padding: 0,
+                    paddingLeft: px("16.3rem"),
                 }
             }}>
-                <Box style={{ height: '100vh', overflow: 'auto' }} m={0} ref={mainRef} p={0}>
+                <Box style={{ height: '100vh', overflow: 'auto' }} m={0} pt={"xl"} px={"sm"}>
                     <Outlet />
                 </Box>
             </AppShell.Main>

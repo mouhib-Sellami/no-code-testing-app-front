@@ -4,7 +4,7 @@ import { onShowNotification } from "../notificationSlice/notificationSlice";
 import authServices from "@/redux/services/authServices";
 import { loginResponse } from "@/types/response/authResponses";
 import secureLocalStorage from "react-secure-storage";
-import { handleNewSession, handleSessionExpired } from "../sessionSlice/sessionSlice";
+import { handleNewSession } from "../sessionSlice/sessionSlice";
 
 export const login = createAsyncThunk('auth/login', async (data: UserAuth, thunkAPI) => {
     try {

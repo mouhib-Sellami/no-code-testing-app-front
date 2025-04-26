@@ -1,13 +1,42 @@
 import AppCard from "@/components/cards/AppCard";
+import UserDataTable from "@/components/data-table/user-dataTable/UserDataTable";
 import PageContentLayout from "@/components/ui/content-layout/PageContentLayout";
+import DataTableConfig from "@/config/DataTableConfig";
 import PermissionGuard from "@/guards/PermissionGuard";
+import useUsers from "@/hooks/useUsers";
+import { fetchUsers } from "@/redux/slices/userSlice/userSliceBaseServices";
+import { dispatch } from "@/redux/store";
 import { ActionIcon, Group, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 
 const UsersPage: React.FC = ({ }) => {
+    const USER_STATE = useUsers();
     const [opened, { open, close }] = useDisclosure();
+    const [page, setPage] = React.useState(1);
+    const [query, setQuery] = React.useState("");
+
+    const fetchUsersData = React.useCallback(async () => {
+        await dispatch(fetchUsers({
+            p: page,
+            max_page: DataTableConfig.MAX_PAGE_SIZE,
+            search: query
+        }))
+    }, [page, query])
+
+    React.useEffect(() => {
+        fetchUsersData()
+    }, [page, query])
+
+    const onPageChanges = React.useCallback((p: number) => {
+        setPage(c => c + 1)
+    }, [])
+
+    const onQuerySearch = React.useCallback((query: string) => {
+        setPage(1)
+        setQuery(query)
+    }, [])
 
     return (
         <PageContentLayout title={`Organization Members`}>
@@ -21,6 +50,7 @@ const UsersPage: React.FC = ({ }) => {
                     </PermissionGuard>
                 </Group>}
             >
+                <UserDataTable height={350} isLoading={USER_STATE.isLoading} records={USER_STATE.users} count={USER_STATE.count} onChange={fetchUsersData} onPageChanges={onPageChanges} onQuerySearch={onQuerySearch} />
             </AppCard>
         </PageContentLayout>
     )

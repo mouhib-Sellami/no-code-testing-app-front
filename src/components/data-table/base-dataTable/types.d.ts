@@ -8,7 +8,7 @@ export interface CustomDataTableProps {
     columns: Array<DataTableColumn>,
     records: Array<Record>,
     total: number,
-    height ?: number,
+    height?: number,
     count?: number;
     isLoading: boolean,
     page?: number;
@@ -37,6 +37,7 @@ export type AppDataTableProps<T> = {
     onChange?: () => void,
     count: number,
     onPageChanges?: (p: number) => void,
-    height?: number
+    height?: number,
+    onQuerySearch?: (query: string) => void
 }
 

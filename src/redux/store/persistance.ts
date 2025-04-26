@@ -9,6 +9,7 @@ import TenantReducer from "@/redux/slices/TenantSlice/TenantSlice";
 import permissionReducer from "@/redux/slices/accessSlices/permissionSlice";
 import roleReducer from "@/redux/slices/accessSlices/roleSlice";
 import authReducer from "@/redux/slices/authSlices/authSlice";
+import userReducer from "@/redux/slices/userSlice/userSlice";
 
 const encrypts = encryptTransform({
     secretKey: import.meta.env.VITE_REDUX_SECURE_STORAGE_HASH_KEY,
@@ -75,6 +76,13 @@ const RolesPersistConfig = {
     whitelist: ['roles'],
 };
 
+const UsersPersistConfig = {
+    key: 'roles',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: ['roles'],
+};
+
 
 const rootReducer = combineReducers({
     appConfigs: persistReducer(appConfigPersistenceConfig, appConfigReducer),
@@ -84,7 +92,7 @@ const rootReducer = combineReducers({
     tenant: persistReducer(TenantPersistConfig, TenantReducer),
     permissions: persistReducer(PermissionsPersistConfig, permissionReducer),
     roles: persistReducer(RolesPersistConfig, roleReducer),
-
+    users: persistReducer(UsersPersistConfig, userReducer),
 })
 
 export { rootPersistConfig, rootReducer };

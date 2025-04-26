@@ -1,6 +1,6 @@
 import React from "react";
 import DataTableConfig from "@/config/DataTableConfig";
-import { Box, Group, TextInput } from "@mantine/core";
+import { Box, Group, px, TextInput } from "@mantine/core";
 import AppDataTable from "../base-dataTable/AppDataTable";
 import { AppDataTableProps } from "../base-dataTable/types";
 import { Role } from "@/types/models/Role";
@@ -108,7 +108,7 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                     onChange={(e) => setQuery(e.currentTarget.value)}
                     placeholder="search Role"
                     withErrorStyles={false}
-                    leftSection={<IconSearch />}
+                    leftSection={<IconSearch size={px("1.3rem")} />}
                 />
             </Group>
             <AppDataTable isLoading={isLoading} columns={COLUMNS} pageSize={DataTableConfig.MAX_PAGE_SIZE} total={count} records={RECORDS} page={page} {...item} onPageChanges={(p) => { setPage(p) }} />

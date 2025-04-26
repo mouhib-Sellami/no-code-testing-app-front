@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AuthState } from '@/types/redux/AuthState';
 import axiosInstance from '@/config/AxiosInstance';
 import { forgetPasswordRequest, login, logout, resetPassword, retrieve, signup, verifyToken } from './authSliceThunk';
+import secureLocalStorage from 'react-secure-storage';
 
 
 const initialState: AuthState = {
@@ -97,6 +98,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 state.permissions = [];
+                secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
             })
             .addCase(logout.pending, (state) => {
                 state.isLoading = true;

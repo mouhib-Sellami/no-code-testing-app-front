@@ -8,7 +8,7 @@ export interface CustomDataTableProps {
     columns: Array<DataTableColumn>,
     records: Array<Record>,
     total: number,
-    height ?: number,
+    height?: number,
     count?: number;
     isLoading: boolean,
     page?: number;
@@ -22,13 +22,13 @@ export type DataTableActionType<T> = {
     name?: string,
     action: (record: T) => void;
     color?: string,
-    permission?: Array<any>,
+    permission?: string,
     icon: typeof IconHome2,
 }
 
 interface DataTableActions<T> {
     actions?: Array<DataTableActionType<T>>,
-    order?: number | null
+    order?: number | null,
 }
 
 export type AppDataTableProps<T> = {
@@ -37,6 +37,7 @@ export type AppDataTableProps<T> = {
     onChange?: () => void,
     count: number,
     onPageChanges?: (p: number) => void,
-    height?: number
+    height?: number,
+    onQuerySearch?: (query: string) => void
 }
 

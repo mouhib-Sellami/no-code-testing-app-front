@@ -1,42 +1,17 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { ActionIcon, Badge, Collapse, Group, ScrollArea, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Badge, Center, Collapse, Group, ScrollArea, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import { Role } from "@/types/models/Role";
+import useDataTableConfig from "@/hooks/app/useDataTableConfig";
 
 const RoleDataTableConfig = (props: DataTableActions<Role>) => {
     const { colors } = useMantineTheme();
-    const PAGE_SIZE = React.useMemo(() => {
-        return 25
-    }, []);
+    const { generateActions, PAGE_SIZE } = useDataTableConfig();
 
     const ACTIONS = React.useMemo(() => {
         return props.actions
     }, [props])
-
-    const generateActions = React.useCallback(() => {
-        if (!ACTIONS)
-            return null;
-        return {
-            accessor: 'Actions',
-            title: "Actions",
-            textAlign: 'center',
-            width: '10%',
-            render: (record: any) => {
-                return (
-                    <Group align="center" justify="center" gap={10}>
-                        {ACTIONS?.map((elm, idx) => {
-                            return (
-                                <ActionIcon onClick={() => { elm.action(record) }} variant="transparent" key={idx}>
-                                    <elm.icon color={elm.color || colors.primary[0]}></elm.icon>
-                                </ActionIcon>
-                            )
-                        })}
-                    </Group>
-                )
-            }
-        }
-    }, [ACTIONS])
 
     const BASE_COLUMNS: Array<DataTableColumn> = React.useMemo(() => {
         return [
@@ -53,7 +28,7 @@ const RoleDataTableConfig = (props: DataTableActions<Role>) => {
             },
             {
                 accessor: "name", title: "Name",
-                width: "10%"
+                width: "20%"
             },
             {
                 accessor: "slug", title: "slug",
@@ -61,15 +36,11 @@ const RoleDataTableConfig = (props: DataTableActions<Role>) => {
             },
             {
                 accessor: 'permissions', title: "Permissions", textAlign: 'center',
-                width: "40%",
+                width: "10%",
                 render: (role: Role) => (
-                    <SimpleGrid cols={3}>
-                        {/* {role.permissions.map(elm => {
-                            return (<Badge color={"primary"}>
-                                {elm.label}
-                            </Badge>)
-                        })} */}
-                    </SimpleGrid>
+                    <Center w={"100%"} h={"100%%"}>
+                        <Badge>{role.permissions.length} permissions</Badge>
+                    </Center>
                 )
             },
             {
@@ -86,7 +57,7 @@ const RoleDataTableConfig = (props: DataTableActions<Role>) => {
 
     const COLUMNS = React.useMemo(() => {
         if (ACTIONS && ACTIONS.length > 0) {
-            const actions = generateActions();
+            const actions = generateActions(ACTIONS);
             if (actions) {
                 if (props.order != null) {
                     BASE_COLUMNS.splice(props.order - 1, 0, actions as DataTableColumn)

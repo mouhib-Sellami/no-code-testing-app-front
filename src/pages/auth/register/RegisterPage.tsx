@@ -5,16 +5,19 @@ import AuthLayout from "@/constants/layout/auth/AuthLayout";
 import { Center, rem, Stack, Stepper, Text, useMantineTheme } from "@mantine/core";
 import useFormDataFormatter from "@/hooks/useFormDataFormatter";
 import { SessionContext } from "@/contexts/SessionContext";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { PATH_AUTH } from "@/routes/paths";
+import { TenantContext } from "@/contexts/TenantContext";
 
 const RegisterPage: React.FC = ({ }) => {
     const [active, setActive] = React.useState(0);
     const [userDetails, setUserDetails] = React.useState<UserDetailsRegisterForm | null>(null);
     const [organizationDetails, setOrganizationDetails] = React.useState<OrganizationDetailsRegisterForm | null>(null);
     const { isLoading, register } = React.useContext(SessionContext);
+    const { IS_TENANT } = React.useContext(TenantContext);
     const { jsonToFormData } = useFormDataFormatter();
     const { colors } = useMantineTheme();
+    const navigate = useNavigate();
 
     const onNext = React.useCallback((data) => {
         setUserDetails(data);
@@ -32,6 +35,12 @@ const RegisterPage: React.FC = ({ }) => {
         await register?.(formData);
     }, [userDetails])
 
+    React.useEffect(() => {
+        if (IS_TENANT) {
+            navigate(PATH_AUTH.login)
+        }
+    }, [IS_TENANT])
+    
     return (
         <AuthLayout>
             <Center w={"100%"} h={"100%"}>

@@ -146,7 +146,7 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
                     user={selected}
                     visible={openForUpdate}
                     onCancel={() => { closeUpdate(); setSelected(null); }}
-                    onSubmit={() => { closeUpdate(); setSelected(null); onChange() }}
+                    onSubmit={() => { closeUpdate(); setSelected(null); onChange?.();}}
                 />
             }
         </Box>

@@ -73,6 +73,7 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                         confirmText: "Delete"
                     })
                 },
+                permission: "can_delete_role"
             },
             {
                 icon: IconPencil,
@@ -81,6 +82,7 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                     setSelected(record);
                     openUpdate();
                 },
+                permission: "can_change_role"
             },
             {
                 icon: IconEye,
@@ -89,6 +91,7 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                     setSelected(record);
                     openView();
                 },
+                permission: "PUBLIC"
             },
         ]
     });
@@ -112,8 +115,8 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
                 />
             </Group>
             <AppDataTable isLoading={isLoading} columns={COLUMNS} pageSize={DataTableConfig.MAX_PAGE_SIZE} total={count} records={RECORDS} page={page} {...item} onPageChanges={(p) => { setPage(p) }} />
-            {openForUpdate && selected && <EditRoleModal role={selected} onCancel={closeUpdate} onSubmit={() => { onChange?.(); closeUpdate() }} visible={openForUpdate} />}
-            {openForView && selected && <ViewRoleModal role={selected} onCancel={closeView} onSubmit={() => { closeView() }} visible={openForView} />}
+            {openForUpdate && selected && <EditRoleModal role={selected} onCancel={() => { closeUpdate(); setSelected(null); }} onSubmit={() => { onChange?.(); closeUpdate(); setSelected(null); }} visible={openForUpdate} />}
+            {openForView && selected && <ViewRoleModal role={selected} onCancel={() => { closeView(); setSelected(null); }} onSubmit={() => { closeView(); setSelected(null); }} visible={openForView} />}
         </Box>
     )
 }

@@ -1,8 +1,8 @@
 import React from "react";
 import { Checkbox, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { AppModalProps } from "../base-model/types";
-import BaseAppModal from "../base-model/BaseAppModal";
+import { AppModalProps } from "../base-modal/types";
+import BaseAppModal from "../base-modal/BaseAppModal";
 import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
 import AppCard from "@/components/cards/AppCard";
 import { Role } from "@/types/models/Role";

@@ -6,6 +6,7 @@ import GuestGuard from "@/guards/GuestGuard";
 import AuthGuard from "@/guards/AuthGuard";
 import { DashboardLayout } from "@/constants/layout/DashboardLayout";
 import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
+import TenantGuard from "@/guards/TenantGuard";
 
 
 export default function AppRoutes() {
@@ -31,7 +32,9 @@ export default function AppRoutes() {
             path: PATH_AUTH.register,
             element: (
                 <GuestGuard>
-                    <RegisterPage />
+                    <TenantGuard>
+                        <RegisterPage />
+                    </TenantGuard>
                 </GuestGuard>
             ),
         },
@@ -39,7 +42,9 @@ export default function AppRoutes() {
             path: PATH_AUTH.forgetPassword,
             element: (
                 <GuestGuard>
-                    <ForgetPasswordRequest />
+                    <TenantGuard>
+                        <ForgetPasswordRequest />
+                    </TenantGuard>
                 </GuestGuard>
             ),
         },
@@ -47,27 +52,11 @@ export default function AppRoutes() {
             path: PATH_AUTH.resetPassword,
             element: (
                 <GuestGuard>
-                    <ResetPasswordRequest />
+                    <TenantGuard>
+                        <ResetPasswordRequest />
+                    </TenantGuard>
                 </GuestGuard>
             ),
-        },
-        {
-            path: PATH_AUTH.register,
-            element: (
-                <GuestGuard>
-                    {/* <RegisterPage /> */}
-                    <></>
-                </GuestGuard>
-            )
-        },
-        {
-            path: PATH_AUTH.forgetPassword,
-            element: (
-                <GuestGuard>
-                    {/* <ForgetPasswordPage /> */}
-                    <></>
-                </GuestGuard>
-            )
         },
         {
             path: PATH_APP.root,

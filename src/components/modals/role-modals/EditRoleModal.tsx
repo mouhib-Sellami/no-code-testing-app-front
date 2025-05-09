@@ -2,8 +2,8 @@ import React from "react";
 import { dispatch } from "@/redux/store";
 import { Checkbox, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { AppModalProps } from "../base-model/types";
-import BaseAppModal from "../base-model/BaseAppModal";
+import { AppModalProps } from "../base-modal/types";
+import BaseAppModal from "../base-modal/BaseAppModal";
 import { updateRole } from "@/redux/slices/accessSlices/roleSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
@@ -44,21 +44,21 @@ const EditRoleModal: React.FC<EditRoleModalProps> = (props) => {
 
     const onSubmit = React.useCallback(async (values) => {
         const res = await dispatch(updateRole(values))
-        if (res?.type == "roles/createOrgRoles/rejected") {
-            setTimeout(() => dispatch(onShowNotification({
-                content: "Cannot create role , try again later! ",
+        if (res.meta.requestStatus == "rejected") {
+            dispatch(onShowNotification({
+                content: "Cannot update role , try again later !",
                 level: "WARNING",
                 render: "NOTIFICATION",
                 type: "user role"
-            })), 500)
+            }))
         } else {
             props.onSubmit();
-            dispatch(onShowNotification({
+            onShowNotification({
                 content: "Role updated successfully !",
                 level: "SUCCESS",
                 render: "NOTIFICATION",
                 type: "user role"
-            }));
+            })
         }
     }, [])
 
@@ -74,8 +74,6 @@ const EditRoleModal: React.FC<EditRoleModalProps> = (props) => {
 
         const find = form.values.permissions.find(x => x == id);
         let tmp = form.values.permissions;
-        console.log(find);
-
         if (find) {
             tmp = tmp.filter(elm => elm != id)
         } else {

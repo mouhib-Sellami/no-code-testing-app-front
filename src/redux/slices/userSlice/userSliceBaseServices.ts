@@ -39,9 +39,22 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (data: numb
         return thunkAPI.rejectWithValue(error);
     }
 });
+
 export const updateUser = createAsyncThunk('users/updateUser', async (data: createUpdateUser, thunkAPI) => {
     try {
         const response = await userServices.updateUser(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const requestChangePassword = createAsyncThunk('users/requestChangePassword', async (data: number, thunkAPI) => {
+    try {
+        const response = await userServices.requestChangePassword(data);
         return response;
     } catch (error: any) {
         if (error?.response?.data) {

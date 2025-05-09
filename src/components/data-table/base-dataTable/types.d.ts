@@ -22,13 +22,13 @@ export type DataTableActionType<T> = {
     name?: string,
     action: (record: T) => void;
     color?: string,
-    permission?: Array<any>,
+    permission?: string,
     icon: typeof IconHome2,
 }
 
 interface DataTableActions<T> {
     actions?: Array<DataTableActionType<T>>,
-    order?: number | null
+    order?: number | null,
 }
 
 export type AppDataTableProps<T> = {

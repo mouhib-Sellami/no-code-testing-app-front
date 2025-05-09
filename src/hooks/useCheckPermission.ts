@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 
 const useCheckPermission = () => {
     const { permissions } = useAuth();
-
+    
     const hasPermission = React.useCallback((permission: string) => {
         if (permission.toUpperCase().includes("PUBLIC"))
             return true

@@ -1,4 +1,4 @@
-import { Box, Button, CloseIcon, Group, Modal, Title, useMantineTheme } from "@mantine/core";
+import { Box, CloseIcon, Group, Modal, Title, useMantineTheme } from "@mantine/core";
 import { BaseAppModalProps } from "./types";
 import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
@@ -21,7 +21,7 @@ const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, 
             styles={{
                 header: {
                     paddingBottom: 0,
-                    background: colors.mainContentColor[9]
+                    background: colors.mainContentColor[9],
                 },
                 content: {
                     position: "relative",
@@ -37,11 +37,13 @@ const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, 
                 },
                 body: {
                     background: colors.mainContentColor[9],
-                    padding: 24
-                }
+                    padding: 24,
+                    paddingTop: 0
+                },
             }}
 
             transitionProps={{ transition: 'fade', duration: 200 }}
+            
             title={<Title order={4} ta={"center"} w={"100%"}>{title}</Title>}
             autoFocus={false}
             closeButtonProps={{

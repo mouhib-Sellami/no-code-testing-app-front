@@ -3,21 +3,24 @@ import DataTableConfig from "@/config/DataTableConfig";
 import { Box, Group, px, TextInput } from "@mantine/core";
 import AppDataTable from "../base-dataTable/AppDataTable";
 import { AppDataTableProps } from "../base-dataTable/types";
-import { Role } from "@/types/models/Role";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
 import { IconBackspace, IconEye, IconPasswordFingerprint, IconPencil, IconSearch } from "@tabler/icons-react";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import UserDataTableConfig from "./UserDataTableConfig";
 import { AppUser } from "@/types/models/User";
-import { DataTableColumn } from "mantine-datatable";
+import { dispatch } from "@/redux/store";
+import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
+import { deleteUser, requestChangePassword } from "@/redux/slices/userSlice/userSliceBaseServices";
+import ViewUserDetails from "@/components/modals/user-modals/ViewUserDetails";
+import EditUserModal from "@/components/modals/user-modals/EditUserModal";
 
 
 const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoading, count, onChange, onQuerySearch, ...item }) => {
     const [page, setPage] = React.useState(1);
     const [RECORDS, setRECORDS] = React.useState<Array<AppUser>>(records);
-    const { openDeleteModal } = useConfirmModal();
+    const { openDeleteModal, openConfirmModal } = useConfirmModal();
     const [query, setQuery] = React.useState('');
-    const [selected, setSelected] = React.useState<Role | null>(null);
+    const [selected, setSelected] = React.useState<AppUser | null>(null);
     const [openForUpdate, { open: openUpdate, close: closeUpdate }] = useDisclosure(false);
     const [openForView, { open: openView, close: closeView }] = useDisclosure(false);
 
@@ -31,21 +34,38 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
         onQuerySearch?.(debouncedQuery)
     }, [records, debouncedQuery])
 
-    const deleteRole_ = React.useCallback(async (id: number) => {
-        // const res = await dispatch(deleteRole(id))
-        // if (res.meta.requestStatus == "fulfilled") {
-        //     dispatch(onShowNotification({
-        //         content: "Role delete with success",
-        //         level: "SUCCESS",
-        //         type: "role"
-        //     }))
-        // } else {
-        //     dispatch(onShowNotification({
-        //         content: "Organization default roles cannot be delete !",
-        //         level: "WARNING",
-        //         type: "role"
-        //     }))
-        // }
+    const deleteUser_ = React.useCallback(async (id: number) => {
+        const res = await dispatch(deleteUser(id))
+        if (res.meta.requestStatus == "fulfilled") {
+            dispatch(onShowNotification({
+                content: "User delete with success",
+                level: "SUCCESS",
+                type: "role"
+            }))
+        } else {
+            dispatch(onShowNotification({
+                content: "Self deleting is prohibited !",
+                level: "ERROR",
+                type: "role"
+            }))
+        }
+    }, [])
+
+    const requestChangePassword_ = React.useCallback(async (id: number, user: AppUser) => {
+        const res = await dispatch(requestChangePassword(id))
+        if (res.meta.requestStatus == "fulfilled") {
+            dispatch(onShowNotification({
+                content: `An email has been sended to ${user.email}.`,
+                level: "SUCCESS",
+                type: "role"
+            }))
+        } else {
+            dispatch(onShowNotification({
+                content: `Cannot request a rest password for user ${user.email}.`,
+                level: "ERROR",
+                type: "role"
+            }))
+        }
     }, [])
 
     const { COLUMNS } = UserDataTableConfig({
@@ -53,48 +73,59 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
             {
                 icon: IconPasswordFingerprint,
                 color: "gray",
+                permission: 'can_change_user',
                 action(record: AppUser) {
-                    // setSelected(record);
-                    // openUpdate();
+                    openConfirmModal({
+                        content: `Are you sure you want to request a new Password for ${record.email} ?`,
+                        onConfirm: async () => {
+                            await requestChangePassword_(record.id, record)
+                        },
+                        onCancel: () => { },
+                        title: "Request password change",
+                        confirmText: "Confirm",
+                        cancelText: "Cancel",
+                        withCancel: true
+                    })
                 },
             },
             {
                 icon: IconBackspace,
                 color: "gray",
+                permission: 'can_delete_user',
                 action(record: AppUser) {
-                    // openDeleteModal({
-                    //     content: "Are you sure you want to delete this role ?",
-                    //     onConfirm: async () => {
-                    //         await deleteRole_(record.id)
-                    //         onChange?.()
-                    //     },
-                    //     onCancel: () => { },
-                    //     title: "Delete role",
-                    //     confirmText: "Delete"
-                    // })
+                    openDeleteModal({
+                        content: `Are you sure you want to delete ${record.email} ?`,
+                        onConfirm: async () => {
+                            await deleteUser_(record.id)
+                            onChange?.()
+                        },
+                        onCancel: () => { },
+                        title: "Delete role",
+                        confirmText: "Delete"
+                    })
                 },
             },
 
             {
                 icon: IconPencil,
                 color: "gray",
+                permission: 'can_change_user',
                 action(record: AppUser) {
-                    // setSelected(record);
-                    // openUpdate();
+                    setSelected(record);
+                    openUpdate();
                 },
             },
             {
                 icon: IconEye,
                 color: "gray",
+                permission: 'can_view_user',
                 action(record: AppUser) {
-                    // setSelected(record);
-                    // openView();
+                    setSelected(record);
+                    openView();
                 },
             },
         ]
     });
-    console.log("RECORDS");
-    console.log(RECORDS);
 
     return (
         <Box p={0} m={0}>
@@ -109,6 +140,15 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
                 />
             </Group>
             <AppDataTable isLoading={isLoading} columns={COLUMNS} pageSize={DataTableConfig.MAX_PAGE_SIZE} total={count} records={RECORDS} page={page} {...item} onPageChanges={(p) => { setPage(p) }} />
+            {openForView && selected && <ViewUserDetails user={selected} isVisible={openForView} onClose={() => { closeView(); setSelected(null); }} />}
+            {openForUpdate && selected &&
+                <EditUserModal
+                    user={selected}
+                    visible={openForUpdate}
+                    onCancel={() => { closeUpdate(); setSelected(null); }}
+                    onSubmit={() => { closeUpdate(); setSelected(null); onChange() }}
+                />
+            }
         </Box>
     )
 }

@@ -8,9 +8,13 @@ import secureLocalStorage from 'react-secure-storage';
 import { PATH_APP } from '@/routes/paths';
 import { retrieve } from '@/redux/slices/authSlices/authSliceThunk';
 
-type TenantContextProps = {};
+type TenantContextProps = {
+    IS_TENANT: boolean
+};
 
-const TenantContext = React.createContext<Partial<TenantContextProps>>({});
+const TenantContext = React.createContext<Partial<TenantContextProps>>({
+    IS_TENANT: false
+});
 
 const TenantProvider = (props: PropsWithChildren) => {
     const navigate = useNavigate();
@@ -20,6 +24,22 @@ const TenantProvider = (props: PropsWithChildren) => {
     const TOKEN = React.useMemo(() => searchParams.get('token'), [searchParams]);
     const ACTION = React.useMemo(() => searchParams.get('action'), [searchParams]);
     const NEXT = React.useMemo(() => searchParams.get('next'), [searchParams]);
+
+    const IS_TENANT = React.useMemo(() => {
+
+        var regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)?(localhost|\w+\.\w+)(\/.*)?$/);
+
+        if (!regex.test(window.location.hostname)) return false;
+
+        var hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
+
+        var parts = hostname.split('.');
+
+        if (hostname.endsWith('localhost')) {
+            return parts.length > 1;
+        }
+        return parts.length > 2;
+    }, []);
 
     const IS_CORRESPONDED_TENANT = React.useMemo(() => {
         if (!tenant) return false;
@@ -67,7 +87,7 @@ const TenantProvider = (props: PropsWithChildren) => {
         }
     }, [tenant, TOKEN]);
 
-    return <TenantContext.Provider value={{}}>{props.children}</TenantContext.Provider>;
+    return <TenantContext.Provider value={{ IS_TENANT }}>{props.children}</TenantContext.Provider>;
 };
 
 const TenantConsumer = TenantContext.Consumer;

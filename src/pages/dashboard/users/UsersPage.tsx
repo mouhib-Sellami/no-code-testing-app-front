@@ -1,5 +1,6 @@
 import AppCard from "@/components/cards/AppCard";
 import UserDataTable from "@/components/data-table/user-dataTable/UserDataTable";
+import CreateUserModal from "@/components/modals/user-modals/CreateUserModal";
 import PageContentLayout from "@/components/ui/content-layout/PageContentLayout";
 import DataTableConfig from "@/config/DataTableConfig";
 import PermissionGuard from "@/guards/PermissionGuard";
@@ -40,18 +41,21 @@ const UsersPage: React.FC = ({ }) => {
 
     return (
         <PageContentLayout title={`Organization Members`}>
-            <AppCard title={
-                <Group align="center" justify="space-between" w={"100%"}>
-                    <Title order={5}>Members 🪪</Title>
-                    <PermissionGuard permission="can_create_user">
-                        <ActionIcon onClick={() => open()} variant="filled" aria-label="Create new role">
-                            <IconPlus style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                        </ActionIcon>
-                    </PermissionGuard>
-                </Group>}
+            <AppCard
+                withoutPadding={true}
+                title={
+                    <Group align="center" justify="space-between" w={"100%"}>
+                        <Title order={5}>Members 🪪</Title>
+                        <PermissionGuard permission="can_create_user">
+                            <ActionIcon onClick={() => open()} variant="filled" aria-label="Create new role">
+                                <IconPlus style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                            </ActionIcon>
+                        </PermissionGuard>
+                    </Group>}
             >
-                <UserDataTable height={350} isLoading={USER_STATE.isLoading} records={USER_STATE.users} count={USER_STATE.count} onChange={fetchUsersData} onPageChanges={onPageChanges} onQuerySearch={onQuerySearch} />
+                <UserDataTable height={390} isLoading={USER_STATE.isLoading} records={USER_STATE.users} count={USER_STATE.count} onChange={fetchUsersData} onPageChanges={onPageChanges} onQuerySearch={onQuerySearch} />
             </AppCard>
+            {opened && <CreateUserModal visible={opened} onCancel={close} onSubmit={() => { close(); fetchUsersData() }} />}
         </PageContentLayout>
     )
 }

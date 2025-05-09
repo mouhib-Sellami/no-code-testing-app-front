@@ -1,14 +1,16 @@
 import React from "react";
-import { Center, Checkbox, Group, Loader, PasswordInput, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
+import { Center, Checkbox, Group, PasswordInput, Stack, Text, TextInput, Title, useMantineTheme } from "@mantine/core";
 import { useForm } from '@mantine/form';
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { Link, NavLink } from "react-router";
 import { SessionContext } from "@/contexts/SessionContext";
 import { PATH_AUTH } from "@/routes/paths";
+import { TenantContext } from "@/contexts/TenantContext";
 
 const LoginForm: React.FC = ({ }) => {
     const { colors } = useMantineTheme();
     const { isLoading, signIn } = React.useContext(SessionContext);
+    const { IS_TENANT } = React.useContext(TenantContext);
 
     const form = useForm<UserAuth>({
         mode: "uncontrolled",
@@ -68,12 +70,12 @@ const LoginForm: React.FC = ({ }) => {
                                 Log in
                             </Text>
                         </PrimaryButton>
-                        <Text ta="center" c={"dimmed"} size='sm' mt="md">
+                        {!IS_TENANT && <Text ta="center" c={"dimmed"} size='sm' mt="md">
                             Don't have an account ?{' '}
                             <NavLink to={PATH_AUTH.register} style={{ textDecoration: "none", color: colors.primary[9] }}>
                                 Click here
                             </NavLink>
-                        </Text>
+                        </Text>}
                     </Stack>
                 </form>
             </Stack>

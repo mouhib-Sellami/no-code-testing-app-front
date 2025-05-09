@@ -39,11 +39,20 @@ const deleteUser = async (id: number) => {
     return data
 };
 
+const requestChangePassword = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/request-change-user-password/`,
+    });
+    return data
+};
+
 const userServices = {
     fetchUsers,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    requestChangePassword
 };
 
 export default userServices;

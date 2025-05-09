@@ -67,8 +67,6 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
         if (res.meta.requestStatus === 'fulfilled') {
             const { organization } = res.payload as loginResponse;
             dispatch(handleNewTenant(organization));
-        } else {
-            console.log(res.payload);
         }
         return res;
     }, []);

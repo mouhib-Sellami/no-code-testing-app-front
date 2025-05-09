@@ -24,7 +24,7 @@ const UserDetailsForm: React.FC<RegisterFormsProps<UserDetailsRegisterForm>> = (
         validate: {
             password: (value) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(value) ? null : 'Invalid password'),
             confirm_password: (value, values) => value == values.password ? null : "Password mismatch",
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            email: (value) => (/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/.test(value) ? null : 'Invalid email'),
             first_name: (value) => value.length > 0 ? null : 'Invalid field',
             last_name: (value) => value.length > 0 ? null : 'Invalid field',
             username: (value) => value.length > 0 ? null : 'Invalid field',

@@ -1,42 +1,19 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { ActionIcon, Badge, Group, Text, useMantineTheme } from "@mantine/core";
+import { Badge, Text, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import { AppUser } from "@/types/models/User";
+import useDataTableConfig from "@/hooks/app/useDataTableConfig";
 
 const UserDataTableConfig = (props: DataTableActions<AppUser>) => {
     const { colors } = useMantineTheme();
-    const PAGE_SIZE = React.useMemo(() => {
-        return 25
-    }, []);
+    const { generateActions, PAGE_SIZE } = useDataTableConfig();
 
     const ACTIONS = React.useMemo(() => {
         return props.actions
     }, [props])
 
-    const generateActions = React.useCallback(() => {
-        if (!ACTIONS)
-            return null;
-        return {
-            accessor: 'Actions',
-            title: "Actions",
-            textAlign: 'center',
-            width: '15%',
-            render: (record: any) => {
-                return (
-                    <Group align="center" justify="center" gap={10}>
-                        {ACTIONS?.map((elm, idx) => {
-                            return (
-                                <ActionIcon onClick={() => { elm.action(record) }} variant="transparent" key={idx}>
-                                    <elm.icon color={elm.color || colors.primary[0]}></elm.icon>
-                                </ActionIcon>
-                            )
-                        })}
-                    </Group>
-                )
-            }
-        }
-    }, [ACTIONS])
+
 
     const BASE_COLUMNS: Array<DataTableColumn> = React.useMemo(() => {
         return [
@@ -90,7 +67,7 @@ const UserDataTableConfig = (props: DataTableActions<AppUser>) => {
 
     const COLUMNS = React.useMemo(() => {
         if (ACTIONS && ACTIONS.length > 0) {
-            const actions = generateActions();
+            const actions = generateActions(ACTIONS, '15%');
             if (actions) {
                 if (props.order != null) {
                     BASE_COLUMNS.splice(props.order - 1, 0, actions as DataTableColumn)

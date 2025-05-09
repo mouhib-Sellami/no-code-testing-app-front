@@ -6,9 +6,11 @@ export interface User {
     email: string;
     username: string;
     email: string;
-    full_name: string;
+    first_name: string,
+    last_name: string,
     is_active?: boolean;
     profession: string;
+    tenant_user_id: number,
     role?: Role;
     organization?: Organization;
 }
@@ -19,6 +21,8 @@ export interface createUpdateUser {
         username: string,
         email: string
     }
+    role?: number,
+    role_id?: string,
     first_name: string,
     last_name: string,
     profession: string
@@ -29,10 +33,11 @@ export interface AppUser {
     email: string;
     username: string;
     email: string;
-    full_name: string;
+    first_name: string,
+    last_name: string,
     profession: string;
     is_active?: boolean;
     role?: Role;
-    create_at: Date,
+    created_at: Date,
     updated_at: Date
 }

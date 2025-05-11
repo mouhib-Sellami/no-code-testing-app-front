@@ -5,7 +5,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import PermissionGuardAlert from "@/guards/PermissionGuardAlert";
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 
-const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, visible, children, submitText, cancelText, isLoading, withCancelButton, submitColor, size = "md", permission = "PUBLIC", fullScreen = false, SubmitButtonLoading }) => {
+const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, height, onSubmit, title, visible, children, submitText, cancelText, isLoading, withCancelButton, submitColor, size = "md", permission = "PUBLIC", fullScreen = false, SubmitButtonLoading }) => {
     const { colors } = useMantineTheme();
     return (
         <Modal
@@ -38,12 +38,12 @@ const BaseAppModal: React.FC<BaseAppModalProps> = ({ onCancel, onSubmit, title, 
                 body: {
                     background: colors.mainContentColor[9],
                     padding: 24,
-                    paddingTop: 0
+                    paddingTop: 0,
                 },
             }}
 
             transitionProps={{ transition: 'fade', duration: 200 }}
-            
+
             title={<Title order={4} ta={"center"} w={"100%"}>{title}</Title>}
             autoFocus={false}
             closeButtonProps={{

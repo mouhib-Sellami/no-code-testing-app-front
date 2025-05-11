@@ -25,10 +25,26 @@ const useAppHooks = () => {
             .join('');
     }, [])
 
+    const formateDate = React.useCallback((value: string) => {
+        const date = new Date(value);
+
+        const formattedDate = date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true
+        });
+        return formattedDate;
+    }, [])
+
     return {
         getSlug,
         getSlugWithSeparator,
-        createAcronym
+        createAcronym,
+        formateDate
     }
 }
 

@@ -38,6 +38,4 @@ export interface AppUser {
     profession: string;
     is_active?: boolean;
     role?: Role;
-    created_at: Date,
-    updated_at: Date
 }

@@ -1,5 +1,5 @@
 export interface paginationRequestParams {
     p: number,
-    max_page: number,
+    page_size: number,
     search?: string
 }

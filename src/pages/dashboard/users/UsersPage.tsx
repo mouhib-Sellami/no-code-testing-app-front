@@ -21,7 +21,7 @@ const UsersPage: React.FC = ({ }) => {
     const fetchUsersData = React.useCallback(async () => {
         await dispatch(fetchUsers({
             p: page,
-            max_page: DataTableConfig.MAX_PAGE_SIZE,
+            page_size: DataTableConfig.MAX_PAGE_SIZE,
             search: query
         }))
     }, [page, query])
@@ -31,12 +31,12 @@ const UsersPage: React.FC = ({ }) => {
     }, [page, query])
 
     const onPageChanges = React.useCallback((p: number) => {
-        setPage(c => c + 1)
+        setPage(p)
     }, [])
 
     const onQuerySearch = React.useCallback((query: string) => {
-        setPage(1)
-        setQuery(query)
+        setPage(1);
+        setQuery(query);
     }, [])
 
     return (

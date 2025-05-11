@@ -86,6 +86,14 @@ export default function AppRoutes() {
                             <UsersPage />
                         </PermissionGuardRedirection>
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.projects,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_project">
+                            <ProjectsPage />
+                        </PermissionGuardRedirection>
+                    )
                 }
             ]
         },
@@ -118,6 +126,9 @@ const RolePage = Loadable(lazy(() => import('@/pages/dashboard/roles/RolesPage')
 
 //USERS
 const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage')));
+
+//PROJECTS
+const ProjectsPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectsPage')));
 
 //OTHER
 const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));

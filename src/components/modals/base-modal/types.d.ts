@@ -19,5 +19,6 @@ export interface BaseAppModalProps extends AppModalProps, PropsWithChildren {
     submitColor?: string,
     size?: string | number;
     fullScreen?: boolean,
-    SubmitButtonLoading?: boolean
+    SubmitButtonLoading?: boolean,
+    height?: string | number
 }

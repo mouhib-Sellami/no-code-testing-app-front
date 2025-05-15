@@ -1,11 +1,11 @@
-import { Flex, Menu, useMantineTheme } from '@mantine/core';
+import { Divider, Flex, Menu, px, useMantineTheme } from '@mantine/core';
 import React from 'react';
 import { dispatch } from '@/redux/store';
 import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import { handleSessionExpired } from '@/redux/slices/sessionSlice/sessionSlice';
 import useAuth from '@/hooks/useAuth';
 import UserButton from './UserButton';
-import { IconLogout } from '@tabler/icons-react';
+import { IconArrowsLeftRight, IconLogout, IconTrash } from '@tabler/icons-react';
 import { logout } from '@/redux/slices/authSlices/authSliceThunk';
 
 const NavbarFooter: React.FC = () => {
@@ -27,14 +27,27 @@ const NavbarFooter: React.FC = () => {
 
     return (
         <Flex direction={"column"} w={"100%"}>
-            <Menu position="top-start" withArrow width={200}>
+            <Menu position="top-start" offset={5}>
                 <Menu.Target >
                     <UserButton
                         name={user?.username ?? "default user"}
                         role={role.name ?? "default role"}
                     />
                 </Menu.Target>
-                <Menu.Dropdown w={240}>
+                <Menu.Dropdown w={px("14.2rem")}>
+                    <Menu.Label>Danger zone</Menu.Label>
+                    <Menu.Item
+                        leftSection={<IconArrowsLeftRight size={14} />}
+                    >
+                        Transfer my data
+                    </Menu.Item>
+                    <Menu.Item
+                        color="red"
+                        leftSection={<IconTrash size={14} />}
+                    >
+                        Delete my account
+                    </Menu.Item>
+                    <Menu.Divider />
                     <Menu.Item
                         leftSection={<IconLogout size={18} color={colors.sideNavBarLinksColor[9]} />}
                         onClick={() => logout_()}

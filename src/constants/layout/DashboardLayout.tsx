@@ -61,13 +61,15 @@ export function DashboardLayout() {
             </AppShell.Navbar>
             <AppShell.Main bg={theme.colors.mainContentColor[9]} styles={{
                 main: {
-
                     margin: 0,
                     padding: 0,
                     paddingLeft: px("16.3rem"),
                 }
             }}>
-                <Box style={{ height: '100vh', overflow: 'auto' }} m={0} pt={"xl"} px={"sm"}>
+                <Box style={{
+                    height: '100vh', overflow: 'auto', backgroundImage: `radial-gradient(circle at 1px 1px, rgba(186, 45, 11, 0.15) 1px, transparent 0)`,
+                    backgroundSize: "20px 20px",
+                }} m={0} pt={"xl"} px={"sm"}>
                     <Outlet />
                 </Box>
             </AppShell.Main>

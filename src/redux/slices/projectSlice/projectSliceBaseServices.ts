@@ -51,3 +51,15 @@ export const updateProject = createAsyncThunk('projects/updateProject', async (d
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+export const recentProjects = createAsyncThunk('projects/recentProjects', async (_, thunkAPI) => {
+    try {
+        const response = await projectServices.recentProjects();
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

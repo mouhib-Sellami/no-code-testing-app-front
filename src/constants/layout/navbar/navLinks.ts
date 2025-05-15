@@ -1,65 +1,51 @@
 import {
-    IconBuildingCog,
-    IconFolderCode,
-    IconShieldLock,
-    IconSmartHome,
-    IconUsers,
+    IconChartBar,
+    IconFolder,
+    IconLock,
+    IconSettings,
+    IconUsersGroup,
 } from "@tabler/icons-react";
 import { PATH_APP } from "@/routes/paths";
 import { NavItem } from "@/components/navbar-components/NavItem";
 
 export const navLinks: NavItem[] = [
     {
-        label: "Dashboard",
-        icon: IconSmartHome,
+        label: "Overview",
+        icon: IconChartBar,
         link: PATH_APP.general.dashboard.home,
         name: "Home",
         isVisible: true,
     },
     {
-        label: "Members",
-        icon: IconUsers,
+        label: "Team",
+        icon: IconUsersGroup,
         link: PATH_APP.general.dashboard.users,
-        name: "members",
+        name: "team",
         isVisible: true,
-        permission: "can_view_user"
+        permission: "can_view_user",
     },
     {
-        label: "Privilege section",
-        icon: IconShieldLock,
+        label: "Permissions",
+        icon: IconLock,
         link: PATH_APP.general.dashboard.roles,
-        name: "roles",
+        name: "permissions",
         isVisible: true,
-        permission: "can_view_role"
+        permission: "can_view_role",
     },
     {
-        label: "Projects",
-        icon: IconFolderCode,
+        label: "Workspaces",
+        icon: IconFolder,
         link: PATH_APP.general.dashboard.projects,
-        name: "projects",
+        name: "workspaces",
         isVisible: true,
-        permission: "can_view_project"
+        permission: "can_view_project",
     },
     {
-        label: "Organization",
-        icon: IconBuildingCog,
+        label: "Settings",
+        icon: IconSettings,
         link: PATH_APP.general.dashboard.organization,
-        name: "organization",
+        name: "settings",
         isVisible: true,
-        permission: "can_view_organization"
+        permission: "can_view_organization",
     },
-    // {
-    //     label: "sidebar.dashboard",
-    //     icon: HiOutlinePresentationChartBar,
-    //     initiallyOpened: false,
-    //     name: "Tableau de bord",
-    //     isVisible: true,
-    //     links: [
-    //         // {
-    //         //     label: "sidebar.dashboard_rh",
-    //         //     link: PATH_APP.general.dashboard.dashboardRH.index,
-    //         // },
-
-    //     ],
-    // },
 ];

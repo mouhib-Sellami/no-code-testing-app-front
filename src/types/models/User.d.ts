@@ -1,3 +1,4 @@
+import { BaseModal } from "./BaseModel";
 import { Organization } from "./Organization";
 import { Role } from "./Role";
 
@@ -28,7 +29,7 @@ export interface createUpdateUser {
     profession: string
 }
 
-export interface AppUser {
+export interface AppUser extends BaseModal {
     id: number;
     email: string;
     username: string;

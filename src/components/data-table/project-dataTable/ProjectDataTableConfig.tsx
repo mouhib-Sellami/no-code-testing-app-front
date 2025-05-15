@@ -1,12 +1,12 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { Badge, Text, useMantineTheme } from "@mantine/core";
+import { Badge, Pill, Text, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
-import { AppUser } from "@/types/models/User";
 import useDataTableConfig from "@/hooks/app/useDataTableConfig";
 import useAppHooks from "@/hooks/useAppHooks";
+import { Project } from "@/types/models/Project";
 
-const ProjectDataTableConfig = (props: DataTableActions<AppUser>) => {
+const ProjectDataTableConfig = (props: DataTableActions<Project>) => {
     const { colors } = useMantineTheme();
     const { generateActions, PAGE_SIZE } = useDataTableConfig();
     const { formateDate } = useAppHooks();
@@ -42,8 +42,15 @@ const ProjectDataTableConfig = (props: DataTableActions<AppUser>) => {
                 width: "10%"
             },
             {
-                accessor: "updated_at", title: "Last update",
+                accessor: "status", title: "Status",
                 width: "10%",
+                render: (record: any) => (
+                    <Pill> {record.status}</Pill>
+                )
+            },
+            {
+                accessor: "updated_at", title: "Last update",
+                width: "15%",
                 render: (record: any) => (
                     formateDate(record.updated_at)
                 )

@@ -1,12 +1,14 @@
 import { Provider } from "@/types/models/Provider";
-import { Avatar, Card, Grid, Group, Text, useMantineTheme } from "@mantine/core";
+import { Avatar, Card, Grid, Group, Indicator, Text, Title, useMantineTheme } from "@mantine/core";
 import React from "react";
 
 export interface ProviderCardProps {
-    provider: Provider
+    provider: Provider,
+    onSelect: (p: Provider) => void,
+    selected: boolean
 }
 
-const ProviderCard: React.FC<ProviderCardProps> = ({ provider }) => {
+const ProviderCard: React.FC<ProviderCardProps> = ({ provider, onSelect, selected = false }) => {
     const { colors } = useMantineTheme();
 
     return (
@@ -15,25 +17,33 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider }) => {
             withBorder={true}
             p={"md"}
             h={"100%"}
+            onClick={() => { onSelect(provider) }}
             styles={{
                 root: {
                     backgroundColor: colors.mainContentColor[9],
-                    borderColor: 'var(--mantine-color-dividerBorderColorDark-9)'
+                    borderColor: 'var(--mantine-color-dividerBorderColorDark-9)',
+                    cursor: 'pointer'
                 },
             }}
         >
-            <Group align="center" justify="space-between">
-                <Avatar name={provider.name} radius="xl" size={"2rem"} styles={{
-                    placeholder: {
-                        fontSize: "0.8rem"
-                    }
-                }}
-                    bg={"primary"} color='white' />
+            <Indicator disabled={!selected}>
 
-                {provider.name}
-                <Text size="sm" c={"dimmed"}>V {provider.version}</Text>
-            </Group>
+                <Group align="center" justify="space-between">
+                    <Group>
 
+                        <Avatar name={provider.name} radius="xl" size={"2rem"} styles={{
+                            placeholder: {
+                                fontSize: "0.8rem"
+                            }
+                        }}
+                            bg={"primary"} color='white' />
+
+                        <Title order={5}> {provider.name}</Title>
+                    </Group>
+                    <Text size="xs" c={"dimmed"}>V {provider.version}</Text>
+                </Group>
+
+            </Indicator>
         </Card>
     )
 }

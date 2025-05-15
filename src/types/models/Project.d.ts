@@ -1,4 +1,5 @@
 import { BaseModal } from "./BaseModel";
+import { Provider } from "./Provider";
 import { User } from "./User";
 
 
@@ -8,7 +9,8 @@ export interface Project extends BaseModal {
     description: string,
     members: Array<User>,
     managed_by: User,
-    provider: any
+    provider: Provider,
+    status: string
 }
 
 export interface CreateUpdateProject {
@@ -16,6 +18,6 @@ export interface CreateUpdateProject {
     name: string,
     description: string,
     members: Array<number>,
-    managed_by_id: number,
-    provider_id: number
+    managed_by: number,
+    provider: number
 }

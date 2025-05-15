@@ -268,6 +268,13 @@ const theme = createTheme({
                 },
             }
         },
+        'Textarea': {
+            styles: {
+                input: {
+                    height: "var(--input-size)"
+                }
+            }
+        },
 
         'Grid': {
             styles: {

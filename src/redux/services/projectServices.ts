@@ -13,6 +13,14 @@ const fetchProjects = async (p: paginationRequestParams) => {
     return data
 };
 
+const recentProjects = async () => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + "recent/",
+    });
+    return data
+};
+
 const createProject = async (project: CreateUpdateProject) => {
     const { data } = await axiosInstance({
         method: "POST",
@@ -43,7 +51,8 @@ const projectServices = {
     fetchProjects,
     createProject,
     deleteProject,
-    updateProject
+    updateProject,
+    recentProjects
 };
 
 export default projectServices;

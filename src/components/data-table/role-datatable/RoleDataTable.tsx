@@ -14,9 +14,9 @@ import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import EditRoleModal from "@/components/modals/role-modals/EditRoleModal";
 import ViewRoleModal from "@/components/modals/role-modals/ViewRoleModal";
 
-const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, count, onChange, ...item }) => {
+const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, count, onQuerySearch, onPageChanges, onChange, ...item }) => {
     const [page, setPage] = React.useState(1);
-    const [RECORDS, setRECORDS] = React.useState<Array<Role>>(records.slice(0, DataTableConfig.MAX_PAGE_SIZE));
+    const [RECORDS, setRECORDS] = React.useState<Array<Role>>(records);
     const { openDeleteModal } = useConfirmModal();
     const [query, setQuery] = React.useState('');
     const [selected, setSelected] = React.useState<Role | null>(null);
@@ -25,19 +25,18 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
 
     const [debouncedQuery] = useDebouncedValue(query, 200);
 
-    React.useEffect(() => {
-        setRECORDS(
-            records.filter(({ name }) => {
-                if (
-                    debouncedQuery !== '' &&
-                    !`${name}`.toLowerCase().includes(debouncedQuery.trim().toLowerCase())
-                )
-                    return false;
-                return true;
-            })
-        )
 
-    }, [records, debouncedQuery])
+    React.useEffect(() => {
+        setRECORDS(records)
+    }, [records])
+
+    React.useEffect(() => {
+        onQuerySearch?.(debouncedQuery)
+    }, [debouncedQuery])
+
+    React.useEffect(() => {
+        onPageChanges?.(page)
+    }, [page])
 
     const deleteRole_ = React.useCallback(async (id: number) => {
         const res = await dispatch(deleteRole(id))
@@ -96,12 +95,6 @@ const RoleDataTable: React.FC<AppDataTableProps<Role>> = ({ records, isLoading, 
         ]
     });
 
-
-    React.useEffect(() => {
-        const from = (page - 1) * DataTableConfig.MAX_PAGE_SIZE;
-        const to = from + DataTableConfig.MAX_PAGE_SIZE;
-        setRECORDS(records.slice(from, to));
-    }, [page, DataTableConfig.MAX_PAGE_SIZE, records]);
 
     return (
         <Box p={0} m={0}>

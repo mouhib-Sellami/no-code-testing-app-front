@@ -7,6 +7,7 @@ const initialState: RoleState = {
     isError: false,
     isLoading: false,
     message: '',
+    count: 0
 };
 
 const roleSlice = createSlice({
@@ -18,6 +19,7 @@ const roleSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.message = '';
+            state.count = 0;
         },
     },
     extraReducers: (builder) => {
@@ -27,10 +29,11 @@ const roleSlice = createSlice({
                 state.message = '';
             })
             .addCase(fetchRoles.fulfilled, (state, action) => {
-                state.roles = action.payload;
+                state.roles = action.payload?.results || action.payload;
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
+                state.count = action.payload.count || 0;
             })
             .addCase(fetchRoles.rejected, (state, action) => {
                 state.roles = [];

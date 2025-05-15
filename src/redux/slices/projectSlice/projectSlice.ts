@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProject, deleteProject, fetchProjects, updateProject } from "./projectSliceBaseServices";
+import { createProject, deleteProject, fetchProjects, recentProjects, updateProject } from "./projectSliceBaseServices";
 import { ProjectState } from "@/types/redux/ProjectState";
 
 const initialState: ProjectState = {
@@ -37,6 +37,24 @@ const projectSlice = createSlice({
                 state.count = action.payload.count || 0
             })
             .addCase(fetchProjects.rejected, (state) => {
+                state.projects = [];
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+                state.count = 0
+            })
+            .addCase(recentProjects.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(recentProjects.fulfilled, (state, action) => {
+                state.projects = action.payload?.results || action.payload;
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+                state.count = action.payload.count || action.payload.length
+            })
+            .addCase(recentProjects.rejected, (state) => {
                 state.projects = [];
                 state.isLoading = false;
                 state.isError = true;

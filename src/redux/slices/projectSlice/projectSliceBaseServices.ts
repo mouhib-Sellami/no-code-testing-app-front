@@ -63,3 +63,27 @@ export const recentProjects = createAsyncThunk('projects/recentProjects', async 
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+export const getProjectComponents = createAsyncThunk('projects/projectComponents', async (id: number, thunkAPI) => {
+    try {
+        const response = await projectServices.getProjectComponents(id);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const executeProject = createAsyncThunk('projects/executeProject', async (data: any, thunkAPI) => {
+    try {
+        const response = await projectServices.executeProject(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

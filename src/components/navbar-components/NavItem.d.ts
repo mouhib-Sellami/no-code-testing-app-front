@@ -6,6 +6,7 @@ interface LinkItem {
   label: string;
   link: string;
   isVisible?: boolean;
+  icon: typeof IconHome2
 }
 
 interface NavItem {

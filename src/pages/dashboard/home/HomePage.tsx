@@ -14,7 +14,7 @@ import AppCard from "@/components/cards/AppCard";
 import ProjectDataTable from "@/components/data-table/project-dataTable/ProjectDataTable";
 
 const HomePage: React.FC = () => {
-    const { projects, isLoading, count } = useProjects();
+    const { projects, isLoading } = useProjects();
 
     const fetchRecentProjects = React.useCallback(async () => {
         await dispatch(recentProjects());

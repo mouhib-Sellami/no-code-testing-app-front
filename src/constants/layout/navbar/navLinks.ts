@@ -1,8 +1,11 @@
 import {
     IconChartBar,
     IconFolder,
+    IconGitBranch,
     IconLock,
+    IconRun,
     IconSettings,
+    IconTestPipe,
     IconUsersGroup,
 } from "@tabler/icons-react";
 import { PATH_APP } from "@/routes/paths";
@@ -40,6 +43,25 @@ export const navLinks: NavItem[] = [
         isVisible: true,
         permission: "can_view_project",
     },
+    {
+        label: "CI / CD",
+        icon: IconTestPipe,
+        name: "CI / CD",
+        isVisible: true,
+        links: [
+            {
+                label: "Git integration",
+                icon: IconGitBranch,
+                link: "",
+            },
+            {
+                label: "Runner agent",
+                icon: IconRun,
+                link: PATH_APP.general.dashboard.runnerAgent,
+            },
+        ],
+    },
+    //udate sub links
     {
         label: "Settings",
         icon: IconSettings,

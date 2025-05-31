@@ -7,6 +7,7 @@ const initialState: ProviderState = {
     isError: false,
     isLoading: false,
     message: '',
+    selectedProvider: null
 };
 
 const providerSlice = createSlice({
@@ -39,6 +40,21 @@ const providerSlice = createSlice({
                 state.isError = true;
                 state.message = '';
             })
+            .addCase(fetchProvidersDetails.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(fetchProvidersDetails.fulfilled, (state, action) => {
+                state.selectedProvider = action.payload;
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(fetchProvidersDetails.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
     }
 })
 
@@ -46,6 +62,18 @@ const providerSlice = createSlice({
 export const fetchProviders = createAsyncThunk('providers/fetchProviders', async (_, thunkAPI) => {
     try {
         const response = await providerServices.fetchProviders();
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const fetchProvidersDetails = createAsyncThunk('providers/fetchProvidersDetails', async (id: number, thunkAPI) => {
+    try {
+        const response = await providerServices.getProviderComponents(id);
         return response;
     } catch (error: any) {
         if (error?.response?.data) {

@@ -12,3 +12,34 @@ export interface Provider extends BaseModal {
     dependencies: Array<number>
 
 }
+
+export interface Kwarg {
+    label: string,
+    value: string
+}
+export interface Component extends BaseModal {
+    id: number,
+    is_function: boolean,
+    name: string,
+    module: string,
+    is_default: boolean,
+    action_name: string,
+    extra_arguments: Array<Kwarg>,
+    default_arguments: Array<Kwarg>,
+    type: 'input' | 'output' | 'input-output'
+}
+export interface Category extends BaseModal {
+    id: number,
+    name: string,
+    components: Array<Component>
+}
+export interface ProviderDetails extends BaseModal {
+    id: number,
+    name: string,
+    version: string,
+    image: string,
+    initial_config: Record,
+    extra_download_assets: string,
+    is_active: boolean,
+    categories: Array<Category>,
+}

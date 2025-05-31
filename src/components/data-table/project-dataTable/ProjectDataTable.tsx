@@ -4,7 +4,7 @@ import { Box, Group, px, TextInput } from "@mantine/core";
 import AppDataTable from "../base-dataTable/AppDataTable";
 import { AppDataTableProps } from "../base-dataTable/types";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
-import { IconBackspace, IconEye, IconLogs, IconSearch } from "@tabler/icons-react";
+import { IconBackspace, IconEye, IconHammer, IconLogs, IconSearch } from "@tabler/icons-react";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { dispatch } from "@/redux/store";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
@@ -12,6 +12,9 @@ import ProjectDataTableConfig from "./ProjectDataTableConfig";
 import { Project } from "@/types/models/Project";
 import { deleteProject } from "@/redux/slices/projectSlice/projectSliceBaseServices";
 import ViewProjectDetails from "@/components/modals/project-modals/ViewProjectDetails";
+import { onSelectProject } from "@/redux/slices/projectSlice/projectSlice";
+import { useNavigate } from "react-router";
+import { PATH_APP } from "@/routes/paths";
 
 
 export interface ProjectDataTableProps extends AppDataTableProps<Project> {
@@ -26,6 +29,7 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
     const [selected, setSelected] = React.useState<Project | null>(null);
     const [openForUpdate, { open: openUpdate, close: closeUpdate }] = useDisclosure(false);
     const [openForView, { open: openView, close: closeView }] = useDisclosure(false);
+    const navigate = useNavigate();
 
     const [debouncedQuery] = useDebouncedValue(query, 200);
 
@@ -60,6 +64,15 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
     }, [])
     const { COLUMNS } = ProjectDataTableConfig({
         actions: [
+            {
+                icon: IconHammer,
+                color: "gray",
+                permission: 'can_change_project',
+                action(record: Project) {
+                    dispatch(onSelectProject(record));
+                    navigate(PATH_APP.general.dashboard.builder);
+                },
+            },
             {
                 icon: IconEye,
                 color: "gray",

@@ -35,6 +35,7 @@ const ContentHeaderLayout: React.FC<ContentHeaderLayoutProps> = (props) => {
                                 variant="filled"
                                 size={35}
                                 aria-label="github"
+                                title="github"
                                 p={0}
                             >
                                 <IconBrandGithub style={{ width: '70%', height: '70%' }} stroke={1.5} />
@@ -44,6 +45,7 @@ const ContentHeaderLayout: React.FC<ContentHeaderLayoutProps> = (props) => {
                                 variant="filled"
                                 size={35}
                                 aria-label="Documentation"
+                                title="Docs"
                                 p={0}
                                 aria-describedby="Docs"
                             >

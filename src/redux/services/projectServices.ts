@@ -39,10 +39,27 @@ const updateProject = async (project: CreateUpdateProject) => {
     return data
 };
 
+const executeProject = async (project: any) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + `${project.id}/execute/`,
+        data: project
+    });
+    return data
+};
+
 const deleteProject = async (id: number) => {
     const { data } = await axiosInstance({
         method: "DELETE",
         url: API_PREFIX + `${id}/`,
+    });
+    return data
+};
+
+const getProjectComponents = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/components/`,
     });
     return data
 };
@@ -52,7 +69,9 @@ const projectServices = {
     createProject,
     deleteProject,
     updateProject,
-    recentProjects
+    recentProjects,
+    getProjectComponents,
+    executeProject
 };
 
 export default projectServices;

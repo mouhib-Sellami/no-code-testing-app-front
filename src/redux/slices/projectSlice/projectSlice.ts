@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProject, deleteProject, fetchProjects, recentProjects, updateProject } from "./projectSliceBaseServices";
+import { createProject, deleteProject, executeProject, fetchProjects, getProjectComponents, recentProjects, updateProject } from "./projectSliceBaseServices";
 import { ProjectState } from "@/types/redux/ProjectState";
 
 const initialState: ProjectState = {
@@ -7,7 +7,10 @@ const initialState: ProjectState = {
     isError: false,
     isLoading: false,
     message: '',
-    count: 0
+    count: 0,
+    selectedProject: null,
+    projectComponents: [],
+    isLoadingForRunning: false
 };
 
 const projectSlice = createSlice({
@@ -20,8 +23,20 @@ const projectSlice = createSlice({
             state.isError = false;
             state.message = '';
             state.count = 0;
+            state.selectedProject = null;
+            state.projectComponents = [];
+            state.isLoadingForRunning = false;
         },
-
+        onSelectProject: (state, action) => {
+            state.selectedProject = action.payload;
+        },
+        resetSelectedProject: (state) => {
+            state.selectedProject = null;
+            state.projectComponents = []
+        },
+        resetSelectedProjectComponent: (state) => {
+            state.projectComponents = []
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -103,11 +118,40 @@ const projectSlice = createSlice({
                 state.isError = true;
                 state.message = '';
             })
+            .addCase(getProjectComponents.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(getProjectComponents.fulfilled, (state, action) => {
+                state.projectComponents = action.payload
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getProjectComponents.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(executeProject.pending, (state) => {
+                state.isLoadingForRunning = true;
+                state.message = '';
+            })
+            .addCase(executeProject.fulfilled, (state, action) => {
+                state.isLoadingForRunning = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(executeProject.rejected, (state) => {
+                state.isLoadingForRunning = false;
+                state.isError = true;
+                state.message = '';
+            })
     }
 })
 
 
 
-export const { resetProjects } = projectSlice.actions;
+export const { resetProjects, onSelectProject, resetSelectedProject, resetSelectedProjectComponent } = projectSlice.actions;
 
 export default projectSlice.reducer;

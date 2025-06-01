@@ -4,18 +4,21 @@ import CustomNode from "./CustomNode";
 
 
 
-const CustomOutputNode: React.FC<any> = (props) => {
+const MonitorInputNode: React.FC<any> = (props) => {
+    console.log(props);
+
     return (
         <>
+            <CustomNode {...props} />
             <Handle
-                type="target"
-                position={Position.Top}
+                type="source"
+                id="source"
+                position={Position.Bottom}
                 onConnect={(params) => console.log('handle onConnect', params)}
                 isConnectable={props.isConnectable}
             />
-            <CustomNode {...props} />
         </>
     )
 }
 
-export default CustomOutputNode;
+export default MonitorInputNode;

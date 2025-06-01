@@ -13,6 +13,7 @@ import { useForm } from "@mantine/form";
 import useProjects from "@/hooks/useProjects";
 import { executeProject } from "@/redux/slices/projectSlice/projectSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
+import { setSelectedProjectLogs } from "@/redux/slices/projectSlice/projectStatusLogSlice";
 
 export interface RunProjectModalProps extends AppModalProps {
     project: Project
@@ -31,7 +32,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
             label: item.name, value: item.id.toString()
         }))
     }, [RUNNER_AGENT.runners])
-    
+
     const fetchRunners = React.useCallback(async () => {
         await dispatch(fetchRunnerAgents({
             p: 1,
@@ -74,6 +75,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
                 render: "NOTIFICATION",
                 type: "user role"
             }))
+            await dispatch(setSelectedProjectLogs(res.payload))
             props.onSubmit()
         }
     }, [])

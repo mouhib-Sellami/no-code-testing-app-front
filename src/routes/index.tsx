@@ -8,6 +8,7 @@ import { DashboardLayout } from "@/constants/layout/DashboardLayout";
 import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
 import TenantGuard from "@/guards/TenantGuard";
 import { ReactFlowProvider } from "@xyflow/react";
+import { BuilderViewerProvider } from "@/contexts/BuilderViewerContext";
 
 
 export default function AppRoutes() {
@@ -74,13 +75,15 @@ export default function AppRoutes() {
         {
             path: PATH_APP.general.dashboard.projectLogs,
             element: (
-                <ReactFlowProvider>
-                    <AuthGuard>
-                        <PermissionGuardRedirection permission="can_view_project">
-                            <ViewProjectLogPage />
-                        </PermissionGuardRedirection>
-                    </AuthGuard>
-                </ReactFlowProvider>
+                <BuilderViewerProvider>
+                    <ReactFlowProvider>
+                        <AuthGuard>
+                            <PermissionGuardRedirection permission="can_view_project">
+                                <ViewProjectLogPage />
+                            </PermissionGuardRedirection>
+                        </AuthGuard>
+                    </ReactFlowProvider>
+                </BuilderViewerProvider>
             )
         },
         {

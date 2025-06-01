@@ -112,7 +112,6 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
                 }} m={0} pt={"70"} pb={10} px={"sm"}>
                     {children}
 
-                    {/* {openedForRun && selectedProject && <RunProjectModal onCancel={closeForRun} onSubmit={() => { closeForRun(); navigate(PATH_APP.general.dashboard.projectLogs) }} project={selectedProject} visible={openedForRun} />} */}
                 </Box>
             </AppShell.Main>
         </AppShell>

@@ -48,7 +48,7 @@ const TenantProvider = (props: PropsWithChildren) => {
 
     React.useEffect(() => {
         if (TOKEN && ACTION == "login") {
-            secureLocalStorage.setItem(import.meta.env.VITE_AUTH_TOKEN || '@token', TOKEN);
+            secureLocalStorage.setItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token', TOKEN);
             dispatch(handleNewSession());
         }
     }, [TOKEN, ACTION, NEXT, IS_CORRESPONDED_TENANT]);
@@ -70,7 +70,7 @@ const TenantProvider = (props: PropsWithChildren) => {
         const res = await dispatch(retrieve());
         if (res.meta.requestStatus === 'fulfilled' && tenant && !IS_CORRESPONDED_TENANT) {
             const new_url = window.location.href.replace(window.location.hostname, tenant.domain.domain);
-            const TOKEN = secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
+            const TOKEN = secureLocalStorage.getItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token');
             const queryParams = new URLSearchParams({
                 next: new_url,
                 token: TOKEN as string,

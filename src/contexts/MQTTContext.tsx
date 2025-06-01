@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import mqtt, { MqttClient } from 'mqtt';
 import { SessionContext } from "./SessionContext";
 
@@ -13,9 +13,9 @@ type MQTTContextProps = {
 const MQTTContext = React.createContext<Partial<MQTTContextProps>>({
     isConnected: false,
     MQTTClient: null,
-    handleSubscribe: (topic: string, qos: 0 | 1 | 2, callback: (topic: string, message: Buffer) => void) => null,
-    handlePublish: (topic: string, payload: string, qos: 0 | 1 | 2) => null,
-    handleUnSub: (topic: string, qos?: 0 | 1 | 2) => null,
+    handleSubscribe: () => null,
+    handlePublish: () => null,
+    handleUnSub: () => null,
 });
 
 interface MQTTProviderProps {
@@ -26,6 +26,7 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
     const [isConnected, setIsConnected] = React.useState<boolean>(false);
     const [MQTTClient, setMQTTClient] = React.useState<MqttClient | null>(null);
     const { isAuthenticated } = React.useContext(SessionContext);
+    const topicCallbacks = useRef<Map<string, (topic: string, message: Buffer) => void>>(new Map());
 
     const handleConnect = useCallback(() => {
         const host = import.meta.env.VITE_MQTT_HOST;
@@ -60,6 +61,16 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
         client.on('close', () => {
             console.log('MQTT connection closed');
             setIsConnected(false);
+            topicCallbacks.current.clear();
+        });
+
+        client.on('message', (topic, message) => {
+            const callback = topicCallbacks.current.get(topic);
+            if (callback) {
+                callback(topic, message);
+            } else {
+                console.warn(`No callback found for topic: ${topic}`);
+            }
         });
 
         return client;
@@ -67,14 +78,19 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
 
     const handleSubscribe = useCallback((topic: string, qos: 0 | 1 | 2, callback: (topic: string, message: Buffer) => void) => {
         if (MQTTClient) {
-            MQTTClient.subscribe(topic, { qos }, (error) => {
-                if (error) {
-                    console.error('Subscribe to topics error', error);
-                    return;
-                }
-                console.log(`Subscribed to topic: ${topic}`);
-                MQTTClient.on('message', callback);
-            });
+            if (!topicCallbacks.current.has(topic)) {
+                MQTTClient.subscribe(topic, { qos }, (error) => {
+                    if (error) {
+                        console.error('Subscribe to topics error', error);
+                        return;
+                    }
+                    console.log(`Subscribed to topic: ${topic}`);
+                    topicCallbacks.current.set(topic, callback);
+                });
+            } else {
+                console.log(`Updating callback for topic: ${topic}`);
+                topicCallbacks.current.set(topic, callback);
+            }
         }
     }, [MQTTClient]);
 
@@ -96,14 +112,15 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
                     return;
                 }
                 console.log(`Unsubscribed from topic: ${topic}`);
+                topicCallbacks.current.delete(topic);
             });
         }
     }, [MQTTClient]);
 
     useEffect(() => {
-        if (!isAuthenticated)
-            return
-        console.log("connection")
+        if (!isAuthenticated) return;
+
+        console.log("connection");
         const client = handleConnect();
 
         return () => {
@@ -111,10 +128,11 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
                 client.end();
                 setMQTTClient(null);
                 setIsConnected(false);
+                topicCallbacks.current.clear();
             }
         };
-    }, [isAuthenticated]);
-    
+    }, [isAuthenticated, handleConnect]);
+
     return (
         <MQTTContext.Provider value={{ MQTTClient, isConnected, handleSubscribe, handlePublish, handleUnSub }}>
             {children}

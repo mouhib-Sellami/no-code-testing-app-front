@@ -4,17 +4,22 @@ import { Component } from "@/types/models/Provider";
 import { Edge, useNodesState } from "@xyflow/react";
 import React, { PropsWithChildren } from "react";
 import { MQTTContext } from "./MQTTContext";
+import { ProjectStatusLog } from "@/types/models/ProjectStatusLog";
+import { dispatch } from "@/redux/store";
+import { getProjectLogs, getProjectLogsDetails } from "@/redux/slices/projectSlice/projectStatusLogSliceBaseServices";
 
 type BuilderViewerContextProps = {
     nodes: Array<Node>,
     edges: Array<Edge>,
-    isBuilding: boolean
+    isBuilding: boolean,
+    isQueued: boolean
 }
 
 const BuilderViewerContext = React.createContext<Partial<BuilderViewerContextProps>>({
     nodes: [],
     edges: [],
-    isBuilding: false
+    isBuilding: false,
+    isQueued: true
 })
 
 const BuilderViewerProvider = (props: PropsWithChildren) => {
@@ -23,7 +28,8 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     const [nodes, setNodes] = useNodesState([]);
     const [edges, setEdges] = React.useState<Array<Edge>>([]);
     const { handleSubscribe, isConnected, MQTTClient } = React.useContext(MQTTContext);
-    const [executing, setExecuting] = React.useState<any>(null)
+    const [executing, setExecuting] = React.useState<any>(null);
+
     const workflow = React.useMemo(() => {
         if (!selectedProjectLogs)
             return
@@ -32,8 +38,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
 
     React.useEffect(() => {
         if (!executing) return;
-
-        console.log("Executing update:", executing);
 
         setNodes((nodes) =>
             nodes.map((elm) => {
@@ -55,11 +59,20 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
 
     const handleEdgeStatus = React.useCallback(() => { }, [])
 
+    const handleProjectStatus = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>, selectedProjectLogs: ProjectStatusLog) => {
+        const data = JSON.parse(message.toString())
+        if (data.execution_id == selectedProjectLogs.id) {
+            const res = await dispatch(getProjectLogsDetails(data.execution_id))
+        }
+
+    }, [])
+
     React.useEffect(() => {
         if (!isConnected || !selectedProjectLogs)
             return
-        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.project + "_component", 1, handleComponentStatus)
-        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.project + "_edge", 1, handleEdgeStatus)
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_component", 1, handleComponentStatus)
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_edge", 1, handleEdgeStatus)
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
     }, [isConnected, selectedProjectLogs])
 
     const rebuildProject = React.useCallback(async (): Promise<{ nodes: Array<Node>, edges: any }> => {
@@ -100,7 +113,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
         setEdges(edges)
 
         setTimeout(() => setIsBuilding(false), 1000)
-    }, [workflow, selectedProjectLogs])
+    }, [workflow, selectedProjectLogs, isBuilding])
 
     React.useEffect(() => {
         if (!selectedProjectLogs || !workflow)

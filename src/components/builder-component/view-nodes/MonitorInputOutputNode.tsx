@@ -6,8 +6,6 @@ import CustomNode from "./CustomNode";
 
 
 const MonitorInputOutputNode: React.FC<any> = (props) => {
-    console.log(props);
-
 
     return (
         <>

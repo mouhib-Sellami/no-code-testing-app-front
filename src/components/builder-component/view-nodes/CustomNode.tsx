@@ -6,8 +6,6 @@ import React from "react";
 const CustomNode: React.FC<any> = ({ data, isConnectable }) => {
     const status = data.status || "PENDING";
 
-    console.log("Node props:", { data, status });
-
     const getStatus = React.useMemo(() => {
         switch (status) {
             case "PENDING":

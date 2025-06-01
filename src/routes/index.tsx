@@ -73,7 +73,7 @@ export default function AppRoutes() {
             ),
         },
         {
-            path: PATH_APP.general.dashboard.projectLogs,
+            path: PATH_APP.general.dashboard.projectLog,
             element: (
                 <BuilderViewerProvider>
                     <ReactFlowProvider>
@@ -130,6 +130,14 @@ export default function AppRoutes() {
                             <RunnerAgentPage />
                         </PermissionGuardRedirection>
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.projectLogsList,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_project">
+                            <ProjectLogs />
+                        </PermissionGuardRedirection>
+                    )
                 }
 
             ]
@@ -168,6 +176,8 @@ const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage'
 const ProjectsPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectsPage')));
 const ViewProjectLogPage = Loadable(lazy(() => import('@/pages/dashboard/project/ViewProjectLogPage')));
 const BuilderPage = Loadable(lazy(() => import('@/pages/dashboard/builder/BuilderPage')));
+
+const ProjectLogs = Loadable(lazy(() => import('@/pages/dashboard/projectLogs/ProjectLogs')));
 
 //CI /CD
 const RunnerAgentPage = Loadable(lazy(() => import('@/pages/dashboard/runner-agent/RunnerAgentPage')));

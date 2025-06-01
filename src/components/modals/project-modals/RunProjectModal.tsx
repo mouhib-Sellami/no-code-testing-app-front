@@ -14,6 +14,8 @@ import useProjects from "@/hooks/useProjects";
 import { executeProject } from "@/redux/slices/projectSlice/projectSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import { setSelectedProjectLogs } from "@/redux/slices/projectSlice/projectStatusLogSlice";
+import { useNavigate } from "react-router";
+import { PATH_APP } from "@/routes/paths";
 
 export interface RunProjectModalProps extends AppModalProps {
     project: Project
@@ -24,6 +26,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
     const [query, setQuery] = React.useState("");
     const [debouncedQuery] = useDebouncedValue(query, 200);
     const PROJECT_HOOKS = useProjects();
+    const navigate = useNavigate();
 
     const runners = React.useMemo(() => {
         return RUNNER_AGENT.runners.filter(elm =>
@@ -77,6 +80,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
             }))
             await dispatch(setSelectedProjectLogs(res.payload))
             props.onSubmit()
+            navigate(PATH_APP.general.dashboard.projectLog.replaceAll(":id", res.payload.id))
         }
     }, [])
 

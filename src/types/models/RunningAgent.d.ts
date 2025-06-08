@@ -6,7 +6,7 @@ export interface RunnerAgent extends BaseModal {
     agent_key: string,
     name: string,
     last_heartbeat: Date,
-    VITE_AUTH_TOKEN: string,
+    auth_token: string,
     description: string,
     host_machine_name: string,
     host_machine_ip: string,

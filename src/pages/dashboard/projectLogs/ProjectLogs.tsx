@@ -11,21 +11,20 @@ import { dispatch } from "@/redux/store";
 import React from "react";
 import { useLocation, useParams } from "react-router";
 
-
-const ProjectLogs: React.FC = ({ }) => {
+const ProjectLogs: React.FC = () => {
     const PROJECT_STATE = useProjectLogs();
     const [page, setPage] = React.useState(1);
     const [query, setQuery] = React.useState("");
-    const params = useParams()
+    const params = useParams();
 
     const onPageChange = React.useCallback((p: number) => {
         setPage(p);
-    }, [])
+    }, []);
 
     const onSearch = React.useCallback((q: string) => {
         setPage(1);
         setQuery(q);
-    }, [])
+    }, []);
 
     const fetchData = React.useCallback(async () => {
         await dispatch(getProjectLogs({
@@ -35,28 +34,27 @@ const ProjectLogs: React.FC = ({ }) => {
                 page_size: DataTableConfig.MAX_PAGE_SIZE,
                 search: query,
             }
-
-        }))
-    }, [page, query, params])
+        }));
+    }, [page, query, params]);
 
     React.useEffect(() => {
-        fetchData()
-    }, [page, query, params])
+        fetchData();
+    }, [page, query, params]);
 
-    React.useEffect(() => () => {        
-        dispatch(resetSelectedProjectLogs())
+    React.useEffect(() => () => {
+        dispatch(resetSelectedProjectLogs());
     }, []);
+
     return (
-        <PageContentLayout title="Creative Cosmos ✨">
+        <PageContentLayout title="Innovate Hub 🚀">
             <AppCard
                 permission="can_view_all_project"
                 withoutPadding={true}
-                title={
-                    "Project Sparks ⚡"
-                }
+                title="Project Pulse 🌩️"
             >
                 <ProjectLogsDataTable
-                    height={390}
+                    withSearch={false}
+                    height={500}
                     isLoading={PROJECT_STATE.isLoading}
                     records={PROJECT_STATE.projectLogs}
                     count={PROJECT_STATE.count}
@@ -67,6 +65,6 @@ const ProjectLogs: React.FC = ({ }) => {
             </AppCard>
         </PageContentLayout>
     );
-}
+};
 
 export default ProjectLogs;

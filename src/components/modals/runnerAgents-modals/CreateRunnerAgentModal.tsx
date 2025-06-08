@@ -66,12 +66,12 @@ const CreateRunnerAgentModal: React.FC<AppModalProps> = (props) => {
                         <Group w="100%" align="center" wrap="nowrap" justify="center">
                             <PasswordInput
                                 w={300}
-                                value={res.payload.VITE_AUTH_TOKEN}
+                                value={res.payload.auth_token}
                                 readOnly
                                 placeholder="Your secret agent code! 🕵️"
                             />
 
-                            <CopyButton value={res.payload.VITE_AUTH_TOKEN} timeout={2000}>
+                            <CopyButton value={res.payload.auth_token} timeout={2000}>
                                 {({ copied, copy }) => (
                                     <Tooltip label={copied ? "Copied to clipboard! 🎉" : "Copy the secret code! 📋"} withArrow position="right">
                                         <ActionIcon color={copied ? "teal" : "primary.9"} variant="filled" size={35} onClick={copy}>
@@ -84,7 +84,7 @@ const CreateRunnerAgentModal: React.FC<AppModalProps> = (props) => {
                     </Group>
                 ),
                 onConfirm: () => {
-                    clipboard.copy(res.payload.VITE_AUTH_TOKEN);
+                    clipboard.copy(res.payload.auth_token);
                 },
             });
             notifications.show({

@@ -9,7 +9,7 @@
     text-decoration: none;
     font-family: var(--mantine-font-inter);
     &:hover {
-        background-color: var(--mantine-color-activeLinkBgColor-0);
+        background-color: var(--mantine-color-primary-0);
         border-radius: 6px;
         color: light-dark(var(--mantine-color-linkColorLight-9), var(--mantine-color-linkColorDark-9));
     }
@@ -31,6 +31,7 @@
 .activeControl {
     font-weight: 600;
     color: var(--mantine-color-activeLinkColor-0);
+    
 }
 
 .link {
@@ -55,6 +56,7 @@
     color: var(--mantine-color-activeLinkColor-0);
     padding-top: 0px;
     padding-bottom: 0px;
+    
 }
 
 .chevron {

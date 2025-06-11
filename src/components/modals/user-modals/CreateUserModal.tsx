@@ -68,6 +68,8 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
     });
 
     const onSubmit = React.useCallback(async (values) => {
+        console.log(values);
+
         const res = await dispatch(createUser(values))
         if (res.meta.requestStatus == "rejected") {
             dispatch(onShowNotification({
@@ -91,6 +93,9 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
         form.validate()
         if (form.isValid()) {
             onSubmit({ ...form.values })
+        } else {
+            console.log(form.errors);
+
         }
     }, [form])
 
@@ -158,7 +163,8 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
                     data={RoleOptions}
                     nothingFoundMessage="No role found"
                     onSearchChange={setQuery}
-                    {...form.getInputProps('role_id')} />
+                    key={form.key('role')}
+                    {...form.getInputProps('role')} />
             </Stack>
         </BaseAppModal>
     )

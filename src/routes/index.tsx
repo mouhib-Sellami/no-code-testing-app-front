@@ -9,6 +9,7 @@ import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
 import TenantGuard from "@/guards/TenantGuard";
 import { ReactFlowProvider } from "@xyflow/react";
 import { BuilderViewerProvider } from "@/contexts/BuilderViewerContext";
+import { WorkFlowProvider } from "@/contexts/WorkflowContext";
 
 
 export default function AppRoutes() {
@@ -70,6 +71,20 @@ export default function AppRoutes() {
                         </PermissionGuardRedirection>
                     </AuthGuard>
                 </ReactFlowProvider>
+            ),
+        },
+        {
+            path: PATH_APP.general.dashboard.projectWorkflows,
+            element: (
+                <AuthGuard>
+                    <ReactFlowProvider>
+                        <WorkFlowProvider>
+                            <PermissionGuardRedirection permission="can_change_project">
+                                <ProjectWorkflowPage />
+                            </PermissionGuardRedirection>
+                        </WorkFlowProvider>
+                    </ReactFlowProvider>
+                </AuthGuard>
             ),
         },
         {
@@ -174,7 +189,9 @@ const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage'
 
 //PROJECTS
 const ProjectsPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectsPage')));
+const ProjectWorkflowPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectWorkflowPage')));
 const ViewProjectLogPage = Loadable(lazy(() => import('@/pages/dashboard/project/ViewProjectLogPage')));
+
 const BuilderPage = Loadable(lazy(() => import('@/pages/dashboard/builder/BuilderPage')));
 
 const ProjectLogs = Loadable(lazy(() => import('@/pages/dashboard/projectLogs/ProjectLogs')));

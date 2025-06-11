@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProject, deleteProject, executeProject, fetchProjects, getProjectComponents, recentProjects, updateProject } from "./projectSliceBaseServices";
+import { createProject, deleteProject, executeProject, fetchProjects, getProjectComponents, getProjectTestCases, getProjectTestFlows, recentProjects, updateProject } from "./projectSliceBaseServices";
 import { ProjectState } from "@/types/redux/ProjectState";
 
 const initialState: ProjectState = {
@@ -10,7 +10,11 @@ const initialState: ProjectState = {
     count: 0,
     selectedProject: null,
     projectComponents: [],
-    isLoadingForRunning: false
+    projectTests: [],
+    projectFlows: [],
+    isLoadingForRunning: false,
+    isLoadingFlows: false,
+    isLoadingTests: false
 };
 
 const projectSlice = createSlice({
@@ -25,7 +29,11 @@ const projectSlice = createSlice({
             state.count = 0;
             state.selectedProject = null;
             state.projectComponents = [];
+            state.projectTests = [];
+            state.projectFlows = [];
             state.isLoadingForRunning = false;
+            state.isLoadingFlows = false;
+            state.isLoadingTests = false;
         },
         onSelectProject: (state, action) => {
             state.selectedProject = action.payload;
@@ -33,9 +41,13 @@ const projectSlice = createSlice({
         resetSelectedProject: (state) => {
             state.selectedProject = null;
             state.projectComponents = []
+            state.projectTests = []
+            state.projectFlows = []
         },
         resetSelectedProjectComponent: (state) => {
             state.projectComponents = []
+            state.projectTests = []
+            state.projectFlows = []
         },
     },
     extraReducers: (builder) => {
@@ -130,6 +142,36 @@ const projectSlice = createSlice({
             })
             .addCase(getProjectComponents.rejected, (state) => {
                 state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(getProjectTestCases.pending, (state) => {
+                state.isLoadingTests = true;
+                state.message = '';
+            })
+            .addCase(getProjectTestCases.fulfilled, (state, action) => {
+                state.projectTests = action.payload
+                state.isLoadingTests = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getProjectTestCases.rejected, (state) => {
+                state.isLoadingTests = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(getProjectTestFlows.pending, (state) => {
+                state.isLoadingFlows = true;
+                state.message = '';
+            })
+            .addCase(getProjectTestFlows.fulfilled, (state, action) => {
+                state.projectFlows = action.payload
+                state.isLoadingFlows = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getProjectTestFlows.rejected, (state) => {
+                state.isLoadingFlows = false;
                 state.isError = true;
                 state.message = '';
             })

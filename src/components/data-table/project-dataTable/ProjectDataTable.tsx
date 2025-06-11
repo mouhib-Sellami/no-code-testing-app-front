@@ -70,7 +70,7 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
                 permission: 'can_change_project',
                 action(record: Project) {
                     dispatch(onSelectProject(record));
-                    navigate(PATH_APP.general.dashboard.builder);
+                    navigate(PATH_APP.general.dashboard.projectWorkflows);
                 },
             },
             {

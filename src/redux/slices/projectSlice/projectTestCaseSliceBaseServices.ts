@@ -25,3 +25,15 @@ export const deleteTestCase = createAsyncThunk('projectsTestCases/deleteTestCase
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+export const getTestCaseComponents = createAsyncThunk('projectsTestCases/getTestCaseComponents', async (id: number, thunkAPI) => {
+    try {
+        const response = await projectTestCaseServices.getTestCaseComponents(id);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

@@ -10,15 +10,18 @@ import { useDisclosure } from '@mantine/hooks';
 import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import { useForm } from '@mantine/form';
 import { onShowNotification } from '@/redux/slices/notificationSlice/notificationSlice';
-import { createTestCase, deleteTestCase } from '@/redux/slices/projectSlice/ProjectTestCaseSliceBaseServices';
-import { CreateUpdateTestCase } from '@/types/models/TestCase';
+import { createTestCase, deleteTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
+import { CreateUpdateTestCase, TestCase } from '@/types/models/TestCase';
+import { useNavigate } from 'react-router';
+import { PATH_APP } from '@/routes/paths';
+import { onSelectTestCase } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
 
 const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
     const { selectedProject, projectTests, isLoadingTests } = useProjects();
     const { colors } = useMantineTheme();
     const [opened, { open, close }] = useDisclosure();
     const { openDeleteModal } = useConfirmModal();
-
+    const navigate = useNavigate();
     const fetchTestCases = React.useCallback(async () => {
         if (!selectedProject)
             return
@@ -92,6 +95,11 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
                 await dispatch(getProjectTestCases(selectedProject.id))
             }
         });
+    }, [])
+
+    const goEdit = React.useCallback((item: TestCase) => {
+        dispatch(onSelectTestCase(item))
+        navigate(PATH_APP.general.dashboard.builder.replaceAll(":test_id", item.id.toString()))
     }, [])
 
     return (
@@ -171,6 +179,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
                                             color={colors.activeLinkBgColor[9]}
                                             title="Sync from remote"
                                             size={30}
+                                            onClick={() => goEdit(elm)}
                                         >
                                             <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
                                         </ActionIcon>

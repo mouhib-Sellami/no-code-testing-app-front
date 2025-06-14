@@ -22,6 +22,8 @@ import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import { IconPencil, IconTrash, IconX } from '@tabler/icons-react';
 import { deleteEdge, updateEdgeType } from '@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices';
 import { dispatch } from '@/redux/store';
+import { useParams, useSearchParams } from 'react-router';
+import { restProjectTestCases } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
 
 
 const BuilderPage: React.FC = () => {
@@ -30,15 +32,19 @@ const BuilderPage: React.FC = () => {
     const { resetBuilder, isBuilding, updateProjectSyncing, deleteComponent } = React.useContext(BuilderContext);
     const { openDeleteModal, openConfirmModal } = useConfirmModal();
     const { setEdges } = useReactFlow();
+    const params = useParams();
 
     const selectedEdge = React.useMemo(() => {
         return edges.find(elm => elm.selected)
     }, [edges])
 
-    // React.useEffect(() => () => {
-    //     resetBuilder?.()
-    //     resetBuilderHooks()
-    // }, []);
+    React.useEffect(() => () => {
+        // resetBuilder?.()
+        // resetBuilderHooks()
+        console.log("reseting");
+        
+        dispatch(restProjectTestCases())
+    }, []);
 
     const deleteSelectedComponent = React.useCallback(async (id: number) => {
         openDeleteModal({

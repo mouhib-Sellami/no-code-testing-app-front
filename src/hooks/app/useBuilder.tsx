@@ -11,7 +11,7 @@ const useBuilder = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { type, name, setDnD, component } = useDnD();
-    const { createNewProjectComponent, rebuildProject, projectComponents, createNewEdge, updateProjectSyncing } = React.useContext(BuilderContext);
+    const { createNewProjectComponent, rebuildProject, components, createNewEdge, updateProjectSyncing } = React.useContext(BuilderContext);
     const { openConfirmModal } = useConfirmModal();
     const [rebuild, setRebuild] = useState(false);
     const [rebuildEdges, setRebuildEdges] = useState(false);
@@ -89,17 +89,17 @@ const useBuilder = () => {
                 setRebuild(false);
             });
         }
-    }, [projectComponents, rebuild,]);
+    }, [components, rebuild,]);
 
     useEffect(() => {
-        if (projectComponents) {
-            rebuildProject(projectComponents.length == 0).then(res => {
+        if (components) {
+            rebuildProject(components.length == 0).then(res => {
                 setNodes(res.nodes);
                 setEdges(res.edges);
                 setRebuild(false);
             });
         }
-    }, [projectComponents]);
+    }, [components]);
 
     const miniMapRendering = useCallback((n: Node) => {
         switch (n.type) {

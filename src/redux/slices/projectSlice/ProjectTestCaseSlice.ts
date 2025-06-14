@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTestCase, deleteTestCase } from "./ProjectTestCaseSliceBaseServices";
+import { createTestCase, deleteTestCase, getTestCaseComponents } from "./projectTestCaseSliceBaseServices";
+import { ProjectTestCaseState } from "@/types/redux/ProjectTestCaseState";
 
 const initialState: ProjectTestCaseState = {
     isError: false,
     isLoading: false,
     message: '',
+    components: [],
+    selectedTest: null
 };
 
 const projectTestCaseSlice = createSlice({
@@ -15,7 +18,12 @@ const projectTestCaseSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.message = '';
+            state.components = [];
+            state.selectedTest = null
         },
+        onSelectTestCase: (state, action) => {
+            state.selectedTest = action.payload
+        }
 
     },
     extraReducers: (builder) => {
@@ -24,7 +32,7 @@ const projectTestCaseSlice = createSlice({
                 state.isLoading = true;
                 state.message = '';
             })
-            .addCase(createTestCase.fulfilled, (state, action) => {
+            .addCase(createTestCase.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
@@ -38,7 +46,7 @@ const projectTestCaseSlice = createSlice({
                 state.isLoading = true;
                 state.message = '';
             })
-            .addCase(deleteTestCase.fulfilled, (state, action) => {
+            .addCase(deleteTestCase.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
@@ -48,9 +56,24 @@ const projectTestCaseSlice = createSlice({
                 state.isError = true;
                 state.message = '';
             })
+            .addCase(getTestCaseComponents.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(getTestCaseComponents.fulfilled, (state, action) => {
+                state.components = action.payload
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getTestCaseComponents.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
     }
 })
 
-export const { restProjectTestCases } = projectTestCaseSlice.actions;
+export const { restProjectTestCases, onSelectTestCase } = projectTestCaseSlice.actions;
 
 export default projectTestCaseSlice.reducer;

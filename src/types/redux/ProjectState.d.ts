@@ -8,7 +8,7 @@ export interface ProjectState extends BaseState {
     projects: Array<Project>;
     count: number;
     selectedProject?: Project,
-    projectComponents: Array<ProjectComponent>,
+    // projectComponents: Array<ProjectComponent>,
     projectTests: Array<TestCase>,
     projectFlows: Array<TestFlow>,
     isLoadingForRunning: boolean,

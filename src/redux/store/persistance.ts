@@ -135,7 +135,7 @@ const ProjectTestCasePersistConfig = {
     key: 'project-test-case',
     storage: storage,
     keyPrefix: 'redux-',
-    whitelist: [],
+    whitelist: ["selectedTest"],
 };
 const rootReducer = combineReducers({
     appConfigs: persistReducer(appConfigPersistenceConfig, appConfigReducer),

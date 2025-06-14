@@ -22,7 +22,7 @@ export const PATH_APP = {
             projects: path(ROOTS_APP, '/projects'),
             organization: path(ROOTS_APP, '/organization'),
             roles: path(ROOTS_APP, '/privilege'),
-            builder: path(ROOTS_APP, '/builder'),
+            builder: path(ROOTS_APP, '/builder/:test_id'),
             runnerAgent: path(ROOTS_APP, '/runner-agent'),
             projectWorkflows: path(ROOTS_APP, "/test-flows"),
             projectLogsList: path(ROOTS_APP, '/project-logs/:project_id'),

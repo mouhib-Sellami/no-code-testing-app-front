@@ -38,10 +38,19 @@ const deleteTestCase = async (id: number) => {
     });
     return data
 };
+
 const getTestCase = async (id: number) => {
     const { data } = await axiosInstance({
         method: "GET",
         url: API_PREFIX + `${id}/`,
+    });
+    return data
+};
+
+const getTestCaseComponents = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/components/`,
     });
     return data
 };
@@ -52,6 +61,7 @@ const projectTestCaseServices = {
     createTestCase,
     getTestCase,
     patchTestCase,
+    getTestCaseComponents
 };
 
 export default projectTestCaseServices;

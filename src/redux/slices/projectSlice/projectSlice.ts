@@ -9,7 +9,7 @@ const initialState: ProjectState = {
     message: '',
     count: 0,
     selectedProject: null,
-    projectComponents: [],
+    // projectComponents: [],
     projectTests: [],
     projectFlows: [],
     isLoadingForRunning: false,
@@ -28,7 +28,7 @@ const projectSlice = createSlice({
             state.message = '';
             state.count = 0;
             state.selectedProject = null;
-            state.projectComponents = [];
+            // state.projectComponents = [];
             state.projectTests = [];
             state.projectFlows = [];
             state.isLoadingForRunning = false;
@@ -40,12 +40,12 @@ const projectSlice = createSlice({
         },
         resetSelectedProject: (state) => {
             state.selectedProject = null;
-            state.projectComponents = []
+            // state.projectComponents = []
             state.projectTests = []
             state.projectFlows = []
         },
         resetSelectedProjectComponent: (state) => {
-            state.projectComponents = []
+            // state.projectComponents = []
             state.projectTests = []
             state.projectFlows = []
         },
@@ -130,21 +130,21 @@ const projectSlice = createSlice({
                 state.isError = true;
                 state.message = '';
             })
-            .addCase(getProjectComponents.pending, (state) => {
-                state.isLoading = true;
-                state.message = '';
-            })
-            .addCase(getProjectComponents.fulfilled, (state, action) => {
-                state.projectComponents = action.payload
-                state.isLoading = false;
-                state.isError = false;
-                state.message = '';
-            })
-            .addCase(getProjectComponents.rejected, (state) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = '';
-            })
+            // .addCase(getProjectComponents.pending, (state) => {
+            //     state.isLoading = true;
+            //     state.message = '';
+            // })
+            // .addCase(getProjectComponents.fulfilled, (state, action) => {
+            //     state.projectComponents = action.payload
+            //     state.isLoading = false;
+            //     state.isError = false;
+            //     state.message = '';
+            // })
+            // .addCase(getProjectComponents.rejected, (state) => {
+            //     state.isLoading = false;
+            //     state.isError = true;
+            //     state.message = '';
+            // })
             .addCase(getProjectTestCases.pending, (state) => {
                 state.isLoadingTests = true;
                 state.message = '';

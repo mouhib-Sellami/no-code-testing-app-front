@@ -5,10 +5,11 @@ import React from 'react'
 import classes from './style.module.css';
 import WorkFlowsTab from './WorkFlowsTab';
 import CasesTab from './CasesTab';
+import { WorkFlowContext } from '@/contexts/WorkflowContext';
 
 const WorkFlowSideBar: React.FC = () => {
     const [rootRef, setRootRef] = React.useState<HTMLDivElement | null>(null);
-    const [value, setValue] = React.useState<string | null>('1');
+    const { value, updateActiveTab } = React.useContext(WorkFlowContext);
     const [controlsRefs, setControlsRefs] = React.useState<Record<string, HTMLButtonElement | null>>({});
     const setControlRef = (val: string) => (node: HTMLButtonElement) => {
         controlsRefs[val] = node;
@@ -16,7 +17,7 @@ const WorkFlowSideBar: React.FC = () => {
     };
 
     return (
-        <Tabs variant="none" value={value} onChange={setValue}>
+        <Tabs variant="none" value={value} onChange={updateActiveTab}>
             <Tabs.List ref={setRootRef} className={classes.list}>
                 <Tabs.Tab value="1" ref={setControlRef('1')} className={classes.tab}>
                     Work flows

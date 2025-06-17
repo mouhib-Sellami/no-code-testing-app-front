@@ -1,15 +1,12 @@
-import { ActionIcon, AppShell, Box, Group, px, ScrollArea, Stack, useMantineTheme } from '@mantine/core';
+import { ActionIcon, AppShell, Box, Group, px, Stack, useMantineTheme } from '@mantine/core';
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';
 import NavbarFooter from '../navbar/NavbarFooter';
-import { IconCloudUpload, IconRefresh, IconArrowLeft, IconReceiptPound, IconCloudCog } from '@tabler/icons-react';
-import { BuilderContext } from '@/contexts/BuilderContext';
+import { IconCloudUpload, IconRefresh, IconArrowLeft } from '@tabler/icons-react';
 import { dispatch } from '@/redux/store';
-import { getProjectComponents, getProjectTestCases } from '@/redux/slices/projectSlice/projectSliceBaseServices';
-import { resetProjectsComponent } from '@/redux/slices/projectComponentsSlice/projectComponentSlice';
-import { resetSelectedProjectComponent } from '@/redux/slices/projectSlice/projectSlice';
-import RunProjectModal from '@/components/modals/project-modals/RunProjectModal';
+import { WorkFlowContext } from '@/contexts/WorkflowContext';
+import { getTestFlowComponents } from '@/redux/slices/projectSlice/projectTestFlowSliceBaseServices';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
     sideBard: JSX.Element | JSX.Element[];
@@ -23,7 +20,7 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
     const navigate = useNavigate();
     const mainRef = useRef<HTMLDivElement>(null);
     const { colors } = useMantineTheme();
-    const { isSyncing, selectedProject } = React.useContext(BuilderContext);
+    const { isSyncing, selectedFlow } = React.useContext(WorkFlowContext);
 
     useEffect(() => {
         if (mainRef.current) {
@@ -32,14 +29,10 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
     }, [pathname]);
 
     const resync = React.useCallback(async () => {
-        if (!selectedProject)
+        if (!selectedFlow)
             return
-        if (!selectedProject || !selectedProject.provider.id)
-            return
-        await dispatch(resetSelectedProjectComponent())
-        await dispatch(resetProjectsComponent())
-        await dispatch(getProjectTestCases(selectedProject.id))
-    }, [selectedProject])
+        await dispatch(getTestFlowComponents(selectedFlow.id))
+    }, [selectedFlow])
 
     const handleGoBack = () => {
         navigate(-1);
@@ -104,6 +97,7 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
             >
                 <Stack style={{
                     height: "100%",
+                    overflow: "hidden",
                     borderWidth: 1,
                     padding: 10,
                     borderRadius: "var(--mantine-spacing-md)",
@@ -111,7 +105,7 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
                     borderStyle: "solid",
                     zIndex: -1
                 }}>
-                    <AppShell.Section grow my="md" component={ScrollArea}>
+                    <AppShell.Section grow my="md">
                         {sideBard}
                     </AppShell.Section>
                     <AppShell.Section>

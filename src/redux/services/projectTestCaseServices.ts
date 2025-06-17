@@ -55,13 +55,23 @@ const getTestCaseComponents = async (id: number) => {
     return data
 };
 
+const executeTestCase = async (values: any) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + `${values.id}/execute-test-case/`,
+        data: values
+    });
+    return data
+};
+
 const projectTestCaseServices = {
     deleteTestCase,
     updateTestCase,
     createTestCase,
     getTestCase,
     patchTestCase,
-    getTestCaseComponents
+    getTestCaseComponents,
+    executeTestCase
 };
 
 export default projectTestCaseServices;

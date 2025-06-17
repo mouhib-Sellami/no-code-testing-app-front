@@ -38,10 +38,19 @@ const deleteTestFlow = async (id: number) => {
     });
     return data
 };
+
 const getTestFlow = async (id: number) => {
     const { data } = await axiosInstance({
         method: "GET",
         url: API_PREFIX + `${id}/`,
+    });
+    return data
+};
+
+const getTestFlowComponents = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/components/`,
     });
     return data
 };
@@ -52,6 +61,7 @@ const projectTestFlowServices = {
     createTestFlow,
     getTestFlow,
     patchTestFlow,
+    getTestFlowComponents
 };
 
 export default projectTestFlowServices;

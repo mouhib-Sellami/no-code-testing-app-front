@@ -13,7 +13,7 @@ const TestInputOutputNode: React.FC<any> = (props) => {
             <Handle
                 type="target"
                 id="target"
-                position={Position.Top}
+                position={Position.Left}
                 onConnect={(params) => console.log('handle onConnect', params)}
                 isConnectable={props.isConnectable}
             />
@@ -21,7 +21,7 @@ const TestInputOutputNode: React.FC<any> = (props) => {
             <Handle
                 type="source"
                 id="source"
-                position={Position.Bottom}
+                position={Position.Right}
                 onConnect={(params) => console.log('handle onConnect', params)}
                 isConnectable={props.isConnectable}
             />

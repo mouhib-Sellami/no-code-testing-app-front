@@ -5,9 +5,6 @@ import {
     Background,
     MiniMap,
     Panel,
-    EdgeProps,
-    Edge,
-    useEdges,
     useReactFlow,
 } from '@xyflow/react';
 import { ActionIcon, Group, Select, useMantineTheme } from '@mantine/core';
@@ -42,7 +39,7 @@ const BuilderPage: React.FC = () => {
         // resetBuilder?.()
         // resetBuilderHooks()
         console.log("reseting");
-        
+
         dispatch(restProjectTestCases())
     }, []);
 

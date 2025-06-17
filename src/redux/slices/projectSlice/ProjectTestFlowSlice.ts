@@ -1,11 +1,12 @@
-import permissionServices from "@/redux/services/permissionServices";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createTestFlow, deleteTestFlow } from "./projectTestFlowSliceBaseServices";
+import { createSlice } from "@reduxjs/toolkit";
+import { createTestFlow, deleteTestFlow, getTestFlowComponents } from "./projectTestFlowSliceBaseServices";
+import { executeTestCase } from "./projectTestCaseSliceBaseServices";
 
 const initialState: ProjectTestFlowState = {
     isError: false,
     isLoading: false,
     message: '',
+    testComponents: []
 };
 
 const ProjectTestFlowSlice = createSlice({
@@ -16,6 +17,7 @@ const ProjectTestFlowSlice = createSlice({
             state.isLoading = false;
             state.isError = false;
             state.message = '';
+            state.testComponents = []
         },
 
     },
@@ -25,7 +27,7 @@ const ProjectTestFlowSlice = createSlice({
                 state.isLoading = true;
                 state.message = '';
             })
-            .addCase(createTestFlow.fulfilled, (state, action) => {
+            .addCase(createTestFlow.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
@@ -39,12 +41,41 @@ const ProjectTestFlowSlice = createSlice({
                 state.isLoading = true;
                 state.message = '';
             })
-            .addCase(deleteTestFlow.fulfilled, (state, action) => {
+            .addCase(deleteTestFlow.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
             })
             .addCase(deleteTestFlow.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(getTestFlowComponents.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(getTestFlowComponents.fulfilled, (state, action) => {
+                state.testComponents = action.payload
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getTestFlowComponents.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(executeTestCase.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(executeTestCase.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(executeTestCase.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = '';

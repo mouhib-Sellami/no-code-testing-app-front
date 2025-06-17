@@ -64,13 +64,15 @@ export default function AppRoutes() {
         {
             path: PATH_APP.general.dashboard.builder,
             element: (
-                <ReactFlowProvider>
-                    <AuthGuard>
-                        <PermissionGuardRedirection permission="can_change_project">
-                            <BuilderPage />
-                        </PermissionGuardRedirection>
-                    </AuthGuard>
-                </ReactFlowProvider>
+                <AuthGuard>
+                    <ReactFlowProvider>
+                        <WorkFlowProvider>
+                            <PermissionGuardRedirection permission="can_change_project">
+                                <BuilderPage />
+                            </PermissionGuardRedirection>
+                        </WorkFlowProvider>
+                    </ReactFlowProvider>
+                </AuthGuard>
             ),
         },
         {

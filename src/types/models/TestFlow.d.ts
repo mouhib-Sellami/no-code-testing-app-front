@@ -10,3 +10,15 @@ export interface CreateUpdateTestFlow {
     name: string,
     project: number
 }
+
+
+export interface CreateProjectTestFlowComponent {
+    flow_id: number,
+    test_case_id: number,
+    extra_data: Object
+}
+
+export interface CreateTestFlowEdge {
+    source_component: number,
+    target_component: number,
+}

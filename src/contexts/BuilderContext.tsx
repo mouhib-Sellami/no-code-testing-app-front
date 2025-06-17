@@ -4,7 +4,7 @@ import useProviders from "@/hooks/useProviders";
 import { resetProjectsComponent } from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
 import { createEdge, createProjectComponent, deleteProjectComponent, getEdges } from "@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices";
 import { resetSelectedProject, resetSelectedProjectComponent } from "@/redux/slices/projectSlice/projectSlice";
-import { getProjectComponents } from "@/redux/slices/projectSlice/projectSliceBaseServices";
+import { restProjectTestCases } from "@/redux/slices/projectSlice/ProjectTestCaseSlice";
 import { getTestCaseComponents } from "@/redux/slices/projectSlice/projectTestCaseSliceBaseServices";
 import { fetchProvidersDetails } from "@/redux/slices/providerSlice/providerSlice";
 import { dispatch } from "@/redux/store";
@@ -48,7 +48,6 @@ const BuilderProvider = (props: PropsWithChildren) => {
     const { selectedProvider } = useProviders();
     const [isSyncing, setIsSyncing] = React.useState(false);
     const [isBuilding, setIsBuilding] = React.useState(false);
-    console.log(selectedTest);
 
     const updateProjectSyncing = React.useCallback((v: boolean) => {
         if (v == false) {
@@ -174,9 +173,10 @@ const BuilderProvider = (props: PropsWithChildren) => {
     }, [])
 
     const resetBuilder = React.useCallback(() => {
-        dispatch(resetProjectsComponent())
-        dispatch(resetSelectedProject())
-        dispatch(resetSelectedProjectComponent())
+        // dispatch(resetProjectsComponent())
+        // dispatch(resetSelectedProject())
+        // dispatch(resetSelectedProjectComponent())
+        dispatch(restProjectTestCases())
     }, [])
 
     return (

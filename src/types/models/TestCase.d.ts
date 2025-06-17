@@ -20,3 +20,8 @@ export interface TestCase extends BaseModal {
     name: string,
     is_reference: boolean
 }
+
+
+export interface FlowTestComponent extends TestCase {
+    builder_config: any
+}

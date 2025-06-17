@@ -2,26 +2,26 @@ import CustomLoadingOverlay from '@/components/custom-loading/CustomLoadingOverl
 import useProjects from '@/hooks/useProjects'
 import { getProjectTestCases } from '@/redux/slices/projectSlice/projectSliceBaseServices';
 import { dispatch } from '@/redux/store';
-import { ActionIcon, Box, Divider, Group, rem, ScrollArea, Text, TextInput, Title, useMantineTheme } from '@mantine/core'
-import { IconPencil, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { ActionIcon, Box, Divider, Group, rem, ScrollArea, TextInput, Title, useMantineTheme } from '@mantine/core'
+import { IconPlus, IconX } from '@tabler/icons-react';
 import React from 'react'
 import { CustomTabsProps } from './types';
 import { useDisclosure } from '@mantine/hooks';
-import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import { useForm } from '@mantine/form';
 import { onShowNotification } from '@/redux/slices/notificationSlice/notificationSlice';
-import { createTestCase, deleteTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
-import { CreateUpdateTestCase, TestCase } from '@/types/models/TestCase';
-import { useNavigate } from 'react-router';
+import { createTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
+import { CreateUpdateTestCase, TestCase, } from '@/types/models/TestCase';
+import TestCaseCard from './TestCaseCard';
 import { PATH_APP } from '@/routes/paths';
 import { onSelectTestCase } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
+import { useNavigate } from 'react-router';
 
 const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
     const { selectedProject, projectTests, isLoadingTests } = useProjects();
     const { colors } = useMantineTheme();
     const [opened, { open, close }] = useDisclosure();
-    const { openDeleteModal } = useConfirmModal();
     const navigate = useNavigate();
+
     const fetchTestCases = React.useCallback(async () => {
         if (!selectedProject)
             return
@@ -70,6 +70,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
             await dispatch(getProjectTestCases(selectedProject.id))
             form.reset()
             close()
+            onSelect(res.payload)
             dispatch(onShowNotification({
                 content: "Test flow created succesfully",
                 level: "SUCCESS",
@@ -86,18 +87,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
 
     }, [selectedProject])
 
-    const deleteTestCase_ = React.useCallback(async (id: number) => {
-        openDeleteModal({
-            content: "Are you sure?",
-            title: "Delete Test flow",
-            onConfirm: async () => {
-                await dispatch(deleteTestCase(id))
-                await dispatch(getProjectTestCases(selectedProject.id))
-            }
-        });
-    }, [])
-
-    const goEdit = React.useCallback((item: TestCase) => {
+    const onSelect = React.useCallback((item: TestCase) => {
         dispatch(onSelectTestCase(item))
         navigate(PATH_APP.general.dashboard.builder.replaceAll(":test_id", item.id.toString()))
     }, [])
@@ -118,7 +108,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
                 </ActionIcon>
             </Group>
             <Divider py={"md"} />
-            <ScrollArea pos={"relative"} mih={rem("60vh")}>
+            <ScrollArea pos={"relative"} h={rem("60vh")}>
                 {opened && < form onSubmit={form.onSubmit((values) => submit(values))} style={{ width: "100%" }}>
 
                     <Box p={0} m={0} mb={10}
@@ -158,45 +148,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
                 {
                     projectTests.map((elm, idx) => {
                         return (
-                            <Box p={0} m={0} mb={10} key={idx}
-                                style={{ cursor: "pointer" }}>
-                                <Group
-                                    p={"sm"}
-                                    bg={colors.activeLinkBgColor[0]}
-                                    style={{
-                                        borderRadius: 6,
-                                    }}
-                                    align='center'
-                                    justify='space-between'
-                                >
-                                    <Text fz={{ xl: 14, lg: 12, md: 10 }} truncate maw={"70%"}>
-                                        {elm.name}
-                                    </Text>
-                                    <Group align='center' justify='center' gap={10}>
-                                        <ActionIcon
-                                            variant="filled"
-                                            radius="md"
-                                            color={colors.activeLinkBgColor[9]}
-                                            title="Sync from remote"
-                                            size={30}
-                                            onClick={() => goEdit(elm)}
-                                        >
-                                            <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                        <ActionIcon
-                                            variant="filled"
-                                            radius="md"
-                                            color={colors.activeLinkBgColor[9]}
-                                            title="Sync from remote"
-                                            size={30}
-                                            onClick={() => { deleteTestCase_(elm.id) }}
-                                        >
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Group>
-                                <Divider />
-                            </Box>
+                            <TestCaseCard key={idx} data={elm} onSelect={onSelect} />
                         )
                     })
                 }

@@ -1,11 +1,15 @@
-import TestSelectorSideBar from "@/components/builder-component/test-selector/TestSelectorSideBar";
 import WorkFlowSideBar from "@/components/builder-component/wrokflow-sidebar/WorkFlowSideBar";
 import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
 import TestEdgeTypes from "@/config/TestEdgeTypes";
 import TestNodeTypes from "@/config/TestNodeTypes";
 import TestBuilderLayout from "@/constants/layout/builderLayout/TestBuilderLayout";
+import { WorkFlowContext } from "@/contexts/WorkflowContext";
+import useTestFlowBuilder from "@/hooks/app/useTestFlowBuilder";
 import useProjects from "@/hooks/useProjects";
+import { resetSelectedProject } from "@/redux/slices/projectSlice/projectSlice";
 import { getProjectTestCases } from "@/redux/slices/projectSlice/projectSliceBaseServices";
+import { restProjectTestCases } from "@/redux/slices/projectSlice/ProjectTestCaseSlice";
+import { restProjectFlows } from "@/redux/slices/projectSlice/ProjectTestFlowSlice";
 import { dispatch } from "@/redux/store";
 import { useMantineTheme } from "@mantine/core";
 import { Background, Controls, MiniMap, ReactFlow, useReactFlow } from "@xyflow/react";
@@ -14,30 +18,34 @@ import React from "react";
 
 const ProjectWorkflowPage: React.FC = ({ }) => {
     const { colors } = useMantineTheme();
+    const { isLoading, selectedProject } = useProjects();
+    const { selectedFlow } = React.useContext(WorkFlowContext);
+    const { onDragOver, onDrop, edges, nodes, onNodesChange, onConnect, onEdgesChange, rebuildWorkFlow } = useTestFlowBuilder();
 
-    const { projectTests, selectedProject, isLoading } = useProjects();
-    const { setEdges } = useReactFlow();
+    React.useEffect(() => () => {
+        console.log("reseting");
+        // dispatch(restProjectTestCases())
+        // dispatch(resetSelectedProject())
+        // dispatch(restProjectFlows())
+    }, []);
 
-    const fetchTest = React.useCallback(async () => {
-        if (!selectedProject)
-            return
-        await dispatch(getProjectTestCases(selectedProject.id))
-    }, [selectedProject])
 
     React.useEffect(() => {
-        fetchTest()
-    }, [selectedProject])
+        console.log("rebuilding");
+        
+        rebuildWorkFlow()
+    }, [])
 
     return (
         <TestBuilderLayout sideBard={<WorkFlowSideBar />}>
             <ReactFlow
-                // nodes={nodes}
-                // edges={edges}
-                // onNodesChange={onNodesChange}
-                // onEdgesChange={onEdgesChange}
-                // onConnect={onConnect}
-                // onDrop={onDrop}
-                // onDragOver={onDragOver}
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
                 nodeTypes={TestNodeTypes}
                 edgeTypes={TestEdgeTypes}
                 onBeforeDelete={async ({ nodes: nodesToDelete, edges: edgesToDelete }) => {

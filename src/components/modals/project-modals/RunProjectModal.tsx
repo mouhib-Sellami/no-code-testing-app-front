@@ -16,6 +16,9 @@ import { onShowNotification } from "@/redux/slices/notificationSlice/notificatio
 import { setSelectedProjectLogs } from "@/redux/slices/projectSlice/projectStatusLogSlice";
 import { useNavigate } from "react-router";
 import { PATH_APP } from "@/routes/paths";
+import { executeTestCase } from "@/redux/slices/projectSlice/projectTestCaseSliceBaseServices";
+import { BuilderContext } from "@/contexts/BuilderContext";
+import useProjectTests from "@/hooks/useProjectTests";
 
 export interface RunProjectModalProps extends AppModalProps {
     project: Project
@@ -27,6 +30,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
     const [debouncedQuery] = useDebouncedValue(query, 200);
     const PROJECT_HOOKS = useProjects();
     const navigate = useNavigate();
+    const { selectedTest } = useProjectTests()
 
     const runners = React.useMemo(() => {
         return RUNNER_AGENT.runners.filter(elm =>
@@ -48,11 +52,17 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
         fetchRunners()
     }, [debouncedQuery])
     const initialValues = React.useMemo(() => {
+        if (!selectedTest) {
+            return {
+                id: "",
+                runner_id: "",
+            }
+        }
         return {
-            id: props.project.id,
+            id: selectedTest.id,
             runner_id: "",
         }
-    }, [props.project])
+    }, [selectedTest])
 
     const form = useForm({
         enhanceGetInputProps: () => ({ disabled: PROJECT_HOOKS.isLoadingForRunning }),
@@ -63,7 +73,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
         },
     });
     const onSubmit = React.useCallback(async (values) => {
-        const res = await dispatch(executeProject(values))
+        const res = await dispatch(executeTestCase(values))
         if (res.meta.requestStatus == "rejected") {
             dispatch(onShowNotification({
                 content: "Cannot run project , try again later !",
@@ -82,7 +92,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
             props.onSubmit()
             navigate(PATH_APP.general.dashboard.projectLog.replaceAll(":id", res.payload.id))
         }
-    }, [])
+    }, [selectedTest])
 
     const submit = React.useCallback(() => {
         form.validate()

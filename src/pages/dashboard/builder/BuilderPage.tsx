@@ -21,6 +21,8 @@ import { deleteEdge, updateEdgeType } from '@/redux/slices/projectComponentsSlic
 import { dispatch } from '@/redux/store';
 import { useParams, useSearchParams } from 'react-router';
 import { restProjectTestCases } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
+import useProjectTests from '@/hooks/useProjectTests';
+import { getTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
 
 
 const BuilderPage: React.FC = () => {
@@ -30,6 +32,17 @@ const BuilderPage: React.FC = () => {
     const { openDeleteModal, openConfirmModal } = useConfirmModal();
     const { setEdges } = useReactFlow();
     const params = useParams();
+    const { selectedTest } = useProjectTests()
+    console.log(params);
+
+    const fetchTestCase = React.useCallback(async () => {
+        if (!selectedTest)
+            await dispatch(getTestCase(Number(params.test_id)))
+    }, [selectedTest])
+
+    React.useEffect(() => {
+        fetchTestCase()
+    }, [])
 
     const selectedEdge = React.useMemo(() => {
         return edges.find(elm => elm.selected)

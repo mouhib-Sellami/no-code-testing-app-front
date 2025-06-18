@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTestCase, deleteTestCase, getTestCaseComponents } from "./projectTestCaseSliceBaseServices";
+import { createTestCase, deleteTestCase, getTestCase, getTestCaseComponents } from "./projectTestCaseSliceBaseServices";
 import { ProjectTestCaseState } from "@/types/redux/ProjectTestCaseState";
 
 const initialState: ProjectTestCaseState = {
@@ -67,6 +67,21 @@ const projectTestCaseSlice = createSlice({
                 state.message = '';
             })
             .addCase(getTestCaseComponents.rejected, (state) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = '';
+            })
+            .addCase(getTestCase.pending, (state) => {
+                state.isLoading = true;
+                state.message = '';
+            })
+            .addCase(getTestCase.fulfilled, (state, action) => {
+                state.selectedTest = action.payload
+                state.isLoading = false;
+                state.isError = false;
+                state.message = '';
+            })
+            .addCase(getTestCase.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = '';

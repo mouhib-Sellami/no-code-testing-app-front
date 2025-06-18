@@ -33,8 +33,11 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     const workflow = React.useMemo(() => {
         if (!selectedProjectLogs)
             return
-        return selectedProjectLogs.workflow
+        return selectedProjectLogs.workflow.flows[0].workflow
     }, [selectedProjectLogs])
+
+    console.log(selectedProjectLogs);
+    
 
     React.useEffect(() => {
         if (!executing) return;
@@ -53,7 +56,9 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     }, [executing]);
 
     const handleComponentStatus = React.useCallback((topic: string, message: Buffer<ArrayBufferLike>) => {
+        
         const data = JSON.parse(message.toString())
+        console.log(data);
         setExecuting(data)
     }, [])
 

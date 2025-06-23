@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createTestFlow, deleteTestFlow, getTestFlowComponents } from "./projectTestFlowSliceBaseServices";
-import { executeTestCase } from "./projectTestCaseSliceBaseServices";
+import { createTestFlow, deleteTestFlow, executeTestFlow, getTestFlowComponents } from "./projectTestFlowSliceBaseServices";
 
 const initialState: ProjectTestFlowState = {
     isError: false,
@@ -66,16 +65,16 @@ const ProjectTestFlowSlice = createSlice({
                 state.isError = true;
                 state.message = '';
             })
-            .addCase(executeTestCase.pending, (state) => {
+            .addCase(executeTestFlow.pending, (state) => {
                 state.isLoading = true;
                 state.message = '';
             })
-            .addCase(executeTestCase.fulfilled, (state, action) => {
+            .addCase(executeTestFlow.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
             })
-            .addCase(executeTestCase.rejected, (state) => {
+            .addCase(executeTestFlow.rejected, (state) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = '';

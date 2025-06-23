@@ -3,10 +3,11 @@ import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';
 import NavbarFooter from '../navbar/NavbarFooter';
-import { IconCloudUpload, IconRefresh, IconArrowLeft } from '@tabler/icons-react';
+import { IconCloudUpload, IconRefresh, IconArrowLeft, IconCloudCog } from '@tabler/icons-react';
 import { dispatch } from '@/redux/store';
 import { WorkFlowContext } from '@/contexts/WorkflowContext';
 import { getTestFlowComponents } from '@/redux/slices/projectSlice/projectTestFlowSliceBaseServices';
+import RunTestFlowModal from '@/components/modals/project-modals/RunTestFlowModal';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
     sideBard: JSX.Element | JSX.Element[];
@@ -21,6 +22,7 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
     const mainRef = useRef<HTMLDivElement>(null);
     const { colors } = useMantineTheme();
     const { isSyncing, selectedFlow } = React.useContext(WorkFlowContext);
+    const [openedForRun, { open: openForRun, close: closeForRun }] = useDisclosure();
 
     useEffect(() => {
         if (mainRef.current) {
@@ -64,6 +66,16 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
                         </ActionIcon>
                     </Group>
                     <Group gap="xs">
+                        <ActionIcon
+                            variant="filled"
+                            radius="md"
+                            color={colors.activeLinkBgColor[9]}
+                            title="Run Project"
+                            size={30}
+                            onClick={openForRun}
+                        >
+                            <IconCloudCog style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                        </ActionIcon>
                         <ActionIcon
                             variant="filled"
                             radius="md"
@@ -126,6 +138,7 @@ const TestBuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard })
                     backgroundSize: "20px 20px",
                 }} m={0} pt={"70"} pb={10} px={"sm"}>
                     {children}
+                    {openedForRun && selectedFlow && <RunTestFlowModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} flow={selectedFlow} visible={openedForRun} />}
                 </Box>
             </AppShell.Main>
         </AppShell>

@@ -15,7 +15,7 @@ import { useParams } from "react-router";
 const ViewProjectLogPage: React.FC = () => {
     const { nodes, edges, isBuilding } = React.useContext(BuilderViewerContext);
     const { colors } = useMantineTheme();
-    const { getNodes } = useReactFlow();
+    const { getNodes, fitView } = useReactFlow();
     const params = useParams();
 
     const fetchLogs = React.useCallback(async (id) => {
@@ -30,6 +30,10 @@ const ViewProjectLogPage: React.FC = () => {
         fetchLogs(params['id'])
     }, [params])
 
+    React.useEffect(() => {
+        if (!isBuilding)
+            fitView()
+    }, [isBuilding])
     return (
         <BuilderViewerLayout sideBard={null}>
             <ReactFlow

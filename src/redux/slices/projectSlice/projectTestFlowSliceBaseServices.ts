@@ -37,3 +37,16 @@ export const getTestFlowComponents = createAsyncThunk('projectsTestFlows/getTest
         return thunkAPI.rejectWithValue(error);
     }
 });
+
+
+export const executeTestFlow = createAsyncThunk('projectsTestFlows/executeTestFlow', async (data: any, thunkAPI) => {
+    try {
+        const response = await projectTestFlowServices.executeTestFlow(data);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});

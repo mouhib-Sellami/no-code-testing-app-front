@@ -9,7 +9,7 @@ import { dispatch } from '@/redux/store';
 import { getProjectComponents } from '@/redux/slices/projectSlice/projectSliceBaseServices';
 import { resetProjectsComponent } from '@/redux/slices/projectComponentsSlice/projectComponentSlice';
 import { resetSelectedProjectComponent } from '@/redux/slices/projectSlice/projectSlice';
-import RunProjectModal from '@/components/modals/project-modals/RunProjectModal';
+import RunTestCaseModal from '@/components/modals/project-modals/RunTestCaseModal';
 import { PATH_APP } from '@/routes/paths';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
@@ -145,7 +145,7 @@ const BuilderLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard }) => 
                 }} m={0} pt={"70"} pb={10} px={"sm"}>
                     {children}
 
-                    {openedForRun && selectedProject && <RunProjectModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} project={selectedProject} visible={openedForRun} />}
+                    {openedForRun && selectedProject && <RunTestCaseModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} project={selectedProject} visible={openedForRun} />}
                 </Box>
             </AppShell.Main>
         </AppShell>

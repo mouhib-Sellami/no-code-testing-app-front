@@ -27,6 +27,7 @@ export const PATH_APP = {
             projectWorkflows: path(ROOTS_APP, "/test-flows"),
             projectLogsList: path(ROOTS_APP, '/project-logs/:project_id'),
             projectLog: path(ROOTS_APP, '/project-pipeline/:id'),
+            projectTestCaseLog: path(ROOTS_APP, '/project-pipeline/test-case/:id'),
         },
         notFound: path(ROOTS_APP, '/404')
     }

@@ -55,13 +55,23 @@ const getTestFlowComponents = async (id: number) => {
     return data
 };
 
+const executeTestFlow = async (values: any) => {
+    const { data } = await axiosInstance({
+        method: "POST",
+        url: API_PREFIX + `${values.id}/execute-test-flow/`,
+        data: values
+    });
+    return data
+};
+
 const projectTestFlowServices = {
     deleteTestFlow,
     updateTestFlow,
     createTestFlow,
     getTestFlow,
     patchTestFlow,
-    getTestFlowComponents
+    getTestFlowComponents,
+    executeTestFlow
 };
 
 export default projectTestFlowServices;

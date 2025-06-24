@@ -66,20 +66,14 @@ const BuilderProvider = (props: PropsWithChildren) => {
     }, [selectedProject])
 
     const getProjectComponents_ = React.useCallback(async () => {
-
         if (!selectedProject) {
-            console.log("no project selected");
-
             return
         }
 
         if (!selectedTest) {
-            console.log("no test selected");
             return
         }
         if (!selectedProject || !selectedProject.provider.id || !selectedTest) {
-            console.log("here");
-
             return
         }
         await dispatch(getTestCaseComponents(selectedTest.id))

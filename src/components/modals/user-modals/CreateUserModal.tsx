@@ -68,8 +68,6 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
     });
 
     const onSubmit = React.useCallback(async (values) => {
-        console.log(values);
-
         const res = await dispatch(createUser(values))
         if (res.meta.requestStatus == "rejected") {
             dispatch(onShowNotification({
@@ -94,8 +92,6 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
         if (form.isValid()) {
             onSubmit({ ...form.values })
         } else {
-            console.log(form.errors);
-
         }
     }, [form])
 

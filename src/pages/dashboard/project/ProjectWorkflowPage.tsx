@@ -32,7 +32,6 @@ const ProjectWorkflowPage: React.FC = ({ }) => {
 
     React.useEffect(() => {
         console.log("rebuilding");
-        
         rebuildWorkFlow()
     }, [])
 

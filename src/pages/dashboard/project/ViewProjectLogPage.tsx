@@ -22,6 +22,8 @@ const ViewProjectLogPage: React.FC = () => {
         if (!id)
             return
         await dispatch(getProjectLogsDetails(Number(id)))
+        console.log("fetching project logs");
+        
     }, [])
 
     React.useEffect(() => {
@@ -41,7 +43,6 @@ const ViewProjectLogPage: React.FC = () => {
                 edges={edges}
                 nodeTypes={MonitorNodeTypes}
                 edgeTypes={EdgeTypes}
-                onNodesChange={(changes) => console.log("update nodes", changes)}
                 fitView
                 style={{ height: "100vh", width: "100vw", position: "relative" }}
             >

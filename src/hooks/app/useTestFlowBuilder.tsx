@@ -24,8 +24,6 @@ const useTestFlowBuilder = () => {
             (edge) => edge.source === params.source && edge.target === params.target
         );
         if (exists) return edges;
-        console.log("creating edge");
-
         updateProjectSyncing?.(true)
 
         await dispatch(createTestFlowEdge({
@@ -33,8 +31,6 @@ const useTestFlowBuilder = () => {
             target_component: Number(params.target),
         }));
         await fetchComponents()
-        console.log("done");
-
         setRebuild(true);
         updateProjectSyncing?.(false)
     }, [edges])

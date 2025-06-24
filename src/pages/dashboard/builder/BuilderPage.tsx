@@ -33,8 +33,6 @@ const BuilderPage: React.FC = () => {
     const { setEdges } = useReactFlow();
     const params = useParams();
     const { selectedTest } = useProjectTests()
-    console.log(params);
-
     const fetchTestCase = React.useCallback(async () => {
         if (!selectedTest)
             await dispatch(getTestCase(Number(params.test_id)))

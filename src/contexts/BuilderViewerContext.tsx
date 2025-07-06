@@ -40,6 +40,8 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     const [workflow, setWorkflow] = React.useState<any>([])
     const [enableBuilding, setEnableBuilding] = React.useState(true)
 
+    // TO BE CHANGE SEND ALL PAYLOAD WITH IMAGE AND VIDEO IN THE END AND KEEP UPDATING PROJECT LOGS FOR EXIT AND RE ENTER
+
     React.useEffect(() => {
         setEnableBuilding(true)
     }, [selectedTestCase])

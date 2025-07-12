@@ -3,6 +3,8 @@ import { IconCheck, IconClock, IconPictureInPictureFilled, IconX } from "@tabler
 import React, { useCallback, useMemo } from "react";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
 import { BuilderViewerContext } from "@/contexts/BuilderViewerContext";
+import MonitoringModal from "@/components/modals/monotoring/MonitoringModal";
+import { useDisclosure } from "@mantine/hooks";
 
 enum TestCaseStatus {
     PENDING = "PENDING",
@@ -15,7 +17,11 @@ interface CustomTestCaseNodeProps {
     data: {
         label: string;
         status?: TestCaseStatus;
-        component: any
+        component: any,
+        monitoring: {
+            image_link: string,
+            video_link: string
+        }
     };
     isConnectable: boolean;
 }
@@ -24,7 +30,7 @@ const CustomTestCaseNode: React.FC<CustomTestCaseNodeProps> = ({ data, isConnect
     const status = data.status ?? TestCaseStatus.PENDING;
     const { openConfirmModal } = useConfirmModal();
     const { selectTestCase } = React.useContext(BuilderViewerContext);
-
+    const [opened, { open, close }] = useDisclosure()
     const onSelect = useCallback(() => {
         openConfirmModal({
             title: "View Test Case",
@@ -65,7 +71,6 @@ const CustomTestCaseNode: React.FC<CustomTestCaseNodeProps> = ({ data, isConnect
                 return null;
         }
     }, [status]);
-
     return (
         <Card withBorder p={6} bg="transparent" style={{ width: "fit-content" }} draggable>
             <Group align="center" justify="space-between" wrap="nowrap">
@@ -73,12 +78,15 @@ const CustomTestCaseNode: React.FC<CustomTestCaseNodeProps> = ({ data, isConnect
                     {data.label}
                 </Text>
                 <Group align="center" justify="center" gap={2} wrap="nowrap">
-                    <ActionIcon size={15} onClick={onSelect}>
+                    <ActionIcon size={15} onClick={open}>
                         <IconPictureInPictureFilled size={8} />
                     </ActionIcon>
                     {statusIcon}
                 </Group>
             </Group>
+            {opened &&
+                <MonitoringModal visible={opened} onCancel={close} image_link={data?.monitoring?.image_link || ""} video_link={data?.monitoring?.video_link || ""} />
+            }
         </Card>
     );
 };

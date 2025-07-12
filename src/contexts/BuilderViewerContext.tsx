@@ -5,7 +5,7 @@ import React, { PropsWithChildren } from "react";
 import { MQTTContext } from "./MQTTContext";
 import { ProjectStatusLog } from "@/types/models/ProjectStatusLog";
 import { dispatch } from "@/redux/store";
-import { getProjectLogs, getProjectLogsDetails } from "@/redux/slices/projectSlice/projectStatusLogSliceBaseServices";
+import { getProjectLogsDetails } from "@/redux/slices/projectSlice/projectStatusLogSliceBaseServices";
 import { Component } from "@/types/models/Provider";
 
 type BuilderViewerContextProps = {
@@ -68,29 +68,29 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
         );
     }, [executing]);
 
-    React.useEffect(() => {
-        if (!executionTestCase || !executing)
-            return
-        setEnableBuilding(false)
-        setWorkflow(c => {
-            let tmp = [...c]
-            let selected_flow = tmp.findIndex(elm => elm.test_case?.id == executionTestCase.test_case_id)
-            let components = tmp[selected_flow].workflow.components
-            if (components[executing.component_id]) {
-                components = { ...components, [executing.component_id]: { ...components[executing.component_id], status: executing.status } }
-            }
+    // React.useEffect(() => {
+    //     if (!executionTestCase || !executing)
+    //         return
+    //     setEnableBuilding(false)
+    //     setWorkflow(c => {
+    //         let tmp = [...c]
+    //         let selected_flow = tmp.findIndex(elm => elm.test_case?.id == executionTestCase.test_case_id)
+    //         let components = tmp[selected_flow].workflow.components
+    //         if (components[executing.component_id]) {
+    //             components = { ...components, [executing.component_id]: { ...components[executing.component_id], status: executing.status } }
+    //         }
 
-            tmp[selected_flow] = {
-                ...tmp[selected_flow],
-                workflow: {
-                    ...tmp[selected_flow].workflow,
-                    components
-                }
-            }
-            console.log(tmp);
-            return tmp
-        })
-    }, [executionTestCase, executing])
+    //         tmp[selected_flow] = {
+    //             ...tmp[selected_flow],
+    //             workflow: {
+    //                 ...tmp[selected_flow].workflow,
+    //                 components
+    //             }
+    //         }
+    //         console.log(tmp);
+    //         return tmp
+    //     })
+    // }, [executionTestCase, executing])
 
     React.useEffect(() => {
         setSelectedTestCase((prev) => {
@@ -105,33 +105,34 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
         });
     }, [workflow]);
 
-    React.useEffect(() => {
-        if (!executionTestCase) return;
-        setNodes((nodes) =>
-            nodes.map((elm) => {
-                if (elm.id.toString() === executionTestCase.test_case_id.toString()) {
-                    return {
-                        ...elm,
-                        data: { ...elm.data, status: executionTestCase.status }
-                    };
-                }
-                return elm;
-            })
-        );
-        setEnableBuilding(false)
-        setWorkflow(c => c.map((elm) => {
-            if (elm.test_case?.id == executionTestCase.test_case_id) {
-                return { ...elm, test_case: { ...elm.test_case, status: executionTestCase.status } }
-            } else {
-                return elm
-            }
-        }))
-        setEnableBuilding(false)
-    }, [executionTestCase]);
+    // React.useEffect(() => {
+    //     if (!executionTestCase) return;
+    //     setNodes((nodes) =>
+    //         nodes.map((elm) => {
+    //             if (elm.id.toString() === executionTestCase.test_case_id.toString()) {
+    //                 return {
+    //                     ...elm,
+    //                     data: { ...elm.data, status: executionTestCase.status }
+    //                 };
+    //             }
+    //             return elm;
+    //         })
+    //     );
+    //     setEnableBuilding(false)
+    //     setWorkflow(c => c.map((elm) => {
+    //         if (elm.test_case?.id == executionTestCase.test_case_id) {
+    //             return { ...elm, test_case: { ...elm.test_case, status: executionTestCase.status } }
+    //         } else {
+    //             return elm
+    //         }
+    //     }))
+    //     setEnableBuilding(false)
+    // }, [executionTestCase]);
 
     const handleComponentStatus = React.useCallback((topic: string, message: Buffer<ArrayBufferLike>) => {
 
         const data = JSON.parse(message.toString())
+        setEnableBuilding(false)
         setExecuting(data)
     }, [])
 
@@ -150,13 +151,21 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
 
     }, [])
 
+    const handleExecutionState = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>) => {
+        const data = JSON.parse(message.toString())
+        console.log(data);
+        setEnableBuilding(false)
+        setWorkflow(data?.flows)
+    }, [])
+
     React.useEffect(() => {
         if (!isConnected || !selectedProjectLogs)
             return
-        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_component", 1, handleComponentStatus)
-        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_test_case", 1, handleTestCaseStatus)
-        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_edge", 1, handleEdgeStatus)
+        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_component", 1, handleComponentStatus)
+        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_test_case", 1, handleTestCaseStatus)
+        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_edge", 1, handleEdgeStatus)
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_state_" + selectedProjectLogs.id, 1, handleExecutionState)
     }, [isConnected, selectedProjectLogs])
 
     const rebuildTestCase = React.useCallback(async (): Promise<{ nodes: Array<Node>, edges: any }> => {
@@ -213,13 +222,22 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             setIsBuilding(true)
 
         const nodes = workflow.map((elm: any) => {
+            console.log(elm);
+            
             return {
                 id: elm.test_case.id.toString(),
-                data: { label: elm.test_case.name, component: elm.workflow, status: elm.test_case.status || "PENDING" },
+                data: {
+                    label: elm.test_case.name,
+                    component: elm.workflow,
+                    status: elm.test_case.status || "PENDING",
+                    monitoring: elm.test_case.monitoring || {}
+                },
                 position: elm.test_case.builder_config?.position,
                 type: `app-test-case`
             }
         })
+        console.log(nodes);
+        
 
         setNodes(nodes as Array<Node>)
         const edges = selectedProjectLogs.workflow?.dependencies?.map(elm => {

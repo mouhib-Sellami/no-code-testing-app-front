@@ -2,7 +2,6 @@ import React from "react";
 
 import { AppModalProps } from "../base-modal/types";
 import BaseAppModal from "../base-modal/BaseAppModal";
-import { Project } from "@/types/models/Project";
 import useRunners from "@/hooks/useRunners";
 import { dispatch } from "@/redux/store";
 import { fetchRunnerAgents } from "@/redux/slices/runnerAgentSlice/runnerAgentSliceBaseServices";
@@ -11,17 +10,18 @@ import DataTableConfig from "@/config/DataTableConfig";
 import { Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import useProjects from "@/hooks/useProjects";
-import { executeProject } from "@/redux/slices/projectSlice/projectSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import { setSelectedProjectLogs } from "@/redux/slices/projectSlice/projectStatusLogSlice";
 import { useNavigate } from "react-router";
 import { PATH_APP } from "@/routes/paths";
+import { TestFlow } from "@/types/models/TestFlow";
+import { executeTestFlow } from "@/redux/slices/projectSlice/projectTestFlowSliceBaseServices";
 
-export interface RunProjectModalProps extends AppModalProps {
-    project: Project
+export interface RunTestFlowModalProps extends AppModalProps {
+    flow: TestFlow
 }
 
-const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
+const RunTestFlowModal: React.FC<RunTestFlowModalProps> = (props) => {
     const RUNNER_AGENT = useRunners();
     const [query, setQuery] = React.useState("");
     const [debouncedQuery] = useDebouncedValue(query, 200);
@@ -48,11 +48,17 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
         fetchRunners()
     }, [debouncedQuery])
     const initialValues = React.useMemo(() => {
+        if (!props.flow) {
+            return {
+                id: "",
+                runner_id: "",
+            }
+        }
         return {
-            id: props.project.id,
+            id: props.flow.id,
             runner_id: "",
         }
-    }, [props.project])
+    }, [props.flow])
 
     const form = useForm({
         enhanceGetInputProps: () => ({ disabled: PROJECT_HOOKS.isLoadingForRunning }),
@@ -63,7 +69,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
         },
     });
     const onSubmit = React.useCallback(async (values) => {
-        const res = await dispatch(executeProject(values))
+        const res = await dispatch(executeTestFlow(values))
         if (res.meta.requestStatus == "rejected") {
             dispatch(onShowNotification({
                 content: "Cannot run project , try again later !",
@@ -82,7 +88,7 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
             props.onSubmit()
             navigate(PATH_APP.general.dashboard.projectLog.replaceAll(":id", res.payload.id))
         }
-    }, [])
+    }, [props])
 
     const submit = React.useCallback(() => {
         form.validate()
@@ -113,4 +119,4 @@ const RunProjectModal: React.FC<RunProjectModalProps> = (props) => {
     )
 }
 
-export default RunProjectModal;
+export default RunTestFlowModal;

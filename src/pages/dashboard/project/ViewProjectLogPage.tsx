@@ -15,13 +15,15 @@ import { useParams } from "react-router";
 const ViewProjectLogPage: React.FC = () => {
     const { nodes, edges, isBuilding } = React.useContext(BuilderViewerContext);
     const { colors } = useMantineTheme();
-    const { getNodes } = useReactFlow();
+    const { getNodes, fitView } = useReactFlow();
     const params = useParams();
 
     const fetchLogs = React.useCallback(async (id) => {
         if (!id)
             return
         await dispatch(getProjectLogsDetails(Number(id)))
+        console.log("fetching project logs");
+        
     }, [])
 
     React.useEffect(() => {
@@ -30,6 +32,10 @@ const ViewProjectLogPage: React.FC = () => {
         fetchLogs(params['id'])
     }, [params])
 
+    React.useEffect(() => {
+        if (!isBuilding)
+            fitView()
+    }, [isBuilding])
     return (
         <BuilderViewerLayout sideBard={null}>
             <ReactFlow
@@ -37,7 +43,6 @@ const ViewProjectLogPage: React.FC = () => {
                 edges={edges}
                 nodeTypes={MonitorNodeTypes}
                 edgeTypes={EdgeTypes}
-                onNodesChange={(changes) => console.log("update nodes", changes)}
                 fitView
                 style={{ height: "100vh", width: "100vw", position: "relative" }}
             >

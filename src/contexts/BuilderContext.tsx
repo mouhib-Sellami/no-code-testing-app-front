@@ -1,9 +1,11 @@
 import useProjects from "@/hooks/useProjects";
+import useProjectTests from "@/hooks/useProjectTests";
 import useProviders from "@/hooks/useProviders";
 import { resetProjectsComponent } from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
 import { createEdge, createProjectComponent, deleteProjectComponent, getEdges } from "@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices";
 import { resetSelectedProject, resetSelectedProjectComponent } from "@/redux/slices/projectSlice/projectSlice";
-import { getProjectComponents } from "@/redux/slices/projectSlice/projectSliceBaseServices";
+import { restProjectTestCases } from "@/redux/slices/projectSlice/ProjectTestCaseSlice";
+import { getTestCaseComponents } from "@/redux/slices/projectSlice/projectTestCaseSliceBaseServices";
 import { fetchProvidersDetails } from "@/redux/slices/providerSlice/providerSlice";
 import { dispatch } from "@/redux/store";
 import { Node } from "@/types/app-types/Nodes";
@@ -19,7 +21,7 @@ type BuilderContextProps = {
     rebuildProject: (enableLoader?: boolean) => Promise<{ nodes: Array<Node>, edges: any }> | null
     deleteComponent: (id: number) => void | null
     createNewEdge: (values: CreateEdge) => void | null
-    projectComponents: Array<ProjectComponent>
+    components: Array<ProjectComponent>
     resetBuilder: () => void | null
     isSyncing: boolean,
     isBuilding: boolean,
@@ -33,7 +35,7 @@ const BuilderContext = React.createContext<Partial<BuilderContextProps>>({
     rebuildProject: () => null,
     deleteComponent: (_: number) => null,
     createNewEdge: (_: CreateEdge) => null,
-    projectComponents: [],
+    components: [],
     resetBuilder: () => null,
     isSyncing: false,
     isBuilding: false,
@@ -41,7 +43,8 @@ const BuilderContext = React.createContext<Partial<BuilderContextProps>>({
 })
 
 const BuilderProvider = (props: PropsWithChildren) => {
-    const { selectedProject, projectComponents } = useProjects();
+    const { selectedProject } = useProjects();
+    const { components, selectedTest } = useProjectTests();
     const { selectedProvider } = useProviders();
     const [isSyncing, setIsSyncing] = React.useState(false);
     const [isBuilding, setIsBuilding] = React.useState(false);
@@ -63,29 +66,36 @@ const BuilderProvider = (props: PropsWithChildren) => {
     }, [selectedProject])
 
     const getProjectComponents_ = React.useCallback(async () => {
+        if (!selectedProject) {
+            return
+        }
 
-        if (!selectedProject)
+        if (!selectedTest) {
             return
-        if (!selectedProject || !selectedProject.provider.id)
+        }
+        if (!selectedProject || !selectedProject.provider.id || !selectedTest) {
             return
-        await dispatch(getProjectComponents(selectedProject.id))
-    }, [selectedProject])
+        }
+        await dispatch(getTestCaseComponents(selectedTest.id))
+    }, [selectedProject, selectedTest])
 
     const getProjectEdges_ = React.useCallback(async () => {
         if (!selectedProject)
             return []
+        if (!selectedTest)
+            return []
         if (!selectedProject || !selectedProject.provider.id)
             return []
-        const res = await dispatch(getEdges(selectedProject.id))
+        const res = await dispatch(getEdges(selectedTest.id))
         if (res.meta.requestStatus == "fulfilled")
             return res.payload
         return []
-    }, [selectedProject])
+    }, [selectedProject, selectedTest])
 
     React.useEffect(() => {
         getProviderDetails()
         getProjectComponents_()
-    }, [selectedProject])
+    }, [selectedProject, selectedTest])
 
     const onSave = React.useCallback(() => { }, [])
     const onRestore = React.useCallback(() => { }, [])
@@ -93,7 +103,7 @@ const BuilderProvider = (props: PropsWithChildren) => {
     const rebuildProject = React.useCallback(async (enableLoader?: boolean): Promise<{ nodes: Array<Node>, edges: any }> => {
         if (enableLoader)
             setIsBuilding(true)
-        const nodes = projectComponents.map(elm => {
+        const nodes = components.map(elm => {
             return {
                 id: elm.id.toString(),
                 data: { label: elm.name, component: elm },
@@ -128,42 +138,46 @@ const BuilderProvider = (props: PropsWithChildren) => {
         return {
             nodes: nodes, edges: edges
         } as { nodes: Array<Node>, edges: any }
-    }, [projectComponents])
+    }, [components])
 
 
     const createNewProjectComponent = React.useCallback(async (component_id: number, extra_data: any): Promise<{ component: ProjectComponent } | null> => {
         if (!selectedProject)
             return
+        if (!selectedTest)
+            return
         const res = await dispatch(createProjectComponent({
             component_id,
             project_id: selectedProject.id,
+            test_case_id: selectedTest.id,
             extra_data
         }))
         return res.payload as { component: ProjectComponent }
-    }, [selectedProject])
+    }, [selectedProject, selectedTest])
 
     const deleteComponent = React.useCallback(async (id: number) => {
         const res = await dispatch(deleteProjectComponent(id))
         if (res.meta.requestStatus == "fulfilled") {
             getProjectComponents_()
         }
-    }, [selectedProject])
+    }, [selectedProject, selectedTest])
 
     const createNewEdge = React.useCallback(async (values: CreateEdge) => {
         await dispatch(createEdge(values))
     }, [])
 
     const resetBuilder = React.useCallback(() => {
-        dispatch(resetProjectsComponent())
-        dispatch(resetSelectedProject())
-        dispatch(resetSelectedProjectComponent())
+        // dispatch(resetProjectsComponent())
+        // dispatch(resetSelectedProject())
+        // dispatch(resetSelectedProjectComponent())
+        dispatch(restProjectTestCases())
     }, [])
 
     return (
         <BuilderContext.Provider value={{
             selectedProject,
             selectedProvider,
-            projectComponents,
+            components,
             isSyncing,
             isBuilding,
             createNewProjectComponent,

@@ -2,12 +2,11 @@ import { ActionIcon, AppShell, Badge, Box, Group, Pill, px, ScrollArea, Stack, u
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';
-import NavbarFooter from '../navbar/NavbarFooter';
 import { IconRefresh, IconArrowLeft } from '@tabler/icons-react';
-import { PATH_APP } from '@/routes/paths';
 import useProjectLogs from '@/hooks/useProjectLogs';
 import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
-import RunProjectModal from '@/components/modals/project-modals/RunProjectModal';
+import RunTestCaseModal from '@/components/modals/project-modals/RunTestCaseModal';
+import { BuilderViewerContext } from '@/contexts/BuilderViewerContext';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
     sideBard: JSX.Element | JSX.Element[];
@@ -24,6 +23,7 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
     const { selectedProjectLogs } = useProjectLogs();
     const { openDeleteModal } = useConfirmModal();
     const [openedForRun, { open: openForRun, close: closeForRun }] = useDisclosure();
+    const { resetSelectedTestCase, selectedTestCase } = React.useContext(BuilderViewerContext);
 
     useEffect(() => {
         if (mainRef.current) {
@@ -31,9 +31,13 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
         }
     }, [pathname]);
 
-    const handleGoBack = () => {
-        navigate(-1);
-    };
+    const handleGoBack = React.useCallback(() => {
+        if (selectedTestCase) {
+            resetSelectedTestCase()
+        } else {
+            navigate(-1);
+        }
+    }, [selectedTestCase]);
 
     const getPilColor = React.useMemo(() => {
         if (!selectedProjectLogs)
@@ -82,11 +86,7 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
         <AppShell
             layout="alt"
             header={{ height: 60, offset: true, collapsed: !pinned }}
-            navbar={{
-                width: px("20rem"),
-                breakpoint: 'sm',
-                collapsed: { mobile: !opened }
-            }}
+
             padding="md"
         >
             <AppShell.Header bg={"transparent"}>
@@ -122,37 +122,10 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
                     </Group>
                 </Group>
             </AppShell.Header>
-            <AppShell.Navbar
-                p={5}
-                withBorder={false}
-                bg={theme.colors.sideNavBar[9]}
-                styles={{
-                    navbar: { zIndex: 2 }
-                }}
-            >
-                <Stack style={{
-                    height: "100%",
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: "var(--mantine-spacing-md)",
-                    borderColor: theme.colors.NavbarDividerColor[9],
-                    borderStyle: "solid",
-                    zIndex: -1
-                }}>
-                    <AppShell.Section grow my="md" component={ScrollArea}>
-                        {sideBard}
-                    </AppShell.Section>
-                    <AppShell.Section>
-                        <NavbarFooter />
-                    </AppShell.Section>
-                </Stack>
-            </AppShell.Navbar>
-
             <AppShell.Main bg={theme.colors.mainContentColor[9]} styles={{
                 main: {
                     margin: 0,
                     padding: 0,
-                    paddingLeft: px("20.3rem"),
                 }
             }}>
                 <Box style={{
@@ -160,8 +133,7 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
                     backgroundSize: "20px 20px",
                 }} m={0} pt={"70"} pb={10} px={"sm"}>
                     {children}
-                    {openedForRun && selectedProjectLogs.project && <RunProjectModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} project={selectedProjectLogs.project} visible={openedForRun} />}
-
+                    {openedForRun && selectedProjectLogs.project && <RunTestCaseModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} project={selectedProjectLogs.project} visible={openedForRun} />}
                 </Box>
             </AppShell.Main>
         </AppShell>

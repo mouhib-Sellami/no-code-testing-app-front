@@ -64,6 +64,22 @@ const getProjectComponents = async (id: number) => {
     return data
 };
 
+const getProjectTestCases = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/test-cases/`,
+    });
+    return data
+};
+
+const getProjectTestFlows = async (id: number) => {
+    const { data } = await axiosInstance({
+        method: "GET",
+        url: API_PREFIX + `${id}/test-flows/`,
+    });
+    return data
+};
+
 const projectServices = {
     fetchProjects,
     createProject,
@@ -71,7 +87,9 @@ const projectServices = {
     updateProject,
     recentProjects,
     getProjectComponents,
-    executeProject
+    getProjectTestCases,
+    executeProject,
+    getProjectTestFlows
 };
 
 export default projectServices;

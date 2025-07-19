@@ -76,6 +76,30 @@ export const getProjectComponents = createAsyncThunk('projects/projectComponents
     }
 });
 
+export const getProjectTestCases = createAsyncThunk('projects/getProjectTestCases', async (id: number, thunkAPI) => {
+    try {
+        const response = await projectServices.getProjectTestCases(id);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
+export const getProjectTestFlows = createAsyncThunk('projects/getProjectTestFlows', async (id: number, thunkAPI) => {
+    try {
+        const response = await projectServices.getProjectTestFlows(id);
+        return response;
+    } catch (error: any) {
+        if (error?.response?.data) {
+            return thunkAPI.rejectWithValue(error?.response?.data);
+        }
+        return thunkAPI.rejectWithValue(error);
+    }
+});
+
 export const executeProject = createAsyncThunk('projects/executeProject', async (data: any, thunkAPI) => {
     try {
         const response = await projectServices.executeProject(data);

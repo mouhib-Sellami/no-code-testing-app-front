@@ -5,9 +5,6 @@ import {
     Background,
     MiniMap,
     Panel,
-    EdgeProps,
-    Edge,
-    useEdges,
     useReactFlow,
 } from '@xyflow/react';
 import { ActionIcon, Group, Select, useMantineTheme } from '@mantine/core';
@@ -22,6 +19,10 @@ import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import { IconPencil, IconTrash, IconX } from '@tabler/icons-react';
 import { deleteEdge, updateEdgeType } from '@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices';
 import { dispatch } from '@/redux/store';
+import { useParams, useSearchParams } from 'react-router';
+import { restProjectTestCases } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
+import useProjectTests from '@/hooks/useProjectTests';
+import { getTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
 
 
 const BuilderPage: React.FC = () => {
@@ -30,15 +31,28 @@ const BuilderPage: React.FC = () => {
     const { resetBuilder, isBuilding, updateProjectSyncing, deleteComponent } = React.useContext(BuilderContext);
     const { openDeleteModal, openConfirmModal } = useConfirmModal();
     const { setEdges } = useReactFlow();
+    const params = useParams();
+    const { selectedTest } = useProjectTests()
+    const fetchTestCase = React.useCallback(async () => {
+        if (!selectedTest)
+            await dispatch(getTestCase(Number(params.test_id)))
+    }, [selectedTest])
+
+    React.useEffect(() => {
+        fetchTestCase()
+    }, [])
 
     const selectedEdge = React.useMemo(() => {
         return edges.find(elm => elm.selected)
     }, [edges])
 
-    // React.useEffect(() => () => {
-    //     resetBuilder?.()
-    //     resetBuilderHooks()
-    // }, []);
+    React.useEffect(() => () => {
+        // resetBuilder?.()
+        // resetBuilderHooks()
+        console.log("reseting");
+
+        dispatch(restProjectTestCases())
+    }, []);
 
     const deleteSelectedComponent = React.useCallback(async (id: number) => {
         openDeleteModal({

@@ -10,6 +10,7 @@ export interface CreateProjectComponent {
     project_id: number,
     component_id: number,
     extra_data: Object,
+    test_case_id: number
 }
 
 export interface CreateEdge {

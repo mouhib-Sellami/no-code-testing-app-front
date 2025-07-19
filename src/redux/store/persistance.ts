@@ -10,6 +10,10 @@ import permissionReducer from "@/redux/slices/accessSlices/permissionSlice";
 import roleReducer from "@/redux/slices/accessSlices/roleSlice";
 import authReducer from "@/redux/slices/authSlices/authSlice";
 import userReducer from "@/redux/slices/userSlice/userSlice";
+import projectReducer from "@/redux/slices/projectSlice/projectSlice";
+import providerReducer from "@/redux/slices/providerSlice/providerSlice";
+import projectComponentReducer from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
+import runnerAgentReducer from "@/redux/slices/runnerAgentSlice/runnerAgentSlice";
 
 const encrypts = encryptTransform({
     secretKey: import.meta.env.VITE_REDUX_SECURE_STORAGE_HASH_KEY,
@@ -83,6 +87,34 @@ const UsersPersistConfig = {
     whitelist: ['roles'],
 };
 
+const ProjectsPersistConfig = {
+    key: 'projects',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: ['projects', 'selectedProject', 'projectComponents'],
+};
+
+const ProvidersPersistConfig = {
+    key: 'providers',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: ['providers', 'selectedProvider'],
+};
+
+const ProjectComponentsPersistConfig = {
+    key: 'project-components',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: [],
+};
+
+const RunnerAgentsPersistConfig = {
+    key: 'runner-agents',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: [],
+};
+
 
 const rootReducer = combineReducers({
     appConfigs: persistReducer(appConfigPersistenceConfig, appConfigReducer),
@@ -93,6 +125,10 @@ const rootReducer = combineReducers({
     permissions: persistReducer(PermissionsPersistConfig, permissionReducer),
     roles: persistReducer(RolesPersistConfig, roleReducer),
     users: persistReducer(UsersPersistConfig, userReducer),
+    projects: persistReducer(ProjectsPersistConfig, projectReducer),
+    providers: persistReducer(ProvidersPersistConfig, providerReducer),
+    projectComponents: persistReducer(ProjectComponentsPersistConfig, projectComponentReducer),
+    runners: persistReducer(RunnerAgentsPersistConfig, runnerAgentReducer),
 })
 
 export { rootPersistConfig, rootReducer };

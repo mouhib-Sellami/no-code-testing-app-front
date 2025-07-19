@@ -15,7 +15,7 @@ import ViewUserDetails from "@/components/modals/user-modals/ViewUserDetails";
 import EditUserModal from "@/components/modals/user-modals/EditUserModal";
 
 
-const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoading, count, onChange, onQuerySearch, ...item }) => {
+const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoading, count, onChange, onQuerySearch, onPageChanges, ...item }) => {
     const [page, setPage] = React.useState(1);
     const [RECORDS, setRECORDS] = React.useState<Array<AppUser>>(records);
     const { openDeleteModal, openConfirmModal } = useConfirmModal();
@@ -32,7 +32,11 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
 
     React.useEffect(() => {
         onQuerySearch?.(debouncedQuery)
-    }, [records, debouncedQuery])
+    }, [debouncedQuery])
+
+    React.useEffect(() => {
+        onPageChanges?.(page)
+    }, [page])
 
     const deleteUser_ = React.useCallback(async (id: number) => {
         const res = await dispatch(deleteUser(id))
@@ -146,7 +150,7 @@ const UserDataTable: React.FC<AppDataTableProps<AppUser>> = ({ records, isLoadin
                     user={selected}
                     visible={openForUpdate}
                     onCancel={() => { closeUpdate(); setSelected(null); }}
-                    onSubmit={() => { closeUpdate(); setSelected(null); onChange?.();}}
+                    onSubmit={() => { closeUpdate(); setSelected(null); onChange?.(); }}
                 />
             }
         </Box>

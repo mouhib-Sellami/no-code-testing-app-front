@@ -32,14 +32,14 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.isError = false;
                 state.message = '';
-                state.count = action.payload.count || 0
+                state.count = action.payload.count || 0;
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.users = [];
                 state.isLoading = false;
                 state.isError = true;
                 state.message = '';
-                state.count = 0
+                state.count = 0;
             })
             .addCase(createUser.pending, (state) => {
                 state.isLoading = true;

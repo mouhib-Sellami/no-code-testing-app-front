@@ -7,6 +7,7 @@ import AuthGuard from "@/guards/AuthGuard";
 import { DashboardLayout } from "@/constants/layout/DashboardLayout";
 import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
 import TenantGuard from "@/guards/TenantGuard";
+import { ReactFlowProvider } from "@xyflow/react";
 
 
 export default function AppRoutes() {
@@ -59,6 +60,30 @@ export default function AppRoutes() {
             ),
         },
         {
+            path: PATH_APP.general.dashboard.builder,
+            element: (
+                <ReactFlowProvider>
+                    <AuthGuard>
+                        <PermissionGuardRedirection permission="can_change_project">
+                            <BuilderPage />
+                        </PermissionGuardRedirection>
+                    </AuthGuard>
+                </ReactFlowProvider>
+            ),
+        },
+        {
+            path: PATH_APP.general.dashboard.projectLogs,
+            element: (
+                <ReactFlowProvider>
+                    <AuthGuard>
+                        <PermissionGuardRedirection permission="can_view_project">
+                            <ViewProjectLogPage />
+                        </PermissionGuardRedirection>
+                    </AuthGuard>
+                </ReactFlowProvider>
+            )
+        },
+        {
             path: PATH_APP.root,
             element: (
                 <AuthGuard>
@@ -86,7 +111,24 @@ export default function AppRoutes() {
                             <UsersPage />
                         </PermissionGuardRedirection>
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.projects,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_project">
+                            <ProjectsPage />
+                        </PermissionGuardRedirection>
+                    )
+                },
+                {
+                    path: PATH_APP.general.dashboard.runnerAgent,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_runner_agent">
+                            <RunnerAgentPage />
+                        </PermissionGuardRedirection>
+                    )
                 }
+
             ]
         },
         {
@@ -118,6 +160,15 @@ const RolePage = Loadable(lazy(() => import('@/pages/dashboard/roles/RolesPage')
 
 //USERS
 const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage')));
+
+//PROJECTS
+const ProjectsPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectsPage')));
+const ViewProjectLogPage = Loadable(lazy(() => import('@/pages/dashboard/project/ViewProjectLogPage')));
+const BuilderPage = Loadable(lazy(() => import('@/pages/dashboard/builder/BuilderPage')));
+
+//CI /CD
+const RunnerAgentPage = Loadable(lazy(() => import('@/pages/dashboard/runner-agent/RunnerAgentPage')));
+
 
 //OTHER
 const Page404 = Loadable(lazy(() => import('@pages/errors/Page404')));

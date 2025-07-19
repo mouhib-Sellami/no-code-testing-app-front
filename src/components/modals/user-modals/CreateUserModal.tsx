@@ -10,11 +10,15 @@ import useRoles from "@/hooks/useRoles";
 import useUsers from "@/hooks/useUsers";
 import { createUpdateUser } from "@/types/models/User";
 import { createUser } from "@/redux/slices/userSlice/userSliceBaseServices";
+import { useDebouncedValue } from "@mantine/hooks";
+import DataTableConfig from "@/config/DataTableConfig";
 
 
 const CreateUserModal: React.FC<AppModalProps> = (props) => {
     const { isLoading } = useUsers();
     const ROLE_HOOKS = useRoles();
+    const [query, setQuery] = React.useState("");
+    const [debouncedQuery] = useDebouncedValue(query, 200);
 
     const RoleOptions = React.useMemo(() => {
         return ROLE_HOOKS.roles.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.name }))
@@ -36,12 +40,16 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
 
 
     const fetchRolesData = React.useCallback(async () => {
-        await dispatch(fetchRoles())
-    }, [])
+        await dispatch(fetchRoles({
+            p: 1,
+            page_size: DataTableConfig.MAX_PAGE_SIZE,
+            search: debouncedQuery
+        }))
+    }, [debouncedQuery])
 
     React.useEffect(() => {
         fetchRolesData()
-    }, [])
+    }, [debouncedQuery])
 
     const form = useForm({
         enhanceGetInputProps: () => ({ disabled: isLoading }),
@@ -143,9 +151,14 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
                     key={form.key('profession')}
                     {...form.getInputProps('profession')}
                 />
-                <Select label="Role" placeholder="tester"
+                <Select
+                    label="Role"
+                    placeholder="tester"
+                    searchable
                     data={RoleOptions}
-                    {...form.getInputProps('role')} />
+                    nothingFoundMessage="No role found"
+                    onSearchChange={setQuery}
+                    {...form.getInputProps('role_id')} />
             </Stack>
         </BaseAppModal>
     )

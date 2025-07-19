@@ -3,6 +3,7 @@ import {
     Collapse,
     Group,
     Text,
+    ThemeIcon,
     UnstyledButton,
     useMantineTheme,
 } from "@mantine/core";
@@ -51,13 +52,19 @@ export function NavLinksGroup({
                     }}
                     m={0}
                 >
+
                     <Link
                         to={link.link}
                         className={`${classes.link} ${link.link === pathname && classes.activeLink}`}
                     >
-                        <Text className={`${classes.controlLink}`} fz={{ xl: 14, lg: 12, md: 10 }}>
-                            {link.label}
-                        </Text>
+                        <Group align="center" justify="center" wrap="nowrap" p={0} m={0}>
+                            <ThemeIcon variant="transparent" size={20}>
+                                <link.icon size="1.3rem" color={theme.colors.sideNavBarLinksColor[0]} />
+                            </ThemeIcon>
+                            <Text className={`${classes.controlLink}`} fz={{ xl: 14, lg: 12, md: 10 }}>
+                                {link.label}
+                            </Text>
+                        </Group>
                     </Link>
                 </Group>
             );

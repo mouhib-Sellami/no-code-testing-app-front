@@ -27,11 +27,11 @@ const MODAL_CONFIG: any = (theme: MantineTheme, payload: ConfirmModalDataType) =
         children: (
             <Center>
                 <Box w={"80%"}>
-                    <Text size="sm" c="dimmed" style={{
+                    {typeof payload.content == "string" ? <Text size="sm" c="dimmed" style={{
                         fontWeight: "300"
                     }} ta={"center"}>
                         {payload.content}
-                    </Text>
+                    </Text> : payload.content}
                     <Group align="center" justify="center" w={"100%"} wrap="nowrap" gap={10}>
                         <Button
                             fullWidth

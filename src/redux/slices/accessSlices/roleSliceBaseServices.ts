@@ -1,10 +1,11 @@
 import roleServices from "@/redux/services/roleServices";
 import { Role } from "@/types/models/Role";
+import { paginationRequestParams } from "@/types/requests/PaginationRequestParams";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchRoles = createAsyncThunk('roles/fetchRoles', async (_, thunkAPI) => {
+export const fetchRoles = createAsyncThunk('roles/fetchRoles', async (params: paginationRequestParams, thunkAPI) => {
     try {
-        const response = await roleServices.fetchRoles();
+        const response = await roleServices.fetchRoles(params);
         return response;
     } catch (error: any) {
         if (error?.response?.data) {

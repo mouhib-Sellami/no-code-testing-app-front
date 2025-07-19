@@ -11,6 +11,7 @@
 @import '@mantine/notifications/styles.css';
 @import '@mantine/core/styles.layer.css';
 @import 'mantine-datatable/styles.layer.css';
+@import '@xyflow/react/dist/style.css';
 
 html {
     width: 100vw;
@@ -67,3 +68,20 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+ .react-flow__controls button {
+    background:#13161B;
+    border: none;
+    color:#ba2d0b;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+}
+.react-flow__controls button:hover {
+    background:#22262F;
+    color:#ba2d0b;
+}
+.react-flow__controls button {
+    background:#22262F;
+    color:#ba2d0b;
+    border-radius: 4px;
+    margin-bottom: 2px;
+}

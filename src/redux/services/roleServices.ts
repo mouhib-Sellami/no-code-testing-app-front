@@ -1,12 +1,14 @@
 import { Role } from "@/types/models/Role";
 import axiosInstance from "../../config/AxiosInstance";
+import { paginationRequestParams } from "@/types/requests/PaginationRequestParams";
 
 const API_PREFIX = "roles/"
 
-const fetchRoles = async () => {
+const fetchRoles = async (params: paginationRequestParams) => {
     const { data } = await axiosInstance({
         method: "GET",
         url: API_PREFIX,
+        params
     });
     return data
 };

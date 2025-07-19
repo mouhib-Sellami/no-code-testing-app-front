@@ -24,7 +24,7 @@ const UserDataTableConfig = (props: DataTableActions<AppUser>) => {
                 textAlign: "center",
                 render(_, index) {
                     return (
-                        <Text ta={"center"} > {index + 1}</Text >
+                        index + 1
                     )
                 }
             },

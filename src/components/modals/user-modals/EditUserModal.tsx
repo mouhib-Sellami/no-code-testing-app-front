@@ -4,12 +4,14 @@ import { Grid, Select, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AppModalProps } from "../base-modal/types";
 import BaseAppModal from "../base-modal/BaseAppModal";
-import { fetchRoles } from "@/redux/slices/accessSlices/roleSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import useRoles from "@/hooks/useRoles";
 import useUsers from "@/hooks/useUsers";
 import { AppUser, createUpdateUser } from "@/types/models/User";
 import { updateUser } from "@/redux/slices/userSlice/userSliceBaseServices";
+import { fetchRoles } from "@/redux/slices/accessSlices/roleSliceBaseServices";
+import { useDebouncedValue } from "@mantine/hooks";
+import DataTableConfig from "@/config/DataTableConfig";
 
 
 export interface EditUserModalProps extends AppModalProps {
@@ -19,6 +21,8 @@ export interface EditUserModalProps extends AppModalProps {
 const EditUserModal: React.FC<EditUserModalProps> = (props) => {
     const { isLoading } = useUsers();
     const ROLE_HOOKS = useRoles();
+    const [query, setQuery] = React.useState("");
+    const [debouncedQuery] = useDebouncedValue(query, 200);
 
     const RoleOptions = React.useMemo(() => {
         return ROLE_HOOKS.roles.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.name }))
@@ -40,12 +44,16 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
 
 
     const fetchRolesData = React.useCallback(async () => {
-        await dispatch(fetchRoles())
-    }, [])
+        await dispatch(fetchRoles({
+            p: 1,
+            page_size: DataTableConfig.MAX_PAGE_SIZE,
+            search: debouncedQuery
+        }))
+    }, [debouncedQuery])
 
     React.useEffect(() => {
         fetchRolesData()
-    }, [])
+    }, [debouncedQuery])
 
     const form = useForm({
         enhanceGetInputProps: () => ({ disabled: isLoading }),
@@ -147,8 +155,13 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
                     key={form.key('profession')}
                     {...form.getInputProps('profession')}
                 />
-                <Select label="Role" placeholder="tester"
+                <Select
+                    label="Role"
+                    placeholder="tester"
+                    searchable
                     data={RoleOptions}
+                    nothingFoundMessage="No role found"
+                    onSearchChange={setQuery}
                     {...form.getInputProps('role_id')} />
             </Stack>
         </BaseAppModal>

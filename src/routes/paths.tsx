@@ -22,6 +22,9 @@ export const PATH_APP = {
             projects: path(ROOTS_APP, '/projects'),
             organization: path(ROOTS_APP, '/organization'),
             roles: path(ROOTS_APP, '/privilege'),
+            builder: path(ROOTS_APP, '/builder'),
+            runnerAgent: path(ROOTS_APP, '/runner-agent'),
+            projectLogs: path(ROOTS_APP, '/project-pipeline/:id'),
         },
         notFound: path(ROOTS_APP, '/404')
     }

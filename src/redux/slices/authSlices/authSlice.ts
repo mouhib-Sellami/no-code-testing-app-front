@@ -98,7 +98,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isAuthenticated = false;
                 state.permissions = [];
-                secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+                secureLocalStorage.removeItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token')
             })
             .addCase(logout.pending, (state) => {
                 state.isLoading = true;

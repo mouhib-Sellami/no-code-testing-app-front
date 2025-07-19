@@ -1,10 +1,14 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-    readonly VITE_AUTH_TOKEN: string;
+    readonly VITE_VITE_AUTH_TOKEN: string;
     readonly VITE_BASE_SERVER_API_URL: string;
     readonly VITE_SECURE_LOCAL_STORAGE_PREFIX: string;
     readonly VITE_REDUX_SECURE_STORAGE_HASH_KEY: string;
+    readonly VITE_MQTT_HOST: string;
+    readonly VITE_MQTT_PORT: number;
+    readonly VITE_MQTT_USER: string;
+    readonly VITE_MQTT_PASSWORD: string;
 }
 
 interface ImportMeta {

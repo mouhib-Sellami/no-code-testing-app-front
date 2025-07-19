@@ -8,6 +8,7 @@ import { DashboardLayout } from "@/constants/layout/DashboardLayout";
 import PermissionGuardRedirection from "@/guards/PermissionGuardRedirection";
 import TenantGuard from "@/guards/TenantGuard";
 import { ReactFlowProvider } from "@xyflow/react";
+import { BuilderViewerProvider } from "@/contexts/BuilderViewerContext";
 
 
 export default function AppRoutes() {
@@ -72,15 +73,17 @@ export default function AppRoutes() {
             ),
         },
         {
-            path: PATH_APP.general.dashboard.projectLogs,
+            path: PATH_APP.general.dashboard.projectLog,
             element: (
-                <ReactFlowProvider>
-                    <AuthGuard>
-                        <PermissionGuardRedirection permission="can_view_project">
-                            <ViewProjectLogPage />
-                        </PermissionGuardRedirection>
-                    </AuthGuard>
-                </ReactFlowProvider>
+                <BuilderViewerProvider>
+                    <ReactFlowProvider>
+                        <AuthGuard>
+                            <PermissionGuardRedirection permission="can_view_project">
+                                <ViewProjectLogPage />
+                            </PermissionGuardRedirection>
+                        </AuthGuard>
+                    </ReactFlowProvider>
+                </BuilderViewerProvider>
             )
         },
         {
@@ -127,6 +130,14 @@ export default function AppRoutes() {
                             <RunnerAgentPage />
                         </PermissionGuardRedirection>
                     )
+                },
+                {
+                    path: PATH_APP.general.dashboard.projectLogsList,
+                    element: (
+                        <PermissionGuardRedirection permission="can_view_project">
+                            <ProjectLogs />
+                        </PermissionGuardRedirection>
+                    )
                 }
 
             ]
@@ -165,6 +176,8 @@ const UsersPage = Loadable(lazy(() => import('@/pages/dashboard/users/UsersPage'
 const ProjectsPage = Loadable(lazy(() => import('@/pages/dashboard/project/ProjectsPage')));
 const ViewProjectLogPage = Loadable(lazy(() => import('@/pages/dashboard/project/ViewProjectLogPage')));
 const BuilderPage = Loadable(lazy(() => import('@/pages/dashboard/builder/BuilderPage')));
+
+const ProjectLogs = Loadable(lazy(() => import('@/pages/dashboard/projectLogs/ProjectLogs')));
 
 //CI /CD
 const RunnerAgentPage = Loadable(lazy(() => import('@/pages/dashboard/runner-agent/RunnerAgentPage')));

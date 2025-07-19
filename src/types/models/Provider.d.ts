@@ -26,7 +26,9 @@ export interface Component extends BaseModal {
     action_name: string,
     extra_arguments: Array<Kwarg>,
     default_arguments: Array<Kwarg>,
-    type: 'input' | 'output' | 'input-output'
+    builder_config: any,
+    type: 'input' | 'output' | 'input-output',
+    status?: string
 }
 export interface Category extends BaseModal {
     id: number,

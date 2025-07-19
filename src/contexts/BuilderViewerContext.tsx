@@ -1,165 +1,131 @@
-import useProjects from "@/hooks/useProjects";
-import useProviders from "@/hooks/useProviders";
-import { resetProjectsComponent } from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
-import { createEdge, createProjectComponent, deleteProjectComponent, getEdges } from "@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices";
-import { resetSelectedProject, resetSelectedProjectComponent } from "@/redux/slices/projectSlice/projectSlice";
-import { getProjectComponents } from "@/redux/slices/projectSlice/projectSliceBaseServices";
-import { fetchProvidersDetails } from "@/redux/slices/providerSlice/providerSlice";
-import { dispatch } from "@/redux/store";
+import useProjectLogs from "@/hooks/useProjectLogs";
 import { Node } from "@/types/app-types/Nodes";
-import { Project } from "@/types/models/Project";
-import { CreateEdge, ProjectComponent } from "@/types/models/ProjectComponent";
-import { ProviderDetails } from "@/types/models/Provider";
+import { Component } from "@/types/models/Provider";
+import { Edge, useNodesState } from "@xyflow/react";
 import React, { PropsWithChildren } from "react";
+import { MQTTContext } from "./MQTTContext";
+import { ProjectStatusLog } from "@/types/models/ProjectStatusLog";
+import { dispatch } from "@/redux/store";
+import { getProjectLogs, getProjectLogsDetails } from "@/redux/slices/projectSlice/projectStatusLogSliceBaseServices";
 
 type BuilderViewerContextProps = {
-    selectedProject: Project | null
-    selectedProvider: ProviderDetails | null
-    createNewProjectComponent: (component_id: number, extraData?: any) => Promise<{ component: ProjectComponent } | null>;
-    rebuildProject: (enableLoader?: boolean) => Promise<{ nodes: Array<Node>, edges: any }> | null
-    deleteComponent: (id: number) => void | null
-    createNewEdge: (values: CreateEdge) => void | null
-    projectComponents: Array<ProjectComponent>
-    resetBuilder: () => void | null
-    isSyncing: boolean,
+    nodes: Array<Node>,
+    edges: Array<Edge>,
     isBuilding: boolean,
-    updateProjectSyncing: (v: boolean) => void | null
+    isQueued: boolean
 }
 
 const BuilderViewerContext = React.createContext<Partial<BuilderViewerContextProps>>({
-    selectedProject: null,
-    selectedProvider: null,
-    createNewProjectComponent: (_: number, __?: any) => null,
-    rebuildProject: () => null,
-    deleteComponent: (_: number) => null,
-    createNewEdge: (_: CreateEdge) => null,
-    projectComponents: [],
-    resetBuilder: () => null,
-    isSyncing: false,
+    nodes: [],
+    edges: [],
     isBuilding: false,
-    updateProjectSyncing: (_: boolean) => null
+    isQueued: true
 })
 
 const BuilderViewerProvider = (props: PropsWithChildren) => {
-    const { selectedProject, projectComponents } = useProjects();
-    const { selectedProvider } = useProviders();
-    const [isSyncing, setIsSyncing] = React.useState(false);
+    const { selectedProjectLogs } = useProjectLogs();
     const [isBuilding, setIsBuilding] = React.useState(false);
+    const [nodes, setNodes] = useNodesState([]);
+    const [edges, setEdges] = React.useState<Array<Edge>>([]);
+    const { handleSubscribe, isConnected, MQTTClient } = React.useContext(MQTTContext);
+    const [executing, setExecuting] = React.useState<any>(null);
 
-    const updateProjectSyncing = React.useCallback((v: boolean) => {
-        if (v == false) {
-            setTimeout(() => { setIsSyncing(v) }, 500)
-        } else {
-            setIsSyncing(v)
-        }
-    }, [])
-
-    const getProviderDetails = React.useCallback(async () => {
-        if (!selectedProject)
+    const workflow = React.useMemo(() => {
+        if (!selectedProjectLogs)
             return
-        if (!selectedProject || !selectedProject.provider.id)
-            return
-        await dispatch(fetchProvidersDetails(selectedProject.provider.id))
-    }, [selectedProject])
-
-    const getProjectComponents_ = React.useCallback(async () => {
-
-        if (!selectedProject)
-            return
-        if (!selectedProject || !selectedProject.provider.id)
-            return
-        await dispatch(getProjectComponents(selectedProject.id))
-    }, [selectedProject])
-
-    const getProjectEdges_ = React.useCallback(async () => {
-        if (!selectedProject)
-            return []
-        if (!selectedProject || !selectedProject.provider.id)
-            return []
-        const res = await dispatch(getEdges(selectedProject.id))
-        if (res.meta.requestStatus == "fulfilled")
-            return res.payload
-        return []
-    }, [selectedProject])
+        return selectedProjectLogs.workflow
+    }, [selectedProjectLogs])
 
     React.useEffect(() => {
-        getProviderDetails()
-        getProjectComponents_()
-    }, [selectedProject])
+        if (!executing) return;
 
-    const rebuildProject = React.useCallback(async (enableLoader?: boolean): Promise<{ nodes: Array<Node>, edges: any }> => {
-        if (enableLoader)
-            setIsBuilding(true)
-        const nodes = projectComponents.map(elm => {
+        setNodes((nodes) =>
+            nodes.map((elm) => {
+                if (elm.id.toString() === executing.component_id.toString()) {
+                    return {
+                        ...elm,
+                        data: { ...elm.data, status: executing.status }
+                    };
+                }
+                return elm;
+            })
+        );
+    }, [executing]);
+
+    const handleComponentStatus = React.useCallback((topic: string, message: Buffer<ArrayBufferLike>) => {
+        const data = JSON.parse(message.toString())
+        setExecuting(data)
+    }, [])
+
+    const handleEdgeStatus = React.useCallback(() => { }, [])
+
+    const handleProjectStatus = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>, selectedProjectLogs: ProjectStatusLog) => {
+        const data = JSON.parse(message.toString())
+        if (data.execution_id == selectedProjectLogs.id) {
+            const res = await dispatch(getProjectLogsDetails(data.execution_id))
+        }
+
+    }, [])
+
+    React.useEffect(() => {
+        if (!isConnected || !selectedProjectLogs)
+            return
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_component", 1, handleComponentStatus)
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_edge", 1, handleEdgeStatus)
+        handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
+    }, [isConnected, selectedProjectLogs])
+
+    const rebuildProject = React.useCallback(async (): Promise<{ nodes: Array<Node>, edges: any }> => {
+        if (!workflow)
+            return
+        setIsBuilding(true)
+
+        const nodes = Object.values(workflow.components).map((elm: Component) => {
             return {
                 id: elm.id.toString(),
-                data: { label: elm.name, component: elm },
+                data: { label: elm.name, component: elm, status: elm.status || "PENDING" },
                 position: elm.builder_config?.position,
                 type: `app-${elm.type}`
             }
         })
-        const res = await getProjectEdges_()
-        const edges = res.map(elm => {
+
+        setNodes(nodes as Array<Node>)
+        const edges = workflow.dependencies.map(elm => {
+            if (elm.dependency_type == "RUN_AFTER") {
+                return {
+                    id: elm.id,
+                    source: elm.source_component.toString(),
+                    sourceHandle: "run_after_source",
+                    target: elm.target_component.toString(),
+                    targetHandle: "run_after_target",
+                    type: elm.dependency_type,
+                }
+            }
             return {
                 id: elm.id,
                 source: elm.source_component.toString(),
-                sourceHandle: null,
+                sourceHandle: "source",
                 target: elm.target_component.toString(),
-                targetHandle: null,
+                targetHandle: "target",
                 type: elm.dependency_type,
-                animated: true
             }
         })
-        if (enableLoader)
-            setTimeout(() => setIsBuilding(false), 1000)
+        setEdges(edges)
 
-        return {
-            nodes: nodes, edges: edges
-        } as { nodes: Array<Node>, edges: any }
-    }, [projectComponents])
+        setTimeout(() => setIsBuilding(false), 1000)
+    }, [workflow, selectedProjectLogs, isBuilding])
 
-
-    const createNewProjectComponent = React.useCallback(async (component_id: number, extra_data: any): Promise<{ component: ProjectComponent } | null> => {
-        if (!selectedProject)
+    React.useEffect(() => {
+        if (!selectedProjectLogs || !workflow)
             return
-        const res = await dispatch(createProjectComponent({
-            component_id,
-            project_id: selectedProject.id,
-            extra_data
-        }))
-        return res.payload as { component: ProjectComponent }
-    }, [selectedProject])
-
-    const deleteComponent = React.useCallback(async (id: number) => {
-        const res = await dispatch(deleteProjectComponent(id))
-        if (res.meta.requestStatus == "fulfilled") {
-            getProjectComponents_()
-        }
-    }, [selectedProject])
-
-    const createNewEdge = React.useCallback(async (values: CreateEdge) => {
-        await dispatch(createEdge(values))
-    }, [])
-
-    const resetBuilder = React.useCallback(() => {
-        dispatch(resetProjectsComponent())
-        dispatch(resetSelectedProject())
-        dispatch(resetSelectedProjectComponent())
-    }, [])
+        rebuildProject()
+    }, [workflow, selectedProjectLogs])
 
     return (
         <BuilderViewerContext.Provider value={{
-            selectedProject,
-            selectedProvider,
-            projectComponents,
-            isSyncing,
-            isBuilding,
-            createNewProjectComponent,
-            rebuildProject,
-            deleteComponent,
-            createNewEdge,
-            resetBuilder,
-            updateProjectSyncing
+            nodes,
+            edges,
+            isBuilding
         }}>
             {props.children}
         </BuilderViewerContext.Provider>

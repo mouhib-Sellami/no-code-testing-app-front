@@ -87,8 +87,7 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
                 color: "gray",
                 permission: 'can_view_project',
                 action(record: Project) {
-                    // setSelected(record);
-                    // openView();
+                    navigate(PATH_APP.general.dashboard.projectLogsList.replace(":project_id", record.id.toString()))
                 },
             },
             {

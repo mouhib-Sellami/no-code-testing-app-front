@@ -8,9 +8,9 @@ import { handleNewSession } from "../sessionSlice/sessionSlice";
 
 export const login = createAsyncThunk('auth/login', async (data: UserAuth, thunkAPI) => {
     try {
-        secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
+        secureLocalStorage.removeItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token');
         const response: loginResponse = await authServices.login(data);
-        secureLocalStorage.setItem(import.meta.env.VITE_AUTH_TOKEN || '@token', response.token);
+        secureLocalStorage.setItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token', response.token);
         dispatch(handleNewSession());
         return response;
     } catch (error: any) {
@@ -30,9 +30,9 @@ export const login = createAsyncThunk('auth/login', async (data: UserAuth, thunk
 
 export const signup = createAsyncThunk('auth/signup', async (values: FormData, thunkAPI) => {
     try {
-        secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token');
+        secureLocalStorage.removeItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token');
         const response: loginResponse = await authServices.signup(values);
-        secureLocalStorage.setItem(import.meta.env.VITE_AUTH_TOKEN || '@token', response.token);
+        secureLocalStorage.setItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token', response.token);
         dispatch(handleNewSession());
         return response;
     } catch (error: any) {
@@ -46,7 +46,7 @@ export const signup = createAsyncThunk('auth/signup', async (values: FormData, t
 export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     try {
         const response = await authServices.logout();
-        secureLocalStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+        secureLocalStorage.removeItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token')
         return response;
     } catch (error: any) {
         if (error?.response?.data) {

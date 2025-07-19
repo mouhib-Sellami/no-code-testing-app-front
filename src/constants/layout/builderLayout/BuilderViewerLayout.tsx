@@ -1,16 +1,13 @@
-import { ActionIcon, AppShell, Box, Group, px, ScrollArea, Stack, useMantineTheme } from '@mantine/core';
+import { ActionIcon, AppShell, Badge, Box, Group, Pill, px, ScrollArea, Stack, useMantineTheme } from '@mantine/core';
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';
 import NavbarFooter from '../navbar/NavbarFooter';
-import { IconCloudUpload, IconRefresh, IconArrowLeft, IconReceiptPound, IconCloudCog } from '@tabler/icons-react';
-import { BuilderContext } from '@/contexts/BuilderContext';
-import { dispatch } from '@/redux/store';
-import { getProjectComponents } from '@/redux/slices/projectSlice/projectSliceBaseServices';
-import { resetProjectsComponent } from '@/redux/slices/projectComponentsSlice/projectComponentSlice';
-import { resetSelectedProjectComponent } from '@/redux/slices/projectSlice/projectSlice';
-import RunProjectModal from '@/components/modals/project-modals/RunProjectModal';
+import { IconRefresh, IconArrowLeft } from '@tabler/icons-react';
 import { PATH_APP } from '@/routes/paths';
+import useProjectLogs from '@/hooks/useProjectLogs';
+import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
+import RunProjectModal from '@/components/modals/project-modals/RunProjectModal';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
     sideBard: JSX.Element | JSX.Element[];
@@ -24,16 +21,63 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
     const navigate = useNavigate();
     const mainRef = useRef<HTMLDivElement>(null);
     const { colors } = useMantineTheme();
+    const { selectedProjectLogs } = useProjectLogs();
+    const { openDeleteModal } = useConfirmModal();
+    const [openedForRun, { open: openForRun, close: closeForRun }] = useDisclosure();
 
     useEffect(() => {
         if (mainRef.current) {
             mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
         }
     }, [pathname]);
+
     const handleGoBack = () => {
-        navigate(PATH_APP.general.dashboard.projects);
+        navigate(-1);
     };
 
+    const getPilColor = React.useMemo(() => {
+        if (!selectedProjectLogs)
+            return colors.gray[9]
+
+        if (selectedProjectLogs.is_running)
+            return "orange"
+        if (selectedProjectLogs.is_failed)
+            return "red"
+        if (selectedProjectLogs.is_finish)
+            return "green"
+
+        return colors.gray[9]
+    }, [selectedProjectLogs])
+
+    const getPilMessage = React.useMemo(() => {
+        if (!selectedProjectLogs)
+            return "Queued"
+        if (selectedProjectLogs.is_running)
+            return "Running"
+        if (selectedProjectLogs.is_failed)
+            return "Failed"
+        if (selectedProjectLogs.is_finish)
+            return "Complete"
+        return "Queued"
+    }, [selectedProjectLogs])
+
+
+    const openModal = React.useCallback(() => {
+        if (!selectedProjectLogs)
+            return
+        if (selectedProjectLogs.is_failed) {
+            openDeleteModal({
+                title: "Are you sure",
+                content: "this excution contains errors ! are you sure you want to reexcute it !",
+                confirmText: "Force excution",
+                onConfirm: () => {
+                    openForRun()
+                }
+            })
+        } else {
+            openForRun()
+        }
+    }, [selectedProjectLogs])
     return (
         <AppShell
             layout="alt"
@@ -60,12 +104,17 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
                         </ActionIcon>
                     </Group>
                     <Group gap="xs">
+                        <Pill size="md" bg={getPilColor}>
+                            {getPilMessage}
+                        </Pill>
                         <ActionIcon
                             variant="filled"
                             radius="md"
                             color={colors.activeLinkBgColor[9]}
                             title="Sync from remote"
                             size={30}
+                            onClick={openModal}
+                            disabled={selectedProjectLogs && selectedProjectLogs?.is_running}
                         >
                             <IconRefresh style={{ width: '70%', height: '70%' }} stroke={1.5} />
                         </ActionIcon>
@@ -111,8 +160,8 @@ const BuilderViewerLayout: React.FC<BuilderLayoutProps> = ({ children, sideBard 
                     backgroundSize: "20px 20px",
                 }} m={0} pt={"70"} pb={10} px={"sm"}>
                     {children}
+                    {openedForRun && selectedProjectLogs.project && <RunProjectModal onCancel={closeForRun} onSubmit={() => { closeForRun(); }} project={selectedProjectLogs.project} visible={openedForRun} />}
 
-                    {/* {openedForRun && selectedProject && <RunProjectModal onCancel={closeForRun} onSubmit={() => { closeForRun(); navigate(PATH_APP.general.dashboard.projectLogs) }} project={selectedProject} visible={openedForRun} />} */}
                 </Box>
             </AppShell.Main>
         </AppShell>

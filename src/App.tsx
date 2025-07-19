@@ -6,6 +6,7 @@ import {
 import { TenantProvider } from './contexts/TenantContext.tsx';
 import { SessionProvider } from './contexts/SessionContext.tsx';
 import { AppConfigProvider } from './contexts/AppConfigContext.tsx';
+import { MQTTProvider } from './contexts/MQTTContext.tsx';
 
 const App: React.FC = () => {
 
@@ -14,7 +15,9 @@ const App: React.FC = () => {
       <TenantProvider>
         <SessionProvider>
           <AppConfigProvider>
-            <AppRoutes />
+            <MQTTProvider>
+              <AppRoutes />
+            </MQTTProvider>
           </AppConfigProvider>
         </SessionProvider>
       </TenantProvider>

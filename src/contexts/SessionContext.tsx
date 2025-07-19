@@ -39,7 +39,7 @@ const SessionProvider = ({ children }: SessionProviderProps) => {
     const TOKEN = React.useMemo(() => {
         return (
             searchParams.get('token') ||
-            secureLocalStorage.getItem(import.meta.env.VITE_AUTH_TOKEN || '@token')
+            secureLocalStorage.getItem(import.meta.env.VITE_VITE_AUTH_TOKEN || '@token')
         );
     }, [searchParams]);
 

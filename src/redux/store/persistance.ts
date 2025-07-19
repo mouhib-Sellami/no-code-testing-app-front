@@ -14,6 +14,7 @@ import projectReducer from "@/redux/slices/projectSlice/projectSlice";
 import providerReducer from "@/redux/slices/providerSlice/providerSlice";
 import projectComponentReducer from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
 import runnerAgentReducer from "@/redux/slices/runnerAgentSlice/runnerAgentSlice";
+import projectStatusLogReducer from "@/redux/slices/projectSlice/projectStatusLogSlice";
 
 const encrypts = encryptTransform({
     secretKey: import.meta.env.VITE_REDUX_SECURE_STORAGE_HASH_KEY,
@@ -115,6 +116,13 @@ const RunnerAgentsPersistConfig = {
     whitelist: [],
 };
 
+const ProjectStatusLogsPersistConfig = {
+    key: 'project-status-logs',
+    storage: storage,
+    keyPrefix: 'redux-',
+    whitelist: ["selectedProjectLogs"],
+};
+
 
 const rootReducer = combineReducers({
     appConfigs: persistReducer(appConfigPersistenceConfig, appConfigReducer),
@@ -129,6 +137,7 @@ const rootReducer = combineReducers({
     providers: persistReducer(ProvidersPersistConfig, providerReducer),
     projectComponents: persistReducer(ProjectComponentsPersistConfig, projectComponentReducer),
     runners: persistReducer(RunnerAgentsPersistConfig, runnerAgentReducer),
+    projectStatusLogs: persistReducer(ProjectStatusLogsPersistConfig, projectStatusLogReducer),
 })
 
 export { rootPersistConfig, rootReducer };

@@ -24,7 +24,8 @@ export const PATH_APP = {
             roles: path(ROOTS_APP, '/privilege'),
             builder: path(ROOTS_APP, '/builder'),
             runnerAgent: path(ROOTS_APP, '/runner-agent'),
-            projectLogs: path(ROOTS_APP, '/project-pipeline/:id'),
+            projectLogsList: path(ROOTS_APP, '/project-logs/:project_id'),
+            projectLog: path(ROOTS_APP, '/project-pipeline/:id'),
         },
         notFound: path(ROOTS_APP, '/404')
     }

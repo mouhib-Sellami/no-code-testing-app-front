@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.saasApp.name | quote }}
-          image: "{{ .Values.saasApp.container.image | quote }}:{{ .Values.saasApp.container.tag | quote }}"
+          image: "{{ .Values.saasApp.container.image }}:{{ .Values.saasApp.container.tag }}"
           imagePullPolicy: {{ .Values.saasApp.container.imagePullPolicy | default "IfNotPresent" | quote }}
           ports:
             - name: pg-admin

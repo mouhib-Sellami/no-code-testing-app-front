@@ -4,8 +4,9 @@ saasApp:
   name: saas-app
   group: front
   container:
-    image: ghcr.io/um-org/no-code-testing-app-front:prod
+    image: ghcr.io/um-org/no-code-testing-app-front
     port: 88
+    tag: latest
   service:
     type: NodePort
     port: 30015

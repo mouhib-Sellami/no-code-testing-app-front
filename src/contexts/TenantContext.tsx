@@ -41,11 +41,17 @@ const TenantProvider = (props: PropsWithChildren) => {
     //     }
     //     return parts.length > 2;
     // }, []);
-    
+
     const IS_TENANT = React.useMemo(() => {
+        console.log("PUBLIC_TENANT_DOMAIN");
+        console.log(PUBLIC_TENANT_DOMAIN);
+        
         var regex = new RegExp(`http:\/\/(?:[a-zA-Z0-9-]+\.)?${PUBLIC_TENANT_DOMAIN.replaceAll('.', '\\.')}`);
-        return !regex.test(window.location.hostname)
-    }, []);
+        console.log("regex.test(window.location.hostname)");
+        console.log(regex.test(window.location.hostname));
+        
+        return regex.test(window.location.hostname)
+    }, [PUBLIC_TENANT_DOMAIN]);
 
 
     const IS_CORRESPONDED_TENANT = React.useMemo(() => {

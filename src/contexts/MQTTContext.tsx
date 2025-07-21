@@ -30,6 +30,10 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
 
     const handleConnect = useCallback(() => {
         const host = import.meta.env.VITE_MQTT_HOST;
+        const username = import.meta.env.VITE_MQTT_USER;
+        const password = import.meta.env.VITE_MQTT_PASSWORD;
+
+        console.log('MQTT Config:', { host, username, password: password ? '[REDACTED]' : undefined })
         const mqttOptions: mqtt.IClientOptions = {
             protocol: 'ws',
             reconnectPeriod: 1000,
@@ -131,7 +135,7 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
                 topicCallbacks.current.clear();
             }
         };
-    }, [isAuthenticated, handleConnect]);
+    }, [isAuthenticated]);
 
     return (
         <MQTTContext.Provider value={{ MQTTClient, isConnected, handleSubscribe, handlePublish, handleUnSub }}>

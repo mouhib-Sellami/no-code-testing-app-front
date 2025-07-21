@@ -23,10 +23,11 @@ saasApp:
       ASSET_DIR: "/usr/share/nginx/html"
       VITE_PUBLIC_TENANT: "dg1j75rwzy.oxahost.svr.computeservers.oxa.host"
 
-  secretConfig:
-    name: saas-app-secret-config
-    data:
-      VITE_AUTH_TOKEN: QHRva2VuCg==
-      VITE_SECURE_LOCAL_STORAGE_PREFIX: c2VjcmV0MTIzCg==
-      VITE_REDUX_SECURE_STORAGE_HASH_KEY: QHNlY3VyZQo=
-      VITE_MQTT_PASSWORD: YWRtaW4xMjMK
+secretConfig:
+  name: saas-app-secret-config
+  data:
+    VITE_AUTH_TOKEN: QHRva2Vu
+    VITE_SECURE_LOCAL_STORAGE_PREFIX: c2VjcmV0MTIz
+    VITE_REDUX_SECURE_STORAGE_HASH_KEY: QHNlY3VyZQ==
+    VITE_MQTT_USER: YWRtaW4=
+    VITE_MQTT_PASSWORD: YWRtaW4xMjM=

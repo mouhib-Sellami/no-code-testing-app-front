@@ -25,19 +25,30 @@ const TenantProvider = (props: PropsWithChildren) => {
     const ACTION = React.useMemo(() => searchParams.get('action'), [searchParams]);
     const NEXT = React.useMemo(() => searchParams.get('next'), [searchParams]);
 
-    const IS_TENANT = React.useMemo(() => {
+    // const IS_TENANT = React.useMemo(() => {
 
-        var regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)?(localhost|\w+\.\w+)(\/.*)?$/);
+    //     var regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)?(localhost|\w+\.\w+)(\/.*)?$/);
+
+    //     if (!regex.test(window.location.hostname)) return false;
+
+    //     var hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
+
+    //     var parts = hostname.split('.');
+
+    //     if (hostname.endsWith('localhost')) {
+    //         return parts.length > 1;
+    //     }
+    //     return parts.length > 2;
+    // }, []);
+
+    const IS_TENANT = React.useMemo(() => {
+        const regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)(\w+)(\/.*)?$/);
 
         if (!regex.test(window.location.hostname)) return false;
 
-        var hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
+        const hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
+        const parts = hostname.split('.');
 
-        var parts = hostname.split('.');
-
-        if (hostname.endsWith('localhost')) {
-            return parts.length > 1;
-        }
         return parts.length > 2;
     }, []);
 

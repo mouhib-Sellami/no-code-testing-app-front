@@ -43,13 +43,24 @@ const TenantProvider = (props: PropsWithChildren) => {
 
     const IS_TENANT = React.useMemo(() => {
         const regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)(\w+)(\/.*)?$/);
-
-        if (!regex.test(window.location.hostname)) return false;
-
+        
         const hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
-        const parts = hostname.split('.');
+        
+        console.log('Hostname:', hostname);
+        
+        if (!regex.test(hostname)) {
+            console.log('Invalid hostname, not a tenant');
+            return false;
+        }
 
-        return parts.length > 2;
+        const parts = hostname.split('.');
+        
+        console.log('Domain parts:', parts);
+        const BASE_DOMAIN = import.meta.env.VITE_BASE_DOMAIN || 'example.com';
+        const isTenant = parts.length >= 2 && hostname !== BASE_DOMAIN;
+        
+        console.log('IS_TENANT:', isTenant);
+        return isTenant;
     }, []);
 
     const IS_CORRESPONDED_TENANT = React.useMemo(() => {

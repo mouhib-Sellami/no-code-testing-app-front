@@ -21,6 +21,7 @@ saasApp:
       VITE_BASE_SERVER_API_URL: ""
       APP_PREFIX: "VITE_"
       ASSET_DIR: "/usr/share/nginx/html"
+      VITE_PUBLIC_TENANT: "dg1j75rwzy.oxahost.svr.computeservers.oxa.host"
 
   secretConfig:
     name: saas-app-secret-config

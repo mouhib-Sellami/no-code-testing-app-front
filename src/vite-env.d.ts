@@ -8,6 +8,7 @@ interface ImportMetaEnv {
     readonly VITE_MQTT_HOST: string;
     readonly VITE_MQTT_PORT: number;
     readonly VITE_MQTT_USER: string;
+    readonly VITE_PUBLIC_TENANT: string;
     readonly VITE_MQTT_PASSWORD: string;
 }
 

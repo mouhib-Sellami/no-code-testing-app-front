@@ -24,6 +24,7 @@ const TenantProvider = (props: PropsWithChildren) => {
     const TOKEN = React.useMemo(() => searchParams.get('token'), [searchParams]);
     const ACTION = React.useMemo(() => searchParams.get('action'), [searchParams]);
     const NEXT = React.useMemo(() => searchParams.get('next'), [searchParams]);
+    const PUBLIC_TENANT_DOMAIN = import.meta.env.VITE_PUBLIC_TENANT
 
     // const IS_TENANT = React.useMemo(() => {
 
@@ -40,28 +41,12 @@ const TenantProvider = (props: PropsWithChildren) => {
     //     }
     //     return parts.length > 2;
     // }, []);
-
+    
     const IS_TENANT = React.useMemo(() => {
-        const regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)(\w+)(\/.*)?$/);
-        
-        const hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
-        
-        console.log('Hostname:', hostname);
-        
-        if (!regex.test(hostname)) {
-            console.log('Invalid hostname, not a tenant');
-            return false;
-        }
-
-        const parts = hostname.split('.');
-        
-        console.log('Domain parts:', parts);
-        const BASE_DOMAIN = import.meta.env.VITE_BASE_DOMAIN || 'example.com';
-        const isTenant = parts.length >= 2 && hostname !== BASE_DOMAIN;
-        
-        console.log('IS_TENANT:', isTenant);
-        return isTenant;
+        var regex = new RegExp(`http:\/\/(?:[a-zA-Z0-9-]+\.)?${PUBLIC_TENANT_DOMAIN.replaceAll('.', '\\.')}`);
+        return !regex.test(window.location.hostname)
     }, []);
+
 
     const IS_CORRESPONDED_TENANT = React.useMemo(() => {
         if (!tenant) return false;

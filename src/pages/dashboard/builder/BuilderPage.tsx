@@ -16,10 +16,10 @@ import EdgeTypes from '@/config/EdgeTypes';
 import { BuilderContext } from '@/contexts/BuilderContext';
 import CustomLoadingOverlay from '@/components/custom-loading/CustomLoadingOverlay';
 import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
-import { IconPencil, IconTrash, IconX } from '@tabler/icons-react';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { deleteEdge, updateEdgeType } from '@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices';
 import { dispatch } from '@/redux/store';
-import { useParams, useSearchParams } from 'react-router';
+import { useParams } from 'react-router';
 import { restProjectTestCases } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
 import useProjectTests from '@/hooks/useProjectTests';
 import { getTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
@@ -28,11 +28,12 @@ import { getTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBas
 const BuilderPage: React.FC = () => {
     const { colors } = useMantineTheme();
     const { miniMapRendering, onConnect, onDragOver, onDrop, edges, nodes, onEdgesChange, onNodesChange, resetBuilderHooks, rebuildWorkFlow } = useBuilder();
-    const { resetBuilder, isBuilding, updateProjectSyncing, deleteComponent } = React.useContext(BuilderContext);
+    const { isBuilding, updateProjectSyncing, deleteComponent } = React.useContext(BuilderContext);
     const { openDeleteModal, openConfirmModal } = useConfirmModal();
     const { setEdges } = useReactFlow();
     const params = useParams();
-    const { selectedTest } = useProjectTests()
+    const { selectedTest } = useProjectTests();
+
     const fetchTestCase = React.useCallback(async () => {
         if (!selectedTest)
             await dispatch(getTestCase(Number(params.test_id)))
@@ -47,10 +48,6 @@ const BuilderPage: React.FC = () => {
     }, [edges])
 
     React.useEffect(() => () => {
-        // resetBuilder?.()
-        // resetBuilderHooks()
-        console.log("reseting");
-
         dispatch(restProjectTestCases())
     }, []);
 

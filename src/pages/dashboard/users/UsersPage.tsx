@@ -33,7 +33,7 @@ const UsersPage: React.FC = () => {
                 }
             >
                 <UserDataTable
-                    height={390}
+                    height={500}
                     isLoading={USER_STATE.isLoading}
                     records={USER_STATE.users}
                     count={USER_STATE.count}

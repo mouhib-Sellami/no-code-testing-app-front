@@ -4,12 +4,10 @@ import { useWorkflowDnD } from '@/hooks/app/useWorkflowDnD';
 import useConfirmModal from '@/hooks/modals-hooks/useConfirmModal';
 import useProjects from '@/hooks/useProjects';
 import { getProjectTestCases } from '@/redux/slices/projectSlice/projectSliceBaseServices';
-import { onSelectTestCase } from '@/redux/slices/projectSlice/ProjectTestCaseSlice';
 import { deleteTestCase } from '@/redux/slices/projectSlice/projectTestCaseSliceBaseServices';
 import { dispatch } from '@/redux/store';
-import { PATH_APP } from '@/routes/paths';
 import { TestCase } from '@/types/models/TestCase';
-import { ActionIcon, Box, Divider, Group, Text, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Box, Group, Text, useMantineTheme } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import React from 'react'
 import { useNavigate } from 'react-router';

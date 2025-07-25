@@ -9,7 +9,7 @@ export interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = (props) => {
-    const { project, ...item } = props;
+    const { project, } = props;
     return (
 
         <OverlapCard title={project.name}>

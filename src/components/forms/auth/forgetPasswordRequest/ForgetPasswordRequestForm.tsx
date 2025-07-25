@@ -8,6 +8,8 @@ import { forgetPasswordRequest } from "@/redux/slices/authSlices/authSliceThunk"
 import { IconMailCode } from "@tabler/icons-react";
 import Countdown from 'react-countdown';
 import ForgetPasswordRender from "@/components/countDown/ForgetPasswordRender";
+import { PATH_AUTH } from "@/routes/paths";
+import { NavLink } from "react-router";
 
 const ForgetPasswordRequestForm: React.FC = ({ }) => {
     const { colors } = useMantineTheme();
@@ -87,6 +89,12 @@ const ForgetPasswordRequestForm: React.FC = ({ }) => {
                         </Text>
                     </PrimaryButton>
                 </Stack>
+                <Text ta="center" c={"dimmed"} size='sm' mt="md">
+                    Already have an account ?{' '}
+                    <NavLink to={PATH_AUTH.login} style={{ textDecoration: "none", color: colors.primary[9] }}>
+                        Click here
+                    </NavLink>
+                </Text>
             </Stack>
         </Center>
     )

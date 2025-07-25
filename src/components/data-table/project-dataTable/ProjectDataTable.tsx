@@ -4,7 +4,7 @@ import { Box, Group, px, TextInput } from "@mantine/core";
 import AppDataTable from "../base-dataTable/AppDataTable";
 import { AppDataTableProps } from "../base-dataTable/types";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
-import { IconBackspace, IconEye, IconHammer, IconLogs, IconSearch } from "@tabler/icons-react";
+import { IconBackspace, IconEye, IconHammer, IconLogs, IconPencil, IconSearch } from "@tabler/icons-react";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { dispatch } from "@/redux/store";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
@@ -15,6 +15,7 @@ import ViewProjectDetails from "@/components/modals/project-modals/ViewProjectDe
 import { onSelectProject } from "@/redux/slices/projectSlice/projectSlice";
 import { useNavigate } from "react-router";
 import { PATH_APP } from "@/routes/paths";
+import EditProjectModal from "@/components/modals/project-modals/EditProjectModal";
 
 
 export interface ProjectDataTableProps extends AppDataTableProps<Project> {
@@ -91,6 +92,15 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
                 },
             },
             {
+                icon: IconPencil,
+                color: "gray",
+                permission: 'can_change_project',
+                action(record: Project) {
+                    setSelected(record)
+                    openUpdate()
+                },
+            },
+            {
                 icon: IconBackspace,
                 color: "gray",
                 action(record: Project) {
@@ -125,14 +135,14 @@ const ProjectDataTable: React.FC<ProjectDataTableProps> = ({ records, isLoading,
             <AppDataTable isLoading={isLoading} columns={COLUMNS} pageSize={DataTableConfig.MAX_PAGE_SIZE} total={count} records={RECORDS} page={page} {...item} onPageChanges={(p) => { setPage(p) }} />
             {openForView && selected && <ViewProjectDetails isVisible={openForView} onClose={closeView} project={selected} />}
 
-            {/* {openForUpdate && selected &&
-                <EditUserModal
-                    user={selected}
+            {openForUpdate && selected &&
+                <EditProjectModal
+                    project={selected}
                     visible={openForUpdate}
                     onCancel={() => { closeUpdate(); setSelected(null); }}
-                    onSubmit={() => { closeUpdate(); setSelected(null); onChange?.();}}
+                    onSubmit={() => { closeUpdate(); setSelected(null); onChange?.(); }}
                 />
-            }  */}
+            }
         </Box>
     )
 }

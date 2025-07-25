@@ -1,4 +1,4 @@
-import { ActionIcon, AppShell, Badge, Box, Group, Pill, px, ScrollArea, Stack, useMantineTheme } from '@mantine/core';
+import { ActionIcon, AppShell, Box, Group, Pill, useMantineTheme } from '@mantine/core';
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';

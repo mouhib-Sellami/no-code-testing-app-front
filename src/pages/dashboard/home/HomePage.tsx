@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
             >
                 <ProjectDataTable
                     withSearch={false}
-                    height={320}
+                    height={500}
                     isLoading={isLoading}
                     records={projects}
                     count={projects.length}

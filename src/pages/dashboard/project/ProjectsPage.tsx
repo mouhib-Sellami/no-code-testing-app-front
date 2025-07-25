@@ -14,7 +14,7 @@ import React from "react";
 const ProjectsPage: React.FC = () => {
     const PROJECT_STATE = useProjects();
     const [opened, { open, close }] = useDisclosure();
-    const { onPageChange, onSearch, fetchData } = usePagination(fetchProjects);
+    const { onPageChange, onSearch, fetchData, reset } = usePagination(fetchProjects);
 
     return (
         <PageContentLayout title="Creative Cosmos ✨">
@@ -33,7 +33,7 @@ const ProjectsPage: React.FC = () => {
                 }
             >
                 <ProjectDataTable
-                    height={390}
+                    height={500}
                     isLoading={PROJECT_STATE.isLoading}
                     records={PROJECT_STATE.projects}
                     count={PROJECT_STATE.count}
@@ -42,7 +42,7 @@ const ProjectsPage: React.FC = () => {
                     onQuerySearch={onSearch}
                 />
             </AppCard>
-            {opened && <CreateProjectModal visible={opened} onCancel={close} onSubmit={() => { close(); fetchData() }} />}
+            {opened && <CreateProjectModal visible={opened} onCancel={close} onSubmit={() => { close(); fetchData(); reset() }} />}
         </PageContentLayout>
     );
 };

@@ -5,8 +5,6 @@ import CustomTestCaseNode from "./CustomTestCaseNode";
 
 
 const InputOutputTestCaseViewNode: React.FC<any> = (props) => {
-
-
     return (
         <>
             <Handle

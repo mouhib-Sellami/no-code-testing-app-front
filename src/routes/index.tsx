@@ -10,6 +10,7 @@ import TenantGuard from "@/guards/TenantGuard";
 import { ReactFlowProvider } from "@xyflow/react";
 import { BuilderViewerProvider } from "@/contexts/BuilderViewerContext";
 import { WorkFlowProvider } from "@/contexts/WorkflowContext";
+import { BuilderProvider } from "@/contexts/BuilderContext";
 
 
 export default function AppRoutes() {
@@ -67,9 +68,11 @@ export default function AppRoutes() {
                 <AuthGuard>
                     <ReactFlowProvider>
                         <WorkFlowProvider>
-                            <PermissionGuardRedirection permission="can_change_project">
-                                <BuilderPage />
-                            </PermissionGuardRedirection>
+                            <BuilderProvider>
+                                <PermissionGuardRedirection permission="can_change_project">
+                                    <BuilderPage />
+                                </PermissionGuardRedirection>
+                            </BuilderProvider>
                         </WorkFlowProvider>
                     </ReactFlowProvider>
                 </AuthGuard>

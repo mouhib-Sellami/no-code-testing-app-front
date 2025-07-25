@@ -1,13 +1,12 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { Badge, Pill, Text, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import useDataTableConfig from "@/hooks/app/useDataTableConfig";
 import useAppHooks from "@/hooks/useAppHooks";
 import { Project } from "@/types/models/Project";
+import { Pill } from "@mantine/core";
 
 const ProjectDataTableConfig = (props: DataTableActions<Project>) => {
-    const { colors } = useMantineTheme();
     const { generateActions, PAGE_SIZE } = useDataTableConfig();
     const { formateDate } = useAppHooks();
     const ACTIONS = React.useMemo(() => {

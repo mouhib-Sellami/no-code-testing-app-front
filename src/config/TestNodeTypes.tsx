@@ -2,7 +2,6 @@ import TestInputOutputNode from "@/components/builder-component/test-nodes/TestI
 
 
 const TestNodeTypes = {
-    // "app-input-output": CustomInputOutputNode,
     "app-test-case": TestInputOutputNode,
 };
 

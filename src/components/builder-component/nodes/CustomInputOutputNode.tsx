@@ -7,7 +7,6 @@ import CustomNode from "./CustomNode";
 
 const CustomInputOutputNode: React.FC<any> = (props) => {
 
-
     return (
         <>
             <Handle

@@ -14,7 +14,7 @@ const OrganizationDetailsForm: React.FC<RegisterFormsProps<OrganizationDetailsRe
         return {
             name: '',
             email: '',
-            // org_pic: null
+            org_pic: null
         }
     }, [data])
 

@@ -13,8 +13,6 @@ const UserDataTableConfig = (props: DataTableActions<AppUser>) => {
         return props.actions
     }, [props])
 
-
-
     const BASE_COLUMNS: Array<DataTableColumn> = React.useMemo(() => {
         return [
             {

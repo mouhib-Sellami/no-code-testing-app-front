@@ -1,6 +1,6 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { ActionIcon, Badge, Center, Collapse, Group, ScrollArea, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
+import { Badge, Center, useMantineTheme } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import { Role } from "@/types/models/Role";
 import useDataTableConfig from "@/hooks/app/useDataTableConfig";

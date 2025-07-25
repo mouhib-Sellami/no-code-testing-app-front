@@ -3,14 +3,13 @@ import { useDisclosure, useHeadroom } from '@mantine/hooks';
 import { useLocation, useNavigate } from 'react-router';
 import React, { JSX, PropsWithChildren, useEffect, useRef } from 'react';
 import NavbarFooter from '../navbar/NavbarFooter';
-import { IconCloudUpload, IconRefresh, IconArrowLeft, IconReceiptPound, IconCloudCog } from '@tabler/icons-react';
+import { IconCloudUpload, IconRefresh, IconArrowLeft, IconCloudCog } from '@tabler/icons-react';
 import { BuilderContext } from '@/contexts/BuilderContext';
 import { dispatch } from '@/redux/store';
 import { getProjectComponents } from '@/redux/slices/projectSlice/projectSliceBaseServices';
 import { resetProjectsComponent } from '@/redux/slices/projectComponentsSlice/projectComponentSlice';
 import { resetSelectedProjectComponent } from '@/redux/slices/projectSlice/projectSlice';
 import RunTestCaseModal from '@/components/modals/project-modals/RunTestCaseModal';
-import { PATH_APP } from '@/routes/paths';
 
 export interface BuilderLayoutProps extends PropsWithChildren {
     sideBard: JSX.Element | JSX.Element[];

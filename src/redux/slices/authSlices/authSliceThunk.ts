@@ -17,7 +17,7 @@ export const login = createAsyncThunk('auth/login', async (data: UserAuth, thunk
         if (error?.response?.data) {
             if (error?.response?.status === 400) {
                 dispatch(onShowNotification({
-                    content: "E-mail ou mot de passe incorrect.",
+                    content: "Username ou mot de passe incorrect.",
                     level: "ERROR",
                     type: "AUTH"
                 }))

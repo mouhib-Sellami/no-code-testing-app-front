@@ -1,6 +1,6 @@
 
 
-import { FloatingIndicator, Tabs } from '@mantine/core';
+import { Box, Center, FloatingIndicator, Tabs } from '@mantine/core';
 import React from 'react'
 import classes from './style.module.css';
 import WorkFlowsTab from './WorkFlowsTab';
@@ -38,7 +38,11 @@ const WorkFlowSideBar: React.FC = () => {
 
             <Tabs.Panel value="1"><WorkFlowsTab active={value == "1"} /></Tabs.Panel>
             <Tabs.Panel value="2"><CasesTab active={value == "2"} /></Tabs.Panel>
-            <Tabs.Panel value="3">Third tab content</Tabs.Panel>
+            <Tabs.Panel value="3"><Box h={"100%"} w={"100%"}>
+                <Center w={"100%"} h={"100%"}>
+                    comming soon
+                </Center>
+            </Box></Tabs.Panel>
         </Tabs>
     )
 }

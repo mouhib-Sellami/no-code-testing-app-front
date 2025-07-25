@@ -35,7 +35,7 @@ const NavbarFooter: React.FC = () => {
                     />
                 </Menu.Target>
                 <Menu.Dropdown w={px("14.2rem")}>
-                    <Menu.Label>Danger zone</Menu.Label>
+                    {/* <Menu.Label>Danger zone</Menu.Label>
                     <Menu.Item
                         leftSection={<IconArrowsLeftRight size={14} />}
                     >
@@ -47,7 +47,7 @@ const NavbarFooter: React.FC = () => {
                     >
                         Delete my account
                     </Menu.Item>
-                    <Menu.Divider />
+                    <Menu.Divider /> */}
                     <Menu.Item
                         leftSection={<IconLogout size={18} color={colors.sideNavBarLinksColor[9]} />}
                         onClick={() => logout_()}

@@ -4,6 +4,7 @@ import classes from "./style.module.css";
 import { Box, useMantineTheme } from "@mantine/core";
 import { IconMoodSad } from "@tabler/icons-react";
 import { CustomDataTableProps } from "./types";
+import CustomLoadingOverlay from "@/components/custom-loading/CustomLoadingOverlay";
 
 const AppDataTable: React.FC<CustomDataTableProps> = (props) => {
     const { columns, pageSize, records, total, page, onPageChanges, isLoading, ...defaultProps } = props;
@@ -27,6 +28,8 @@ const AppDataTable: React.FC<CustomDataTableProps> = (props) => {
                 onPageChange={onPageChanges}
                 loadingText="Loading ..."
                 noRecordsText="No data found"
+                loaderBackgroundBlur={1}
+                customLoader={<CustomLoadingOverlay />}
                 styles={{
                     table: {
                         backgroundColor: theme.colors.mainContentColor[9],

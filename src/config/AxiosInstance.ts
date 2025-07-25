@@ -1,5 +1,6 @@
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import { handleSessionExpired } from "@/redux/slices/sessionSlice/sessionSlice";
+import unprocessedEntityHandler from "@/utils/unprocessedEntityHandler";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import secureLocalStorage from "react-secure-storage";
 
@@ -21,7 +22,7 @@ const axiosInstance = axios.create({
 
 export const setAuthToken = async (config: any) => {
     try {
-        const token = secureLocalStorage.getItem(import.meta.env.VITE_VITE_AUTH_TOKEN || "@token");        
+        const token = secureLocalStorage.getItem(import.meta.env.VITE_VITE_AUTH_TOKEN || "@token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         } else {
@@ -61,6 +62,11 @@ const errorHandler = async (error: AxiosError) => {
                 render: "NOTIFICATION"
             }))
         }
+        if (error.response && error.response?.status === 422) {
+            const data: any = error.response.data
+            unprocessedEntityHandler(data.detail, store)
+        }
+
         return Promise.reject(error);
     } catch (error) {
         return Promise.reject(error);

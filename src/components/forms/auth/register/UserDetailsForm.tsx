@@ -22,7 +22,7 @@ const UserDetailsForm: React.FC<RegisterFormsProps<UserDetailsRegisterForm>> = (
         mode: "uncontrolled",
         initialValues: initialValues,
         validate: {
-            password: (value) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(value) ? null : 'Invalid password'),
+            password: (value) => (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(value) ? null : 'Password must be at least 8 characters long and contain a mix of uppercase letters, lowercase letters, numbers, and symbols.'),
             confirm_password: (value, values) => value == values.password ? null : "Password mismatch",
             email: (value) => (/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/.test(value) ? null : 'Invalid email'),
             first_name: (value) => value.length > 0 ? null : 'Invalid field',

@@ -40,13 +40,19 @@ const usePagination = (cb: AsyncThunk<any, paginationRequestParams, any>) => {
         fetchData()
     }, [page, query])
 
+    const reset = React.useCallback(() => {
+        setPage(0)
+        setQuery("")
+    }, [])
+
     return {
         pagination,
         page,
         query,
         onPageChange,
         onSearch,
-        fetchData
+        fetchData,
+        reset
     }
 }
 

@@ -8,7 +8,7 @@ import { Notifications } from '@mantine/notifications';
 import { emotionTransform, MantineEmotionProvider } from '@mantine/emotion';
 import { ModalsProvider } from "@mantine/modals";
 import theme from './constants/AppTheme.ts';
-import { BuilderProvider } from './contexts/BuilderContext.tsx'; // to go wrpe the builder page
+import { NotificationProvider } from './contexts/NotificationContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <ReduxProvider store={store}>
@@ -17,9 +17,9 @@ createRoot(document.getElementById('root')!).render(
         <MantineEmotionProvider>
           <Notifications />
           <ModalsProvider>
-            <BuilderProvider>
+              <NotificationProvider>
                 <App />
-            </BuilderProvider>
+              </NotificationProvider>
           </ModalsProvider>
         </MantineEmotionProvider>
       </MantineProvider >

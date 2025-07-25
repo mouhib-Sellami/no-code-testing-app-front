@@ -95,7 +95,7 @@ const CasesTab: React.FC<CustomTabsProps> = ({ active }) => {
     return (
         <Box w={"100%"} h={"100%"} p={0} m={0}>
             <Group align='center' justify='space-between' py={"md"}>
-                <Title order={4}>Test Flows</Title>
+                <Title order={4}>Test Cases</Title>
                 <ActionIcon
                     variant="filled"
                     radius="md"

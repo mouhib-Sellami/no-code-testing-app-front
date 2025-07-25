@@ -19,5 +19,5 @@ export interface CreateUpdateProject {
     description: string,
     members: Array<number>,
     managed_by: number,
-    provider: number
+    provider?: number
 }

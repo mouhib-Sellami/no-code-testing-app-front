@@ -34,13 +34,9 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     const [nodes, setNodes] = useNodesState([]);
     const [edges, setEdges] = React.useState<Array<Edge>>([]);
     const { handleSubscribe, isConnected, MQTTClient } = React.useContext(MQTTContext);
-    const [executing, setExecuting] = React.useState<any>(null);
-    const [executionTestCase, setExecutingTestCase] = React.useState<any>(null);
     const [selectedTestCase, setSelectedTestCase] = React.useState<any>(null);
     const [workflow, setWorkflow] = React.useState<any>([])
     const [enableBuilding, setEnableBuilding] = React.useState(true)
-
-    // TO BE CHANGE SEND ALL PAYLOAD WITH IMAGE AND VIDEO IN THE END AND KEEP UPDATING PROJECT LOGS FOR EXIT AND RE ENTER
 
     React.useEffect(() => {
         setEnableBuilding(true)
@@ -51,46 +47,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             return
         setWorkflow(selectedProjectLogs.workflow.flows)
     }, [selectedProjectLogs])
-
-    React.useEffect(() => {
-        if (!executing) return;
-
-        setNodes((nodes) =>
-            nodes.map((elm) => {
-                if (elm.id.toString() === executing.component_id.toString()) {
-                    return {
-                        ...elm,
-                        data: { ...elm.data, status: executing.status }
-                    };
-                }
-                return elm;
-            })
-        );
-    }, [executing]);
-
-    // React.useEffect(() => {
-    //     if (!executionTestCase || !executing)
-    //         return
-    //     setEnableBuilding(false)
-    //     setWorkflow(c => {
-    //         let tmp = [...c]
-    //         let selected_flow = tmp.findIndex(elm => elm.test_case?.id == executionTestCase.test_case_id)
-    //         let components = tmp[selected_flow].workflow.components
-    //         if (components[executing.component_id]) {
-    //             components = { ...components, [executing.component_id]: { ...components[executing.component_id], status: executing.status } }
-    //         }
-
-    //         tmp[selected_flow] = {
-    //             ...tmp[selected_flow],
-    //             workflow: {
-    //                 ...tmp[selected_flow].workflow,
-    //                 components
-    //             }
-    //         }
-    //         console.log(tmp);
-    //         return tmp
-    //     })
-    // }, [executionTestCase, executing])
 
     React.useEffect(() => {
         setSelectedTestCase((prev) => {
@@ -105,50 +61,11 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
         });
     }, [workflow]);
 
-    // React.useEffect(() => {
-    //     if (!executionTestCase) return;
-    //     setNodes((nodes) =>
-    //         nodes.map((elm) => {
-    //             if (elm.id.toString() === executionTestCase.test_case_id.toString()) {
-    //                 return {
-    //                     ...elm,
-    //                     data: { ...elm.data, status: executionTestCase.status }
-    //                 };
-    //             }
-    //             return elm;
-    //         })
-    //     );
-    //     setEnableBuilding(false)
-    //     setWorkflow(c => c.map((elm) => {
-    //         if (elm.test_case?.id == executionTestCase.test_case_id) {
-    //             return { ...elm, test_case: { ...elm.test_case, status: executionTestCase.status } }
-    //         } else {
-    //             return elm
-    //         }
-    //     }))
-    //     setEnableBuilding(false)
-    // }, [executionTestCase]);
-
-    const handleComponentStatus = React.useCallback((topic: string, message: Buffer<ArrayBufferLike>) => {
-
-        const data = JSON.parse(message.toString())
-        setEnableBuilding(false)
-        setExecuting(data)
-    }, [])
-
-    const handleTestCaseStatus = React.useCallback((topic: string, message: Buffer<ArrayBufferLike>) => {
-        const data = JSON.parse(message.toString())
-        setExecutingTestCase(data)
-    }, [])
-
-    const handleEdgeStatus = React.useCallback(() => { }, [])
-
     const handleProjectStatus = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>, selectedProjectLogs: ProjectStatusLog) => {
         const data = JSON.parse(message.toString())
         if (data.execution_id == selectedProjectLogs.id) {
             const res = await dispatch(getProjectLogsDetails(data.execution_id))
         }
-
     }, [])
 
     const handleExecutionState = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>) => {
@@ -161,9 +78,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
     React.useEffect(() => {
         if (!isConnected || !selectedProjectLogs)
             return
-        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_component", 1, handleComponentStatus)
-        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_test_case", 1, handleTestCaseStatus)
-        // handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id + "_edge", 1, handleEdgeStatus)
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_state_" + selectedProjectLogs.id, 1, handleExecutionState)
     }, [isConnected, selectedProjectLogs])
@@ -223,7 +137,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
 
         const nodes = workflow.map((elm: any) => {
             console.log(elm);
-            
+
             return {
                 id: elm.test_case.id.toString(),
                 data: {
@@ -237,7 +151,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             }
         })
         console.log(nodes);
-        
+
 
         setNodes(nodes as Array<Node>)
         const edges = selectedProjectLogs.workflow?.dependencies?.map(elm => {

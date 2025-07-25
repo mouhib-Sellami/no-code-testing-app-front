@@ -1,13 +1,12 @@
 import React from "react";
 import { DataTableColumn } from "mantine-datatable";
-import { Pill, useMantineTheme } from "@mantine/core";
+import { Pill } from "@mantine/core";
 import { DataTableActions } from "../base-dataTable/types";
 import useDataTableConfig from "@/hooks/app/useDataTableConfig";
 import useAppHooks from "@/hooks/useAppHooks";
 import { ProjectStatusLog } from "@/types/models/ProjectStatusLog";
 
 const ProjectLogsDataTableConfig = (props: DataTableActions<ProjectStatusLog>) => {
-    const { colors } = useMantineTheme();
     const { generateActions, PAGE_SIZE } = useDataTableConfig();
     const { formateDate } = useAppHooks();
 

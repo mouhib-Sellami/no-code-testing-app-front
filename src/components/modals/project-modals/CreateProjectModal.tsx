@@ -34,6 +34,10 @@ import { Provider } from "@/types/models/Provider";
 import { createProject } from "@/redux/slices/projectSlice/projectSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
 import useProjects from "@/hooks/useProjects";
+import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
+import { useNavigate } from "react-router";
+import { PATH_APP } from "@/routes/paths";
+import { onSelectProject } from "@/redux/slices/projectSlice/projectSlice";
 
 const CreateProjectModal: React.FC<AppModalProps> = (props) => {
     const USER_STATE = useUsers();
@@ -43,6 +47,8 @@ const CreateProjectModal: React.FC<AppModalProps> = (props) => {
     const [active, setActive] = React.useState(0);
     const [query, setQuery] = React.useState("");
     const [debouncedQuery] = useDebouncedValue(query, 200);
+    const { openConfirmModal } = useConfirmModal();
+    const navigate = useNavigate();
 
     const USERS = React.useMemo(() => {
         return USER_STATE.users.map(elm => ({
@@ -74,11 +80,11 @@ const CreateProjectModal: React.FC<AppModalProps> = (props) => {
     React.useEffect(() => {
         fetchProviders_();
         fetchUsersData();
-    }, [fetchProviders_, fetchUsersData]);
+    }, []);
 
     React.useEffect(() => {
         fetchUsersData();
-    }, [debouncedQuery, fetchUsersData]);
+    }, [debouncedQuery]);
 
     const form = useForm({
         mode: 'controlled',
@@ -115,7 +121,7 @@ const CreateProjectModal: React.FC<AppModalProps> = (props) => {
         },
     });
 
-    const fields = form.getValues().members.map((item, index) => (
+    const fields = form.getValues().members.map((_, index) => (
         <Group key={form.key(`members.${index}`)} align="center" gap="sm" wrap="nowrap">
             <Select
                 placeholder="Select member"
@@ -157,6 +163,15 @@ const CreateProjectModal: React.FC<AppModalProps> = (props) => {
                 type: "user creation"
             }));
         } else {
+            // TO BE FIX
+            openConfirmModal({
+                title: "Start Building Your Tests",
+                content: "",
+                onConfirm() {
+                    dispatch(onSelectProject(res.payload))
+                    navigate(PATH_APP.general.dashboard.projectWorkflows)
+                },
+            })
             dispatch(onShowNotification({
                 content: "Project created successfully! let's start cracking 🥳",
                 level: "SUCCESS",

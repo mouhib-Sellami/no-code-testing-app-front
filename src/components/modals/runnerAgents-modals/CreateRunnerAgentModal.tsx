@@ -94,7 +94,7 @@ const CreateRunnerAgentModal: React.FC<AppModalProps> = (props) => {
                 icon: <IconRocket size={20} />,
             });
         }
-    }, [clipboard, dispatch, openConfirmModal, props]);
+    }, [clipboard, props]);
 
     const submit = React.useCallback(() => {
         form.validate();
@@ -108,7 +108,7 @@ const CreateRunnerAgentModal: React.FC<AppModalProps> = (props) => {
                 icon: <IconStar size={20} />,
             });
         }
-    }, [form, onSubmit]);
+    }, [form]);
 
     return (
         <BaseAppModal

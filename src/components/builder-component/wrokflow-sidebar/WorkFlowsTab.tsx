@@ -3,7 +3,7 @@ import useProjects from '@/hooks/useProjects'
 import { getProjectTestFlows } from '@/redux/slices/projectSlice/projectSliceBaseServices';
 import { dispatch } from '@/redux/store';
 import { ActionIcon, Box, Divider, Group, rem, ScrollArea, Text, TextInput, Title, useMantineTheme } from '@mantine/core'
-import { IconBackslash, IconPencil, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { IconPencil, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import React from 'react'
 import { CustomTabsProps } from './types';
 import { WorkFlowContext } from '@/contexts/WorkflowContext';

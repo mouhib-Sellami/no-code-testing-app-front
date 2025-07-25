@@ -1,19 +1,15 @@
-import EditComponentConfigModal from "@/components/modals/compoent-modals/EditComponentConfigModal";
-import { BuilderContext } from "@/contexts/BuilderContext";
 import { WorkFlowContext } from "@/contexts/WorkflowContext";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
-import { patchProjectComponent } from "@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices";
 import { onSelectTestCase } from "@/redux/slices/projectSlice/ProjectTestCaseSlice";
 import { patchProjectTestFlowComponent } from "@/redux/slices/projectTestFlowComponentsSlice/projectComponentSliceBaseServices";
 import { dispatch } from "@/redux/store";
 import { PATH_APP } from "@/routes/paths";
 import { Node } from "@/types/app-types/Nodes";
-import { ProjectComponent } from "@/types/models/ProjectComponent";
 import { FlowTestComponent } from "@/types/models/TestCase";
 import { ActionIcon, Card, Group, Text } from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { useReactFlow } from "@xyflow/react";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -23,7 +19,6 @@ const CustomNode: React.FC<any> = (props) => {
     const [propsData] = useDebouncedValue(props, 1000);
     const { getNode, updateNode } = useReactFlow();
     const { updateProjectSyncing, deleteTestFlowComponent } = React.useContext(WorkFlowContext);
-    const [opened, { open, close }] = useDisclosure();
     const navigate = useNavigate()
     const { openDeleteModal } = useConfirmModal();
 
@@ -96,43 +91,26 @@ const CustomNode: React.FC<any> = (props) => {
         navigate(PATH_APP.general.dashboard.builder.replaceAll(":test_id", component.id.toString()))
     }, [component])
     return (
-        <>
-            {/* <Handle
-                type="target"
-                id="run_after_target"
-                position={Position.Left}
-                onConnect={(params) => console.log('handle onConnect', params)}
-                isConnectable={props.isConnectable}
-            /> */}
-            <Card
-                withBorder
-                p={6}
-                bg="transparent"
-                style={{ width: 'fit-content' }}
-                draggable
-            >
-                <Group align="center" justify="space-between">
-                    <Text size="xs" fz={8}>{data.label}</Text>
-                    <Group align="center" justify="center" gap={5}>
-                        <ActionIcon size={15} onClick={goEdit}>
-                            <IconEdit size={8} />
-                        </ActionIcon>
-                        <ActionIcon size={15} onClick={deleteSelectedComponent_}>
-                            <IconTrash size={8} />
-                        </ActionIcon>
-                    </Group>
+        <Card
+            withBorder
+            p={6}
+            bg="transparent"
+            style={{ width: 'fit-content' }}
+            draggable
+        >
+            <Group align="center" justify="space-between">
+                <Text size="xs" fz={8}>{data.label}</Text>
+                <Group align="center" justify="center" gap={5}>
+                    <ActionIcon size={15} onClick={goEdit}>
+                        <IconEdit size={8} />
+                    </ActionIcon>
+                    <ActionIcon size={15} onClick={deleteSelectedComponent_}>
+                        <IconTrash size={8} />
+                    </ActionIcon>
                 </Group>
+            </Group>
 
-            </Card>
-            {/* <Handle
-                type="source"
-                id="run_after_source"
-                position={Position.Right}
-                onConnect={(params) => console.log('handle onConnect', params)}
-                isConnectable={props.isConnectable}
-            /> */}
-            {/* {opened && component && <EditComponentConfigModal component={component} onClose={close} isVisible={opened} onSubmit={onSubmit} />} */}
-        </>
+        </Card>
     )
 }
 

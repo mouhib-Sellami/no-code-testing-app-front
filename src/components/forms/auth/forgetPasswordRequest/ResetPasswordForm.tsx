@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Box, Center, Group, PasswordInput, px, Stack, Text, Title, useMantineTheme } from "@mantine/core";
-import { useNavigate, useParams } from "react-router";
+import { NavLink, useNavigate, useParams } from "react-router";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { useForm } from "@mantine/form";
 import { IconShieldCheckered } from "@tabler/icons-react";
@@ -121,6 +121,12 @@ const ResetPasswordForm: React.FC = ({ }) => {
                         </Text>
                     </PrimaryButton>
                 </Stack>
+                <Text ta="center" c={"dimmed"} size='sm' mt="md">
+                    Already have an account ?{' '}
+                    <NavLink to={PATH_AUTH.login} style={{ textDecoration: "none", color: colors.primary[9] }}>
+                        Click here
+                    </NavLink>
+                </Text>
             </Stack>
         </Center>
     )

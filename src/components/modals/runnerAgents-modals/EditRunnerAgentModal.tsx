@@ -1,15 +1,15 @@
 import React from "react";
-import { ActionIcon, CopyButton, Group, PasswordInput, Select, Stack, Textarea, TextInput, Tooltip } from "@mantine/core";
+import { Select, Stack, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { AppModalProps, BaseAppModalProps } from "../base-modal/types";
+import { AppModalProps } from "../base-modal/types";
 import BaseAppModal from "../base-modal/BaseAppModal";
 import { CreateUpdateRunnerAgent, RunnerAgent } from "@/types/models/RunningAgent";
 import useRunners from "@/hooks/useRunners";
 import { dispatch } from "@/redux/store";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
-import { createRunnerAgent, updateRunnerAgent } from "@/redux/slices/runnerAgentSlice/runnerAgentSliceBaseServices";
+import { updateRunnerAgent } from "@/redux/slices/runnerAgentSlice/runnerAgentSliceBaseServices";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconCopy, IconRocket, IconStar } from "@tabler/icons-react";
+import { IconRocket, IconStar } from "@tabler/icons-react";
 import { useClipboard } from "@mantine/hooks";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
 
@@ -20,7 +20,6 @@ export interface EditRunnerAgentModalProps extends AppModalProps {
 const EditRunnerAgentModal: React.FC<EditRunnerAgentModalProps> = (props) => {
     const { isLoading } = useRunners();
     const clipboard = useClipboard({ timeout: 500 });
-    const { openConfirmModal } = useConfirmModal();
 
     const ENV = React.useMemo(() => [
         { label: "🖥️ Local", value: "Local" },
@@ -64,7 +63,7 @@ const EditRunnerAgentModal: React.FC<EditRunnerAgentModalProps> = (props) => {
                 icon: <IconRocket size={20} />,
             });
         }
-    }, [clipboard, dispatch, openConfirmModal, props]);
+    }, [clipboard, props]);
 
     const submit = React.useCallback(() => {
         form.validate();
@@ -78,7 +77,7 @@ const EditRunnerAgentModal: React.FC<EditRunnerAgentModalProps> = (props) => {
                 icon: <IconStar size={20} />,
             });
         }
-    }, [form, onSubmit]);
+    }, [form]);
 
     return (
         <BaseAppModal

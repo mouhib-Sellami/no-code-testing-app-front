@@ -5,7 +5,7 @@ import AppDataTable from "../base-dataTable/AppDataTable";
 import { AppDataTableProps } from "../base-dataTable/types";
 import { RunnerAgent } from "@/types/models/RunningAgent";
 import useConfirmModal from "@/hooks/modals-hooks/useConfirmModal";
-import { IconBackspace, IconPencil, IconSearch } from "@tabler/icons-react";
+import { IconBackspace, IconHeartRateMonitor, IconPencil, IconSearch } from "@tabler/icons-react";
 import { dispatch } from "@/redux/store";
 import { deleteRunnerAgent } from "@/redux/slices/runnerAgentSlice/runnerAgentSliceBaseServices";
 import { onShowNotification } from "@/redux/slices/notificationSlice/notificationSlice";
@@ -14,6 +14,7 @@ import RunnerAgentDataTableConfig from "./RunnerAgentDataTableConfig";
 import { notifications } from "@mantine/notifications";
 import { IconRocket } from "@tabler/icons-react";
 import EditRunnerAgentModal from "@/components/modals/runnerAgents-modals/EditRunnerAgentModal";
+import MonitorAgent from "@/components/modals/runnerAgents-modals/MonitorAgent";
 
 const RunnerAgentDataTable: React.FC<AppDataTableProps<RunnerAgent>> = ({
     records,
@@ -97,6 +98,15 @@ const RunnerAgentDataTable: React.FC<AppDataTableProps<RunnerAgent>> = ({
                 },
                 permission: "can_change_runner_agent"
             },
+            {
+                icon: IconHeartRateMonitor,
+                color: "gray",
+                action(record: RunnerAgent) {
+                    setSelected(record);
+                    openView();
+                },
+                permission: "can_view_runner_agent"
+            },
         ],
     });
 
@@ -125,6 +135,10 @@ const RunnerAgentDataTable: React.FC<AppDataTableProps<RunnerAgent>> = ({
                 closeUpdate()
                 onChange?.()
             }} />}
+            {openForView && selected && <MonitorAgent runner={selected} visible={openForView} onCancel={closeView} onSubmit={() => {
+                closeView()
+            }} />}
+
         </Box>
     );
 };

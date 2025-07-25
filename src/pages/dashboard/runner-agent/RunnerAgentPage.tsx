@@ -17,6 +17,12 @@ const RunnerAgentPage: React.FC = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const { onPageChange, onSearch, fetchData } = usePagination(fetchRunnerAgents);
 
+    const activeRunnerCounts = React.useMemo(() => {
+        if (!RUNNERS_STATES.runners)
+            return 0
+        return RUNNERS_STATES.runners.filter(elm => elm.status.toLowerCase() == "active").length
+    }, [RUNNERS_STATES.runners])
+
     const handleRefresh = () => {
         modals.openConfirmModal({
             title: "🔄 Refresh Runners?",
@@ -42,7 +48,7 @@ const RunnerAgentPage: React.FC = () => {
                                 Pipeline Sorcerers 🧙‍♂️
                             </Title>
                             <Badge color="blue" variant="light">
-                                {RUNNERS_STATES.count} Active Runners
+                                {activeRunnerCounts} Active Runners
                             </Badge>
                         </Group>
                         <Group gap="xs">
@@ -74,7 +80,7 @@ const RunnerAgentPage: React.FC = () => {
             >
                 <RunnerAgentDataTable
                     onChange={fetchData}
-                    height={390}
+                    height={500}
                     onPageChanges={onPageChange}
                     onQuerySearch={onSearch}
                     count={RUNNERS_STATES.count}

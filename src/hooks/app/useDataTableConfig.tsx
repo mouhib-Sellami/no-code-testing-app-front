@@ -1,7 +1,6 @@
 import { DataTableActionType } from "@/components/data-table/base-dataTable/types";
 import DataTableConfig from "@/config/DataTableConfig";
 import PermissionGuard from "@/guards/PermissionGuard";
-import SelfUserActionGuard from "@/guards/SelfUserActionGuard";
 import { ActionIcon, Group, useMantineTheme } from "@mantine/core";
 import React from "react";
 

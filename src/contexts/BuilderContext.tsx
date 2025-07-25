@@ -1,9 +1,7 @@
 import useProjects from "@/hooks/useProjects";
 import useProjectTests from "@/hooks/useProjectTests";
 import useProviders from "@/hooks/useProviders";
-import { resetProjectsComponent } from "@/redux/slices/projectComponentsSlice/projectComponentSlice";
 import { createEdge, createProjectComponent, deleteProjectComponent, getEdges } from "@/redux/slices/projectComponentsSlice/projectComponentSliceBaseServices";
-import { resetSelectedProject, resetSelectedProjectComponent } from "@/redux/slices/projectSlice/projectSlice";
 import { restProjectTestCases } from "@/redux/slices/projectSlice/ProjectTestCaseSlice";
 import { getTestCaseComponents } from "@/redux/slices/projectSlice/projectTestCaseSliceBaseServices";
 import { fetchProvidersDetails } from "@/redux/slices/providerSlice/providerSlice";
@@ -96,9 +94,6 @@ const BuilderProvider = (props: PropsWithChildren) => {
         getProviderDetails()
         getProjectComponents_()
     }, [selectedProject, selectedTest])
-
-    const onSave = React.useCallback(() => { }, [])
-    const onRestore = React.useCallback(() => { }, [])
 
     const rebuildProject = React.useCallback(async (enableLoader?: boolean): Promise<{ nodes: Array<Node>, edges: any }> => {
         if (enableLoader)

@@ -34,7 +34,7 @@ const RolePage: React.FC = () => {
             >
                 <RoleDataTable
                     onChange={fetchData}
-                    height={390}
+                    height={500}
                     onPageChanges={onPageChange}
                     onQuerySearch={onSearch}
                     count={ROLE_STATES.count}

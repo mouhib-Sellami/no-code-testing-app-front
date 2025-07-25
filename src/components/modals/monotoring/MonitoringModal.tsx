@@ -10,7 +10,6 @@ export interface RunTestFlowModalProps {
 }
 
 const MonitoringModal: React.FC<RunTestFlowModalProps> = (props) => {
-    console.log(props);
 
     const renderMonitoring = React.useMemo(() => {
         if (props.video_link == "" && props.image_link == "") {

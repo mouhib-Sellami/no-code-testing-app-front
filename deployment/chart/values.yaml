@@ -1,0 +1,33 @@
+replicaCount: 1
+
+saasApp:
+  name: saas-app
+  group: front
+  container:
+    image: ghcr.io/um-org/no-code-testing-app-front
+    port: 88
+    tag: latest
+  service:
+    type: NodePort
+    port: 30015
+    protocol: TCP
+    targetPort: 88
+    nodePort: 30015
+  config:
+    name: saas-app-config
+    data:
+      VITE_MQTT_HOST: "ws://dg1j75rwzy.oxahost.svr.computeservers.oxa.host/mqtt/"
+      VITE_MQTT_PORT: "80"
+      VITE_BASE_SERVER_API_URL: ""
+      APP_PREFIX: "VITE_"
+      ASSET_DIR: "/usr/share/nginx/html"
+      VITE_PUBLIC_TENANT: "dg1j75rwzy.oxahost.svr.computeservers.oxa.host"
+
+  secretConfig:
+    name: saas-app-secret-config
+    data:
+      VITE_AUTH_TOKEN: QHRva2Vu
+      VITE_SECURE_LOCAL_STORAGE_PREFIX: c2VjcmV0MTIz
+      VITE_REDUX_SECURE_STORAGE_HASH_KEY: QHNlY3VyZQ==
+      VITE_MQTT_USER: YWRtaW4=
+      VITE_MQTT_PASSWORD: YWRtaW4xMjM=

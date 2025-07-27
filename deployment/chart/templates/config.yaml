@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.saasApp.config.name }}
+  labels:
+    group: {{ .Values.saasApp.group }}
+data:
+  {{- with .Values.saasApp.config.data }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}

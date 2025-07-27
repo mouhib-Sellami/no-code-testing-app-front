@@ -1,0 +1,114 @@
+name: Create and publish a Docker image
+
+on:
+  push:
+    branches:
+    - prod
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for the Docker image.'
+        required: false
+        default: ''
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.VERSION }}
+
+    permissions:
+      contents: write
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.TOKEN }}
+
+    - name: Generate new version tag
+      id: version
+      run: |
+        if [ -n "${{ github.event.inputs.version }}" ]; then
+          NEW_TAG="${{ github.event.inputs.version }}"
+        else
+          # Get the latest tag or set a default if none exists
+          LATEST_TAG=$(git tag --sort=-v:refname | grep '^v' | head -n 1 || echo "v1.0.0")
+          if [ -z "$LATEST_TAG" ]; then
+            NEW_TAG="v1.0.1"
+          else
+            # Increment the patch version
+            VERSION_NUM=$(echo $LATEST_TAG | sed 's/v//')
+            IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NUM"
+            PATCH=$(( ${VERSION_PARTS[2]} + 1 ))
+            NEW_TAG="v${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$PATCH"
+          fi
+        fi
+        echo "New tag: $NEW_TAG"
+        echo "VERSION=$NEW_TAG" >> $GITHUB_OUTPUT
+        git tag $NEW_TAG
+        git push origin $NEW_TAG
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=raw,value=${{ steps.version.outputs.VERSION }}
+
+    - name: Build and push Docker image
+      id: push
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+  clone-checkout-prod:
+    name: Clone repo and checkout
+    runs-on: ubuntu-latest
+    needs: build-and-push-image
+    steps:
+    - name: Clone the repo
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd /home/${{ secrets.USER }}
+          git clone git@github.com:${{ github.repository }}.git || true
+          cd no-code-testing-app-front && git checkout prod && git pull origin prod
+          exit 0
+
+  deploy-front:
+    name: Deploy front
+    runs-on: ubuntu-latest
+    needs: [ build-and-push-image, clone-checkout-prod ]
+    steps:
+    - name: Deploy front app
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          cd no-code-testing-app-front/deployment/chart
+          helm upgrade --install front . --set saasApp.container.tag=${{ needs.build-and-push-image.outputs.version }}
+          exit 0

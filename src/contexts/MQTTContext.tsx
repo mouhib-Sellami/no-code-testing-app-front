@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import mqtt, { MqttClient } from 'mqtt';
 import { SessionContext } from "./SessionContext";
+import useTenant from "@/hooks/useTenant";
 
 type MQTTContextProps = {
     isConnected: boolean;
@@ -26,16 +27,23 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
     const [isConnected, setIsConnected] = React.useState<boolean>(false);
     const [MQTTClient, setMQTTClient] = React.useState<MqttClient | null>(null);
     const { isAuthenticated } = React.useContext(SessionContext);
+    const { tenant } = useTenant();
+
     const topicCallbacks = useRef<Map<string, (topic: string, message: Buffer) => void>>(new Map());
 
     const handleConnect = useCallback(() => {
         const host = import.meta.env.VITE_MQTT_HOST;
+        const username = import.meta.env.VITE_MQTT_USER;
+        const password = import.meta.env.VITE_MQTT_PASSWORD;
+
+        console.log('MQTT Config:', { host, username, password: password ? '[REDACTED]' : undefined })
         const mqttOptions: mqtt.IClientOptions = {
             protocol: 'ws',
             reconnectPeriod: 1000,
             connectTimeout: 30 * 1000,
             username: import.meta.env.VITE_MQTT_USER || "admin",
             password: import.meta.env.VITE_MQTT_PASSWORD || "admin123",
+            clientId: tenant.id
         };
 
         const client = mqtt.connect(host, mqttOptions);
@@ -74,7 +82,7 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
         });
 
         return client;
-    }, []);
+    }, [tenant]);
 
     const handleSubscribe = useCallback((topic: string, qos: 0 | 1 | 2, callback: (topic: string, message: Buffer) => void) => {
         if (MQTTClient) {
@@ -119,6 +127,7 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
 
     useEffect(() => {
         if (!isAuthenticated) return;
+        if (!tenant) return;
 
         console.log("connection");
         const client = handleConnect();
@@ -131,7 +140,7 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
                 topicCallbacks.current.clear();
             }
         };
-    }, [isAuthenticated, handleConnect]);
+    }, [isAuthenticated, tenant]);
 
     return (
         <MQTTContext.Provider value={{ MQTTClient, isConnected, handleSubscribe, handlePublish, handleUnSub }}>

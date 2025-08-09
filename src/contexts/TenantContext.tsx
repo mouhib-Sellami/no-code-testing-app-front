@@ -24,22 +24,35 @@ const TenantProvider = (props: PropsWithChildren) => {
     const TOKEN = React.useMemo(() => searchParams.get('token'), [searchParams]);
     const ACTION = React.useMemo(() => searchParams.get('action'), [searchParams]);
     const NEXT = React.useMemo(() => searchParams.get('next'), [searchParams]);
+    const PUBLIC_TENANT_DOMAIN = import.meta.env.VITE_PUBLIC_TENANT
+
+    // const IS_TENANT = React.useMemo(() => {
+
+    //     var regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)?(localhost|\w+\.\w+)(\/.*)?$/);
+
+    //     if (!regex.test(window.location.hostname)) return false;
+
+    //     var hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
+
+    //     var parts = hostname.split('.');
+
+    //     if (hostname.endsWith('localhost')) {
+    //         return parts.length > 1;
+    //     }
+    //     return parts.length > 2;
+    // }, []);
 
     const IS_TENANT = React.useMemo(() => {
+        console.log("PUBLIC_TENANT_DOMAIN");
+        console.log(PUBLIC_TENANT_DOMAIN);
+        
+        var regex = new RegExp(`http:\/\/(?:[a-zA-Z0-9-]+\.)?${PUBLIC_TENANT_DOMAIN.replaceAll('.', '\\.')}`);
+        console.log("regex.test(window.location.hostname)");
+        console.log(regex.test(window.location.hostname));
+        
+        return regex.test(window.location.hostname)
+    }, [PUBLIC_TENANT_DOMAIN]);
 
-        var regex = new RegExp(/^([a-z]+:\/\/)?([\w-]+\.)*([\w-]+\.)?(localhost|\w+\.\w+)(\/.*)?$/);
-
-        if (!regex.test(window.location.hostname)) return false;
-
-        var hostname = window.location.hostname.replace(/^([a-z]+:\/\/)?/, '').replace(/\/.*$/, '');
-
-        var parts = hostname.split('.');
-
-        if (hostname.endsWith('localhost')) {
-            return parts.length > 1;
-        }
-        return parts.length > 2;
-    }, []);
 
     const IS_CORRESPONDED_TENANT = React.useMemo(() => {
         if (!tenant) return false;

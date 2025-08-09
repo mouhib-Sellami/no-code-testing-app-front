@@ -27,7 +27,7 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
                         <Text mt="md" size="lg" c="dimmed">
                             Empower your QA teams to build, run, and maintain end-to-end tests using Selenium, Appium, and more — no coding required!
                         </Text>
-                    <Image src={authImage} width={"100%"} height={"100%"} fit="contain" />
+                        <Image src={authImage} width={"100%"} height={"100%"} fit="contain" />
                     </Container>
                 </Grid.Col>
             </Grid>

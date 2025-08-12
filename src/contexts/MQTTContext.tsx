@@ -32,18 +32,19 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
     const topicCallbacks = useRef<Map<string, (topic: string, message: Buffer) => void>>(new Map());
 
     const handleConnect = useCallback(() => {
-        const host = import.meta.env.VITE_MQTT_HOST;
+        const host = "ws://localhost/mqtt";
         const username = import.meta.env.VITE_MQTT_USER;
         const password = import.meta.env.VITE_MQTT_PASSWORD;
 
         console.log('MQTT Config:', { host, username, password: password ? '[REDACTED]' : undefined })
         const mqttOptions: mqtt.IClientOptions = {
-            protocol: 'ws',
+            // protocol: 'ws',
             reconnectPeriod: 1000,
             connectTimeout: 30 * 1000,
             username: import.meta.env.VITE_MQTT_USER || "admin",
             password: import.meta.env.VITE_MQTT_PASSWORD || "admin123",
-            clientId: tenant.id
+            clientId: tenant.id,
+            port:import.meta.env.VITE_MQTT_PORT
         };
 
         const client = mqtt.connect(host, mqttOptions);
@@ -126,6 +127,9 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
     }, [MQTTClient]);
 
     useEffect(() => {
+        console.log(!isAuthenticated);
+        console.log(!tenant);
+        
         if (!isAuthenticated) return;
         if (!tenant) return;
 

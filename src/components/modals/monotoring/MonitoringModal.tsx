@@ -33,6 +33,7 @@ const MonitoringModal: React.FC<RunTestFlowModalProps> = (props) => {
             size={"xl"}
             h={px("50rem")}
             title="Monitoring"
+            fullScreen
         >
             {renderMonitoring}
         </Modal>

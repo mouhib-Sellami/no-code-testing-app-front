@@ -80,6 +80,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             return
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_state_" + selectedProjectLogs.id, 1, handleExecutionState)
+        //reset selected project logs to free the subscriptions
     }, [isConnected, selectedProjectLogs])
 
     const rebuildTestCase = React.useCallback(async (): Promise<{ nodes: Array<Node>, edges: any }> => {

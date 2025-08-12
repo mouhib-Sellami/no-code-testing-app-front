@@ -22,7 +22,6 @@ const ViewProjectLogPage: React.FC = () => {
         if (!id)
             return
         await dispatch(getProjectLogsDetails(Number(id)))
-        console.log("fetching project logs");
         
     }, [])
 

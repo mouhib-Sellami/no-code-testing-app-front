@@ -21,13 +21,12 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
                     </Box>
                 </Grid.Col>
                 <Grid.Col span={{ base: 0, lg: 7, xl: 7 }} display={{ base: "none", lg: "block" }}>
-                    <Container size="lg" py={80}>
-
+                    <Container size="lg" py={80} h={"100vh"}>
                         <Title order={1} ta={"left"}>No-Code Testing Made Simple ✨</Title>
                         <Text mt="md" size="lg" c="dimmed">
                             Empower your QA teams to build, run, and maintain end-to-end tests using Selenium, Appium, and more — no coding required!
                         </Text>
-                        <Image src={authImage} width={"100%"} height={"100%"} fit="contain" />
+                        <Image src={authImage} width={"100%"}  fit="contain" />
                     </Container>
                 </Grid.Col>
             </Grid>

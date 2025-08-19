@@ -43,13 +43,8 @@ const TenantProvider = (props: PropsWithChildren) => {
     // }, []);
 
     const IS_TENANT = React.useMemo(() => {
-        console.log("PUBLIC_TENANT_DOMAIN");
-        console.log(PUBLIC_TENANT_DOMAIN);
-        
+
         var regex = new RegExp(`http:\/\/(?:[a-zA-Z0-9-]+\.)?${PUBLIC_TENANT_DOMAIN.replaceAll('.', '\\.')}`);
-        console.log("regex.test(window.location.hostname)");
-        console.log(regex.test(window.location.hostname));
-        
         return regex.test(window.location.hostname)
     }, [PUBLIC_TENANT_DOMAIN]);
 

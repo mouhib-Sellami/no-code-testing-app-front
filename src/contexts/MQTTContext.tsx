@@ -43,7 +43,8 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
             connectTimeout: 30 * 1000,
             username: import.meta.env.VITE_MQTT_USER || "admin",
             password: import.meta.env.VITE_MQTT_PASSWORD || "admin123",
-            clientId: tenant.id
+            clientId: tenant.id,
+            port:import.meta.env.VITE_MQTT_PORT
         };
 
         const client = mqtt.connect(host, mqttOptions);
@@ -125,11 +126,10 @@ const MQTTProvider = ({ children }: MQTTProviderProps) => {
         }
     }, [MQTTClient]);
 
-    useEffect(() => {
+    useEffect(() => {        
         if (!isAuthenticated) return;
         if (!tenant) return;
 
-        console.log("connection");
         const client = handleConnect();
 
         return () => {

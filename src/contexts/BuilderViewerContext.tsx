@@ -70,7 +70,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
 
     const handleExecutionState = React.useCallback(async (topic: string, message: Buffer<ArrayBufferLike>) => {
         const data = JSON.parse(message.toString())
-        console.log(data);
         setEnableBuilding(false)
         setWorkflow(data?.flows)
     }, [])
@@ -80,6 +79,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             return
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_" + selectedProjectLogs.id, 1, (topic, message) => handleProjectStatus(topic, message, selectedProjectLogs))
         handleSubscribe?.(selectedProjectLogs.agent_key + "_project_state_" + selectedProjectLogs.id, 1, handleExecutionState)
+        //reset selected project logs to free the subscriptions
     }, [isConnected, selectedProjectLogs])
 
     const rebuildTestCase = React.useCallback(async (): Promise<{ nodes: Array<Node>, edges: any }> => {
@@ -136,8 +136,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             setIsBuilding(true)
 
         const nodes = workflow.map((elm: any) => {
-            console.log(elm);
-
             return {
                 id: elm.test_case.id.toString(),
                 data: {
@@ -150,7 +148,6 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
                 type: `app-test-case`
             }
         })
-        console.log(nodes);
 
 
         setNodes(nodes as Array<Node>)

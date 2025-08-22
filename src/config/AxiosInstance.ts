@@ -23,7 +23,7 @@ const axiosInstance = axios.create({
 export const setAuthToken = async (config: any) => {
     try {
         const token = secureLocalStorage.getItem(import.meta.env.VITE_VITE_AUTH_TOKEN || "@token");
-        if (token) {
+        if (token) {    
             config.headers.Authorization = `Bearer ${token}`
         } else {
             delete config.headers.Authorization;

@@ -93,7 +93,7 @@ const WorkFlowProvider = ({ children }: MQTTProviderProps) => {
         const nodes = testComponents.map(elm => {
             return {
                 id: elm.id.toString(),
-                data: { label: elm.name, component: elm },
+                data: { label: elm?.name, component: elm },
                 position: elm.builder_config?.position,
                 type: `app-test-case`
             }

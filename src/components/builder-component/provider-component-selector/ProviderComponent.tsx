@@ -14,11 +14,11 @@ const ProviderComponent: React.FC<ProviderComponentProps> = ({ component }) => {
     const onDragStart = (event: React.DragEvent, component: Component) => {
         event.dataTransfer.setData('application/reactflow', JSON.stringify({
             type: "app-" + component.type,
-            name: component.name,
+            name: component?.name,
             component: component
         }));
         event.dataTransfer.effectAllowed = 'move';
-        setDnD("app-" + component.type, component.name, component);
+        setDnD("app-" + component.type, component?.name, component);
     };
 
     return (
@@ -32,7 +32,7 @@ const ProviderComponent: React.FC<ProviderComponentProps> = ({ component }) => {
             draggable
         >
             <Group align="center" justify="space-between">
-                <Text size="sm">{component.name}</Text>
+                <Text size="sm">{component?.name}</Text>
             </Group>
         </Card>
     );

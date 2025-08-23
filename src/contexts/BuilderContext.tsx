@@ -101,7 +101,7 @@ const BuilderProvider = (props: PropsWithChildren) => {
         const nodes = components.map(elm => {
             return {
                 id: elm.id.toString(),
-                data: { label: elm.name, component: elm },
+                data: { label: elm?.name, component: elm },
                 position: elm.builder_config?.position,
                 type: `app-${elm.type}`
             }

@@ -93,9 +93,9 @@ const CreateProjectModal: React.FC<AppModalProps> = (props) => {
         validate: (values) => {
             if (active === 0) {
                 return {
-                    name: values.name.trim().length < 3
+                    name: values?.name.trim().length < 3
                         ? "Project name must be at least 3 characters"
-                        : values.name.length > 100
+                        : values?.name.length > 100
                             ? "Project name cannot exceed 100 characters"
                             : null,
                     description: values.description.trim().length < 10

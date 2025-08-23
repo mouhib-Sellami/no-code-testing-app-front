@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.saasApp.name | quote }}
+  name: {{ .Values.saasApp?.name | quote }}
   labels:
-    app: {{ .Values.saasApp.name | quote }}
+    app: {{ .Values.saasApp?.name | quote }}
     group: {{ .Values.saasApp.group | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.saasApp.name | quote }}
+      app: {{ .Values.saasApp?.name | quote }}
   template:
     metadata:
       labels:
-        app: {{ .Values.saasApp.name | quote }}
+        app: {{ .Values.saasApp?.name | quote }}
         group: {{ .Values.saasApp.group | quote }}
     spec:
       containers:
-        - name: {{ .Values.saasApp.name | quote }}
+        - name: {{ .Values.saasApp?.name | quote }}
           image: "{{ .Values.saasApp.container.image }}:{{ .Values.saasApp.container.tag }}"
           imagePullPolicy: {{ .Values.saasApp.container.imagePullPolicy | default "IfNotPresent" | quote }}
           ports:
@@ -26,6 +26,6 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ .Values.saasApp.config.name | quote }}
+                name: {{ .Values.saasApp.config?.name | quote }}
             - secretRef:
-                name: {{ .Values.saasApp.secretConfig.name | quote }}
+                name: {{ .Values.saasApp.secretConfig?.name | quote }}

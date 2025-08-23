@@ -16,13 +16,13 @@ const ViewProjectDetails: React.FC<ViewProjectDetailsProps> = ({ project, onClos
             <Stack
                 w={"100%"} gap={"md"} >
                 <Group align="center" justify="space-between">
-                    <Title order={4}>{project.name}</Title>
+                    <Title order={4}>{project?.name}</Title>
                     <Pill>{project.status}</Pill>
                 </Group>
                 <Group align="flex-start" justify="flex-start" style={{ flexDirection: "column" }}>
                     <Card withBorder p={6} px={"md"} bg={"transparent"} style={{ width: "fit-content" }}>
                         <Group align="center" justify="space-between">
-                            <Text size='sm'>{project.provider.name}</Text>
+                            <Text size='sm'>{project.provider?.name}</Text>
                             <Text size='xs' c={"dimmed"}>V {project.provider.version}</Text>
                         </Group>
                     </Card>
@@ -35,7 +35,7 @@ const ViewProjectDetails: React.FC<ViewProjectDetailsProps> = ({ project, onClos
                     <Fieldset legend="General" bg={colors.mainContentColor[9]}>
                         <Stack w={"100%"} gap={"sm"}>
                             <TextInput label="Managed by" disabled value={project.managed_by.first_name + " " + project.managed_by.last_name} />
-                            <TextInput label="Provider" disabled value={project.provider.name} />
+                            <TextInput label="Provider" disabled value={project.provider?.name} />
                             <Textarea label="Description" rows={3} disabled value={project.description} />
                         </Stack>
                     </Fieldset>

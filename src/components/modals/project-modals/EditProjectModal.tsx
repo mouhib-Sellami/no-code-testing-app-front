@@ -54,7 +54,7 @@ const EditProjectModal: React.FC<EditProjectModalModalProps> = (props) => {
 
     const initialValues: CreateUpdateProject = React.useMemo(() => ({
         id: props.project.id,
-        name: props.project.name,
+        name: props.project?.name,
         description: props.project.description,
         managed_by: props.project.managed_by.id,
         members: props.project.members.map(elm => elm.id),
@@ -88,9 +88,9 @@ const EditProjectModal: React.FC<EditProjectModalModalProps> = (props) => {
         validate: (values) => {
             if (active === 0) {
                 return {
-                    name: values.name.trim().length < 3
+                    name: values?.name.trim().length < 3
                         ? "Project name must be at least 3 characters"
-                        : values.name.length > 100
+                        : values?.name.length > 100
                             ? "Project name cannot exceed 100 characters"
                             : null,
                     description: values.description.trim().length < 10

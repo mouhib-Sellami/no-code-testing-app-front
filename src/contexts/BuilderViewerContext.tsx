@@ -88,7 +88,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
         const nodes = Object.values(selectedTestCase.components).map((elm: Component) => {
             return {
                 id: elm?.id?.toString(),
-                data: { label: elm.name, component: elm, status: elm.status || "PENDING" },
+                data: { label: elm?.name, component: elm, status: elm.status || "PENDING" },
                 position: elm.builder_config?.position,
                 type: `app-${elm.type}`
             }
@@ -139,7 +139,7 @@ const BuilderViewerProvider = (props: PropsWithChildren) => {
             return {
                 id: elm.test_case.id.toString(),
                 data: {
-                    label: elm.test_case.name,
+                    label: elm.test_case?.name,
                     component: elm.workflow,
                     status: elm.test_case.status || "PENDING",
                     monitoring: elm.test_case.monitoring || {}

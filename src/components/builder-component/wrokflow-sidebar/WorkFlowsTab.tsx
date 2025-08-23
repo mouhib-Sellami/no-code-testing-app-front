@@ -175,7 +175,7 @@ const WorkFlowsTab: React.FC<CustomTabsProps> = ({ active }) => {
                                     justify='space-between'
                                 >
                                     <Text fz={{ xl: 14, lg: 12, md: 10 }} truncate maw={"70%"}>
-                                        {elm.name}
+                                        {elm?.name}
                                     </Text>
                                     <Group align='center' justify='center' gap={10}>
                                         <ActionIcon

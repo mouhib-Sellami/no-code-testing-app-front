@@ -32,7 +32,7 @@ const RunTestFlowModal: React.FC<RunTestFlowModalProps> = (props) => {
         return RUNNER_AGENT.runners.filter(elm =>
             elm.status != "Inactive" && elm.status != "Initializing"
         ).map(item => ({
-            label: item.name, value: item.id.toString()
+            label: item?.name, value: item.id.toString()
         }))
     }, [RUNNER_AGENT.runners])
 

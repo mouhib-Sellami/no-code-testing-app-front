@@ -78,7 +78,7 @@ const RunnerAgentDataTable: React.FC<AppDataTableProps<RunnerAgent>> = ({
                 color: "gray",
                 action(record) {
                     openDeleteModal({
-                        content: `Are you sure you want to decommission agent "${record.name}"? This action cannot be undone! 🚨`,
+                        content: `Are you sure you want to decommission agent "${record?.name}"? This action cannot be undone! 🚨`,
                         onConfirm: async () => {
                             await deleteRunningAgent(record.id);
                         },

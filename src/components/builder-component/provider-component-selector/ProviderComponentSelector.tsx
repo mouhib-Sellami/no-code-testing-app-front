@@ -25,7 +25,7 @@ const ProviderComponentSelector: React.FC<ProviderComponentSelectorProps> = ({ }
                 }}
                 my={5}
             >
-                {item.name}
+                {item?.name}
             </Accordion.Control>
             <Accordion.Panel>
                 <SimpleGrid cols={2}>
@@ -40,7 +40,7 @@ const ProviderComponentSelector: React.FC<ProviderComponentSelectorProps> = ({ }
     return (
         <>
             <Title order={4} pb={"md"}>
-                {selectedProvider.name}
+                {selectedProvider?.name}
             </Title>
             <Accordion
                 styles={{

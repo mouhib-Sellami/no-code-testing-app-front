@@ -29,7 +29,7 @@ const EditRunnerAgentModal: React.FC<EditRunnerAgentModalProps> = (props) => {
 
     const initialValues: CreateUpdateRunnerAgent = React.useMemo(() => ({
         id: props.runner.id,
-        name: props.runner.name,
+        name: props.runner?.name,
         environment: props.runner.environment,
         description: props.runner.description
     }), [props.runner]);

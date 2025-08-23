@@ -31,7 +31,7 @@ const NavbarFooter: React.FC = () => {
                 <Menu.Target >
                     <UserButton
                         name={user?.username ?? "default user"}
-                        role={role.name ?? "default role"}
+                        role={role?.name ?? "default role"}
                     />
                 </Menu.Target>
                 <Menu.Dropdown w={px("14.2rem")}>

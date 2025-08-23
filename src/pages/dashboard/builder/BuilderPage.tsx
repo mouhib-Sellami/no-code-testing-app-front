@@ -32,6 +32,10 @@ const BuilderPage: React.FC = () => {
     const { setEdges } = useReactFlow();
     const params = useParams();
     const { selectedTest } = useProjectTests();
+    console.log("nodes");
+    console.log(nodes);
+    console.log("edges");
+    console.log(edges);
 
     const fetchTestCase = React.useCallback(async () => {
         if (!selectedTest)

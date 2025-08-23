@@ -27,11 +27,11 @@ const TestCaseCard: React.FC<TestCaseCardProps> = ({ data, onSelect }) => {
     const onDragStart = (event: React.DragEvent, component: TestCase) => {
         event.dataTransfer.setData('application/reactflow', JSON.stringify({
             type: "app-test-case",
-            name: component.name,
+            name: component?.name,
             component: component
         }));
         event.dataTransfer.effectAllowed = 'move';
-        setWorkFlowDnD("app-test-case", component.name, component);
+        setWorkFlowDnD("app-test-case", component?.name, component);
     };
 
 
@@ -71,7 +71,7 @@ const TestCaseCard: React.FC<TestCaseCardProps> = ({ data, onSelect }) => {
                 justify='space-between'
             >
                 <Text fz={{ xl: 14, lg: 12, md: 10 }} truncate maw={"70%"}>
-                    {data.name}
+                    {data?.name}
                 </Text>
                 <Group align='center' justify='center' gap={10}>
                     <ActionIcon

@@ -12,7 +12,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props) => {
     const { project, } = props;
     return (
 
-        <OverlapCard title={project.name}>
+        <OverlapCard title={project?.name}>
             <Text size="sm" c="dimmed" mb="sm" lineClamp={2}>
                 {project.description || "No description available"}
             </Text>

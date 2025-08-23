@@ -101,7 +101,6 @@ const BuilderPage: React.FC = () => {
         });
     }, [selectedEdge, openConfirmModal, rebuildWorkFlow]);
 
-    // --- Node Auto-Layout Function ---
     const arrangeNodes = React.useCallback(() => {
         const levelMap: Record<number, any[]> = {};
         const nodeMap = Object.fromEntries(nodes.map((n) => [n.id, n]));
@@ -122,13 +121,12 @@ const BuilderPage: React.FC = () => {
             children.forEach((childId) => dfs(childId, depth + 1));
         };
 
-        // Root nodes (no incoming edges)
         const targetNodes = new Set(edges.map(e => e.target));
         const rootNodes = nodes.filter(n => !targetNodes.has(n.id));
         rootNodes.forEach(root => dfs(root.id, 0));
 
-        const gapX = 250; // horizontal spacing
-        const gapY = 150; // vertical spacing
+        const gapX = 250;
+        const gapY = 150;
         Object.entries(levelMap).forEach(([depthStr, nodesAtLevel]) => {
             const depth = Number(depthStr);
             nodesAtLevel.forEach((node, index) => {

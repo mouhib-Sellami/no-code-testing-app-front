@@ -47,7 +47,7 @@ const UserDataTableConfig = (props: DataTableActions<AppUser>) => {
                 width: "10%",
                 render: (user: any) => (
                     <Badge>
-                        {user.role.slug || user.role.name}
+                        {user.role.slug || user.role?.name}
                     </Badge>
                 )
             },

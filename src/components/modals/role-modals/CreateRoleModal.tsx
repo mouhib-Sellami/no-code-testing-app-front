@@ -60,7 +60,7 @@ const CreateRoleModal: React.FC<AppModalProps> = (props) => {
     const submit = React.useCallback(() => {
         form.validate()
         if (form.isValid()) {
-            onSubmit({ ...form.values, slug: createAcronym(form.values.name) })
+            onSubmit({ ...form.values, slug: createAcronym(form.values?.name) })
         }
     }, [form])
 
@@ -101,7 +101,7 @@ const CreateRoleModal: React.FC<AppModalProps> = (props) => {
                     readOnly
                     withAsterisk
                     label="Slug"
-                    value={createAcronym(form.values.name)}
+                    value={createAcronym(form.values?.name)}
                     placeholder=""
                 />
                 <Stack w={"100%"} gap={"sm"}>

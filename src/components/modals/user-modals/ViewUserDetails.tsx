@@ -17,7 +17,7 @@ const ViewUserDetails: React.FC<ViewUserDetailsProps> = ({ user, onClose, isVisi
                 w={"100%"} gap={"md"} >
                 <Title order={4}>{user.first_name} {user.last_name}</Title>
                 <Card withBorder p={6} px={10} bg={"transparent"} style={{ width: "fit-content" }}>
-                    <Text size='sm'>{user.role.name}</Text>
+                    <Text size='sm'>{user.role?.name}</Text>
                 </Card>
             </Stack>
             <Divider my={"md"} />
@@ -27,7 +27,7 @@ const ViewUserDetails: React.FC<ViewUserDetailsProps> = ({ user, onClose, isVisi
                         <TextInput label="First name" disabled value={user.first_name} />
                         <TextInput label="Last name" disabled value={user.last_name} />
                         <TextInput label="Profession" disabled value={user.profession} />
-                        <TextInput label="Role" disabled value={user.role.name || 'Staff'} />
+                        <TextInput label="Role" disabled value={user.role?.name || 'Staff'} />
                         <DateInput label="Joined at" disabled value={new Date(user.created_at)} valueFormat="YYYY-MM-DD" />
                     </Stack>
                 </ScrollArea>

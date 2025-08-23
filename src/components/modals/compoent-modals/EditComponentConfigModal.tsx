@@ -68,7 +68,7 @@ const EditComponentConfigModal: React.FC<ViewProjectDetailsProps> = ({ component
         <Drawer
             opened={isVisible}
             onClose={onClose}
-            title={component.name}
+            title={component?.name}
             transitionProps={{ duration: 150, timingFunction: 'linear' }}
         >
             <form onSubmit={form.onSubmit(handleSubmit)}>

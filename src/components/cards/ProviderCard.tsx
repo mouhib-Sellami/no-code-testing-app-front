@@ -31,14 +31,14 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, onSelect, selecte
                 <Group align="center" justify="space-between">
                     <Group>
 
-                        <Avatar name={provider.name} radius="xl" size={"2rem"} styles={{
+                        <Avatar name={provider?.name} radius="xl" size={"2rem"} styles={{
                             placeholder: {
                                 fontSize: "0.8rem"
                             }
                         }}
                             bg={"primary"} color='white' />
 
-                        <Title order={5}> {provider.name}</Title>
+                        <Title order={5}> {provider?.name}</Title>
                     </Group>
                     <Text size="xs" c={"dimmed"}>V {provider.version}</Text>
                 </Group>

@@ -21,7 +21,7 @@ const CreateUserModal: React.FC<AppModalProps> = (props) => {
     const [debouncedQuery] = useDebouncedValue(query, 200);
 
     const RoleOptions = React.useMemo(() => {
-        return ROLE_HOOKS.roles.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm.name }))
+        return ROLE_HOOKS.roles.flatMap(elm => ({ value: elm.id ? elm.id?.toString() : "0", label: elm?.name }))
     }, [ROLE_HOOKS.roles])
 
     const initialValues: createUpdateUser = React.useMemo(() => {

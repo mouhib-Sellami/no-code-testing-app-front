@@ -89,7 +89,7 @@ const CustomNode: React.FC<any> = (props) => {
             data: {
                 ...data,
                 component: c,
-                label: c.name,
+                label: c?.name,
             },
         });
         close()

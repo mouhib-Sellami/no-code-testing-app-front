@@ -37,7 +37,7 @@ const ProjectDataTableConfig = (props: DataTableActions<Project>) => {
                 width: "10%"
             },
             {
-                accessor: "provider.name", title: "Provider",
+                accessor: "provider?.name", title: "Provider",
                 width: "10%"
             },
             {

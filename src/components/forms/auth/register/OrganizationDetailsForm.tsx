@@ -28,7 +28,7 @@ const OrganizationDetailsForm: React.FC<RegisterFormsProps<OrganizationDetailsRe
     });
 
     const slug = React.useMemo(() => {
-        return slugify(form.getValues().name, {
+        return slugify(form.getValues()?.name, {
             delimiter: ''
         }).replaceAll('-', '')
     }, [form])

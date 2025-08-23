@@ -21,7 +21,7 @@ const ViewRoleModal: React.FC<ViewRoleModalProps> = (props) => {
         if (props.role)
             return {
                 id: props.role.id,
-                name: props.role.name,
+                name: props.role?.name,
                 slug: props.role.slug,
                 permissions: props.role.permissions.map(elm => elm.id?.toString())
             }

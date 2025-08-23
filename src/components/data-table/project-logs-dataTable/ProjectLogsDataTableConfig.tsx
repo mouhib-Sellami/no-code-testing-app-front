@@ -25,7 +25,7 @@ const ProjectLogsDataTableConfig = (props: DataTableActions<ProjectStatusLog>) =
                 accessor: "project?.name",
                 title: "Project Name",
                 width: "15%",
-                render: (record: any) => record.project??.name || "N/A",
+                render: (record: any) => record.project?.name || "N/A",
             },
             {
                 accessor: "project.managed_by.username",
@@ -37,7 +37,7 @@ const ProjectLogsDataTableConfig = (props: DataTableActions<ProjectStatusLog>) =
                 accessor: "project.provider?.name",
                 title: "Provider",
                 width: "15%",
-                render: (record: any) => record.project?.provider??.name || "N/A",
+                render: (record: any) => record.project?.provider?.name || "N/A",
             },
             {
                 accessor: "new_status",
